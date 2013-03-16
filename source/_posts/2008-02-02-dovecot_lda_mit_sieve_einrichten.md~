@@ -1,0 +1,58 @@
+---
+title: Dovecot LDA mit Sieve einrichten
+author: sw
+layout: post
+permalink: /2008/02/dovecot_lda_mit_sieve_einrichten/
+categories:
+  - Uncategorized
+tags:
+  - cmusieve
+  - deliver
+  - dovecot
+  - howto
+  - lda
+  - mail
+  - postfix
+  - sieve
+---
+# 
+
+Es ist ein Mailserver mit Postfix und Dovecot um die Möglichkeit zu erweitern [Sieve][1] zu nutzen. Dovecot bringt den Local Delivery Agent (LDA) deliver mit, der mit einem [Sieve Plugin][2] erweitert werden kann. Dessen Einrichtung wird im Folgenden beschrieben. Es wird vorausgesetzt, dass Postfix und Dovecot bereits korrekt konfiguriert sind.
+
+ [1]: http://www.ietf.org/html.charters/sieve-charter.html
+ [2]: http://wiki.dovecot.org/LDA/Sieve
+
+In `/etc/postfix/master.cf` muss deliver eingetragen werden.
+
+`dovecot   unix  -       n       n       -       -       pipe
+flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/deliver -f ${sender} -d ${recipient}`
+
+In `/etc/postfix/main.cf` wird dann der Transport über deliver (das in der master.cf dovecot genannt wird) festgelegt:
+
+`dovecot_destination_recipient_limit = 1
+virtual_transport = dovecot`
+
+In der Dovecot-Konfiguration `/etc/dovecot/dovecot.conf` ist der LDA auszukommentieren und das Plugin cmusieve einzutragen. Weiterhin muss der Pfad zu den Sieve-Skripten definiert werden. Im Beispiel wird ein statischer Eintrag auf die Datei `.dovecot.sieve` im Maildir des Benutzers benutzt.
+
+`protocol lda {
+    postmaster_address = postmaster@example.com
+    auth_socket_path = /var/run/dovecot/auth-master
+    mail_plugins = cmusieve
+}
+[...]
+auth default {
+    [...]
+    userdb static {
+        args = uid=111 gid=111 sieve=/var/spool/virtual/%d/%n/.dovecot.sieve
+    }
+    [...]
+    socket listen {
+        master {
+        path = /var/run/dovecot/auth-master
+        mode = 0600
+        user = vmail # User running Dovecot LDA
+        group = vmail # Or alternatively mode 0660   LDA user in this group
+    }
+}`
+
+Jetzt wird der Mailtransport über den Dovecot LDA abgewickelt und Dank Sieve wie gewünscht behandelt.

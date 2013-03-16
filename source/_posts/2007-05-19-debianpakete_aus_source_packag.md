@@ -1,0 +1,61 @@
+---
+title: Debian-Pakete aus source packages bauen
+author: sw
+layout: post
+permalink: /2007/05/debianpakete_aus_source_packag/
+categories:
+  - Uncategorized
+tags:
+  - apt
+  - binary
+  - build
+  - compile
+  - debian
+  - fuzzyocr
+  - linux
+  - packages
+  - source
+---
+# 
+
+Debian bietet sehr viele Programme fertig kompiliert als binary packages zur einfachen Installation über die distributionseigene Paketverwaltung an. Ist man mit den angebotenen Paketen aus irgend einem Grund nicht zufrieden, kann man sich die Vorteile vom Opensource-Prinzip zu Nutze machen und selbst den Compiler starten.
+
+Wie ein Debian package aus einem source package gebaut wird, beschreibt die folgende Anleitung am Beispiel von FuzzyOCR. (Da FuzzyOCR ein Perl-Skript ist, muss es nicht kompiliert werden. Die Schritte auf dem Weg zum fertigen Paket ändern sich dadurch aber nicht und lassen sich auf Quellcode-Pakete in zu kompilierenden Sprachen übertragen, da der build-Prozess automatisch erfolgt.)
+
+FuzzyOCR ist nicht in der stable Distribution (etch) enthalten. Die Sourcen aus anderen Distributionen (in diesem Fall testing) können gegen stable Pakete kompiliert und somit verfügbar gemacht werden. Um an das Quelltext-Paket zu kommen, muss in diesem Beispiel die `sources.list` erweitert werden.
+
+    # cat /etc/apt/sources.list  
+    [...]  
+    deb-src http://ftp.de.debian.org/debian/ testing main contrib non-free 
+
+Um source packages bauen zu können, müssen einige Pakete vorhanden sein. Im Beispiel waren `dpkg-dev`, `fakeroot` und `debhelper` nachzuinstallieren (da mit diesem System noch kein source package kompiliert wurde).
+
+    # aptitude install dpkg-dev fakeroot debhelper 
+
+Abhängigkeiten von Paketen, die zum Kompilieren von source packages benötigt werden, lassen sich mit dem Modus `build-dep` von `apt-get` auflösen und installieren.
+
+    # apt-get build-dep fuzzyocr 
+
+Um den Quelltext zu empfangen, wird der nächste Befehl ausgeführt.
+
+    # apt-get source fuzzyocr 
+
+Im aktuellen Verzeichnis finden sich nach dem Download neben dem Originalquellcodearchiv (`.orig.tar.gz`), Debian-Patches (`.diff.gz`) und der Paketbeschreibung (`.dsc`) ein Verzeichnis, das den entpackten und gepatchten Sourcecode enthält.
+
+    # ls -l  
+    total 140  
+    [...]  
+    drwxr-xr-x 4 root root  4096 May 19 15:07 fuzzyocr-2.3b  
+    -rw-r–r– 1 root root  8327 Jan  6 11:02 fuzzyocr_2.3b-2.diff.gz  
+    -rw-r–r– 1 root root   556 Jan  6 11:02 fuzzyocr_2.3b-2.dsc  
+    -rw-r–r– 1 root root   849 May 19 15:07 fuzzyocr\_2.3b-2\_i386.changes  
+    -rw-r–r– 1 root root 76411 Dec  7 12:02 fuzzyocr_2.3b.orig.tar.gz 
+
+In diesem Verzeichnis können bei Bedarf Änderungen am Code oder der Konfiguration vorgenommen werden, bevor mit dem folgenden Kommando das Paket gebaut wird. Sind keine Änderungen vorgesehen, kann das Paket gleich mit `apt-get -b source fuzzyocr` erstellt werden.
+
+    # dpkg-buildpackage -rfakeroot -uc -b 
+
+Bevor FuzzyOCR installiert werden kann, müssen noch Abhängigkeiten aufgelöst werden. Danach kann das neue Paket installiert werden.
+
+    # aptitude install gocr netpbm libungif-bin libstring-approx-perl  
+    # dpkg -i fuzzyocr\_2.3b-2\_all.deb

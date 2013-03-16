@@ -1,0 +1,347 @@
+---
+title: Gentoo Linux auf STRATO PowerServer-S installieren
+author: sw
+layout: post
+permalink: /2007/03/gentoo_linux_auf_strato_powers/
+categories:
+  - Uncategorized
+tags:
+  - anleitung
+  - gentoo
+  - howto
+  - install
+  - server
+  - strato
+---
+# 
+
+Die folgende Anleitung beschreibt die Installation von [Gentoo Linux][1] auf einem [STRATO PowerServer-S][2]. Die Installation orientiert sich an der empfohlenen Vorgehensweise aus dem [Gentoo Linux x86 Handbuch][3]. Daher werden nur die von der Standardinstallation abweichenden, STRATO-spezifischen Schritte detailliert beschrieben. Für eine Erklärung der Installation im Einzelnen sei auf das [Gentoo Linux x86 Handbuch][3] verwiesen.
+
+ [1]: http://www.gentoo.org/
+ [2]: http://www.strato.de/server/power/index.html
+ [3]: http://www.gentoo.org/doc/de/handbook/handbook-x86.xml
+
+## Vorbereitung
+
+### Rettungssystem starten
+
+Bevor Sie mit der Installation loslegen, müssen noch ein paar Dinge erledigt werden. Um die Installation durchführen zu können, müssen Sie das Rettungssystem starten. Die Wahl des Bootmodus treffen Sie im [Kundenservicebereich][4] unter Serverkonfiguration > RecoveryManager. Dort wird der Bootmodus “Starten im Rettungssystem” und “Maschine resetten” ausgewählt und mit dem Button “Weiter” bestätigt. Nach ein paar Minuten steht das Rettungssystem für Sie bereit.
+
+ [4]: https://config.strato.de/
+
+### Hardware erkennen
+
+Melden Sie sich auf dem Server an. Eine ausführliche Anleitung, wie Sie sich mit SSH (PuTTY) auf dem Server anmelden, finden Sie im [FAQ-Bereich][5] von STRATO.
+
+ [5]: http://www.strato-faq.de/view.php4?articleid=1197
+
+~ $ ssh root@h913533.serverkompetenz.net 
+
+Nachdem Sie sich auf dem Server angemeldet haben, sollten Sie zuerst ein paar Information zur vorhandenen Hardware sammeln. Das ist wichtig, um später die Unterstützung für diese Hardwarekomponenten im Kernel zu aktivieren.
+
+    ~# cat /proc/cpuinfo | grep “model name”  
+    model name : Intel(R) Celeron(R) CPU 2.40GHz 
+
+
+
+    ~# lspci  
+    00:00.0 Host bridge: Intel Corp. 82845 845 (Brookdale) Chipset Host Bridge (rev 04)  
+    00:01.0 PCI bridge: Intel Corp. 82845 845 (Brookdale) Chipset AGP Bridge (rev 04)  
+    00:1e.0 PCI bridge: Intel Corp. 82801BA/CA/DB PCI Bridge (rev 05)  
+    00:1f.0 ISA bridge: Intel Corp. 82801BA ISA Bridge (LPC) (rev 05)  
+    00:1f.1 IDE interface: Intel Corp. 82801BA IDE U100 (rev 05)  
+    00:1f.3 SMBus: Intel Corp. 82801BA/BAM SMBus (rev 05)  
+    02:06.0 Ethernet controller: Intel Corp. 82557/8/9 \[Ethernet Pro 100\] (rev 08)  
+    02:07.0 Ethernet controller: Intel Corp. 82557/8/9 \[Ethernet Pro 100\] (rev 08)  
+    02:08.0 VGA compatible controller: ATI Technologies Inc Rage XL (rev 27) 
+
+## Installation
+
+Da das Rettungssystem bereits konfiguriert ist und eine Netzwerkanbindung bereitstellt, können Sie die Installation im Kapitel 4 des Gentoo Linux x86 Handbuchs starten.
+
+### Vorbereiten der Festplatte
+
+Sehen Sie sich die Partitionierung der Festplatte an.
+
+    ~# fdisk -l 
+    Disk /dev/hda: 61.4 GB, 61492838400 bytes  
+    255 heads, 63 sectors/track, 7476 cylinders  
+    Units = cylinders of 16065 * 512 = 8225280 bytes
+
+       Device Boot      Start         End      Blocks   Id  System    
+    /dev/hda1   *           1           7       56196   83  Linux    
+    /dev/hda2               8         138     1052257   82  Linux swap / Solaris    
+    /dev/hda3             139        7476    58942485   83  Linux  
+
+Im Beispiel haben wir uns entscheiden, keine Veränderungen an den Partitionen der Festplatte vorzunehmen.  
+Im nächsten Schritt formatieren Sie die Partitionen und legen die Dateisysteme an.
+
+    ~# mke2fs /dev/hda1  
+    ~# mke2fs -j /dev/hda3  
+    ~# mkswap /dev/hda2 
+
+Nachdem die Dateisysteme angelegt sind, mounten Sie die Partitionen.
+
+    ~# swapon /dev/hda2  
+    ~# mkdir /mnt/gentoo  
+    ~# mount /dev/hda3 /mnt/gentoo  
+    ~# mkdir /mnt/gentoo/boot  
+    ~# mount /dev/hda1 /mnt/gentoo/boot 
+
+Die Festplatte ist nun vorbereitet und Sie können zu Kapitel 5 im Gentoo Linux x86 Handbuch übergehen.
+
+### Installation der Gentoo Installationsdateien
+
+Das Gentoo Linux x86 Handbuch sieht vor, die benötigten Dateien mit dem Programm `links` zu suchen und herunterzuladen. Das STRATO Rettungssystem hat `links` nicht installiert, weshalb hier auf `wget` zurückgegriffen wird. Suchen Sie auf den [Mirror-Servern][6] nach den benötigten Installationsdateien und laden Sie sie mit `wget` herunter:
+
+ [6]: http://www.gentoo.org/main/en/mirrors.xml
+
+    ~# cd /mnt/gentoo  
+    /mnt/gentoo# wget ftp://ftp.wh2.tu-dresden.de/pub/mirrors/gentoo/releases/x86/current/stages/stage3-i686-2006.0.tar.bz2  
+    /mnt/gentoo# wget ftp://ftp.wh2.tu-dresden.de/pub/mirrors/gentoo/releases/x86/current/stages/stage3-i686-2006.0.tar.bz2.DIGESTS  
+    /mnt/gentoo# md5sum -c stage3-i686-2006.0.tar.bz2.DIGESTS 
+
+Nun entpacken Sie die Installationsdateien.
+
+    /mnt/gentoo# tar xvjpf stage3-i686-2006.0.tar.bz2 
+
+Als Nächstes werden die Dateien für Portage benötigt. Sie gehen hier wie schon bei den Installationsdateien vor.
+
+    /mnt/gentoo# wget ftp://ftp.wh2.tu-dresden.de/pub/mirrors/gentoo/snapshots/portage-latest.tar.bz2  
+    /mnt/gentoo# wget ftp://ftp.wh2.tu-dresden.de/pub/mirrors/gentoo/snapshots/portage-latest.tar.bz2.md5sum  
+    /mnt/gentoo# md5sum -c portage-latest.tar.bz2.md5sum  
+    /mnt/gentoo# tar xvjf /mnt/gentoo/portage-latest.tar.bz2 -C /mnt/gentoo/usr/ 
+
+Führen Sie eine Konfiguration der Compiler-Optionen durch.
+
+    /mnt/gentoo# vi /mnt/gentoo/etc/make.conf 
+
+Der Inhalt der Datei /etc/make.conf könnte beispielsweise so aussehen:
+
+    USE=”-X -gnome -kde -gtk -qt -doc -ipv6″  
+    CFLAGS=”-O2 -march=pentium4 -pipe”  
+    CHOST=”i686-pc-linux-gnu”  
+    CXXFLAGS=”${CFLAGS}” 
+
+Es befinden sich nun die Installationsdateien auf dem Server und Sie können mit dem nächsten Kapitel des Gentoo Linux x86 Handbuchs fortfahren.
+
+### Installation des Gentoo Basissystems
+
+Bevor Sie gleich in die chroot-Umgebung wechseln, kopieren Sie noch die Nameserver-Informationen und mounten Sie die Pseudo-Dateisysteme `/proc` und `/dev`.
+
+    /mnt/gentoo# cp -L /etc/resolv.conf /mnt/gentoo/etc/resolv.conf  
+    /mnt/gentoo# mount -t proc none /mnt/gentoo/proc  
+    /mnt/gentoo# mount -o bind /dev /mnt/gentoo/dev 
+
+Bauen Sie die chroot-Umgebung auf.
+
+    /mnt/gentoo# chroot /mnt/gentoo /bin/bash  
+    / # env-update  
+    >>> Regenerating /etc/ld.so.cache…  
+    / # source /etc/profile  
+    / # export PS1=”(chroot) $PS1″ 
+
+Als erstes führen Sie ein Update des Portage-Tree durch.
+
+    / # emerge –sync 
+
+Die Standardinstallation von Gentoo Linux sieht vor `nano` als Texteditor zu verwenden. Damit weiterhin `vi` zur Verfügung steht, muß es installiert werden.
+
+    / # emerge vim 
+
+### Konfiguration des Kernels
+
+Stellen Sie die Zeitzone für den Server ein.
+
+    / # cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime 
+
+Nun laden Sie die Quelltexte für den Linux-Kernel herunter. Danach beginnen Sie mit der Konfiguration.
+
+    / # USE=”-doc symlink” emerge gentoo-sources  
+    / # cd /usr/src/linux  
+    linux # make menuconfig 
+
+Aktivieren Sie die benötigten Kernelmodule. Beachten Sie hierbei unbedingt auch die Hinweise im Gentoo Linux x86 Handbuch. Jetzt kommen auch die eingangs gesammelten Informationen zur Hardware zum tragen. Aktivieren Sie das Modul für die Netzwerkkarte. Im Beispiel ist das Intel Ethernet Pro 100.
+
+    -> Device Drivers  
+      -> Network device support  
+        -> Ethernet (10 or 100Mbit)  
+          -> EISA, VLB, PCI and on board controllers  
+            -> Intel(R) PRO/100 support (CONFIG_E100=y) 
+
+Damit Sie sich im Notfall später auch über die Serielle Konsole anmelden können, ist es erforderlich, die dafür notwendigen Kernelmodule zu aktivieren.
+
+    -> Device Drivers  
+      -> Character devices  
+        -> Serial drivers  
+          -> 8250/16550 and compatible serial support (CONFIG\_SERIAL\_8250=y)  
+            -> Console on 8250/16550 and compatible serial port (CONFIG\_SERIAL\_8250_CONSOLE=y) 
+
+Kompilieren Sie den Kernel und kopieren Sie das Kernelimage ins Verzeichnis `/boot`. Im Beispiel wurde ein monolithischer Kernel ohne Module konfiguriert.
+
+    linux # make  
+    cp arch/i386/boot/bzImage /boot/kernel-2.6.16-gentoo-r7 
+
+### Konfiguration des Systems
+
+Tragen Sie alle für das System notwendigen Partitionen in der Datei `/etc/fstab` ein.
+
+    linux # vi /etc/fstab  
+    #                                             
+    /dev/hda1               /boot           ext2            noauto,noatime  1 2  
+    /dev/hda3               /               ext3            noatime         0 1  
+    /dev/hda2               none            swap            sw              0 0  
+    proc                    /proc           proc            defaults        0 0  
+    shm                     /dev/shm        tmpfs           nodev,nosuid,noexec    0 0 
+
+Konfigurieren Sie Host- und Domainnamen.
+
+    linux # vi /etc/conf.d/hostname  
+    HOSTNAME=”h913533″ 
+
+
+
+    linux # vi /etc/conf.d/domainname  
+    DNSDOMAIN=”serverkompetenz.net” 
+
+Aktivieren Sie DHCP für die Netzwerkkarte.
+
+    linux # vi /etc/conf.d/net 
+
+
+
+    config_eth0=( “dhcp” )  
+    dhcp_eth0=”nodns nontp nonis” 
+
+Sorgen Sie dafür, dass die Netzwerkkarte beim Systemstart aktiviert wird.
+
+    linux # rc-update add net.eth0 default 
+
+Informieren Sie das System über die Netzwerkumgebung.
+
+    linux # vi /etc/hosts 
+
+
+
+    127.0.0.1 localhost  
+    81.169.155.197 h913533.serverkompetenz.net h913533 
+
+Setzen Sie das root-Passwort.
+
+    linux # passwd 
+
+Danach konfigurien Sie noch ein paar Umgebungsvariablen.
+
+    linux # vi /etc/rc.conf  
+    linux # vi /etc/conf.d/keymaps 
+
+### Konfiguration der RemoteConsole
+
+Damit es dem Benutzer root erlaubt ist, sich über die RemoteConsole einzuloggen, muß in der Datei `/etc/securetty` “ttyS0″ eingetragen sein. Prüfen Sie, ob der Eintrag vorhandeln ist und fügen Sie ihn gegebenenfalls ein.
+
+    linux # vi /etc/securetty 
+
+
+
+    ttyS0 
+
+Damit der Server Systemausgaben, beispielsweise die Bootmeldungen, an die RemoteConsole sendet, tragen Sie bitte die folgende Zeile in der Datei `/etc/inittab` ein.
+
+    linux # vi /etc/inittab 
+
+
+
+    s0:12345:respawn:/sbin/agetty 57600 /dev/ttyS0 vt102 
+
+Die Konfiguration des System ist somit abschlossen und Sie können im nächsten Kapitel des Gentoo Linux x86 Handbuchs mit der Installation der System-Tools weitermachen.
+
+### Installation der benötigten Systemtools
+
+Installieren und aktivieren Sie `syslog-ng`, `vixie-cron` und `slocate`.
+
+    linux # emerge syslog-ng  
+    linux # rc-update add syslog-ng default  
+    linux # emerge vixie-cron  
+    linux # rc-update add vixie-cron default  
+    linux # emerge slocate 
+
+Damit beim Systemstart auch ein DHCP-Client verfügbar ist, installieren Sie noch `dhcpcd`.
+
+    linux # emerge dhcpcd 
+
+### Konfiguration des Bootloaders
+
+Installalieren und konfigurieren Sie den Bootloader.
+
+    linux # emerge grub  
+    linux # cp /boot/grub/grub.conf.sample /boot/grub/grub.conf  
+    linux # vi /boot/grub/grub.conf 
+
+Der Inhalt der Datei `/boot/grub/grub.conf` könnte beispielsweise wie folgt aussehen.
+
+    timeout 5  
+    default 0  
+    serial –unit=0 –speed=57600  
+    terminal serial 
+    # For booting GNU/Linux  
+    title GNU/Linux  
+    root (hd0,0)  
+    kernel /kernel-2.6.16-gentoo-r7 root=/dev/hda3 console=tty0 console=ttyS0,57600  
+
+Die Angabe der Parameter `console` sorgt dafür, dass die Bootmeldungen auch auf der Seriellen Konsole ausgegeben werden.  
+Installieren Sie `grub` im Master Boot Record (MBR) der Festplatte Ihres Servers.
+
+    linux # grep -v rootfs /proc/mounts > /etc/mtab  
+    linux # grub-install /dev/hda 
+
+Nun aktivieren Sie noch den SSH-Daemon, damit er nach einem Neustart automatisch geladen wird. Dann können Sie die chroot-Umgebung verlassen und die Partitionen unmounten.
+
+    linux # rc-update add sshd default  
+    linux # exit  
+    /mnt/gentoo# cd  
+    ~# umount /mnt/gentoo/boot /mnt/gentoo/dev /mnt/gentoo/proc /mnt/gentoo 
+
+Die Installation ist abgeschlossen und der Server kann neu gestartet werden. Damit nach dem Neustart nicht wieder das Rettungssystem geladen wird, müssen Sie im [Kundenservicebereich][4] unter Serverkonfiguration > RecoveryManager noch den Bootmodus “Normal Boot” auswählen und mit dem Button “Weiter” bestätigen. Die Option “Maschine resetten” aktivieren Sie bitte nicht. Sicherheitshalber führen Sie den Neustart manuell durch.
+
+    ~# reboot 
+
+Jetzt steht Ihnen Gentoo Linux auf dem STRATO PowerServer zur Verfügung. Sie können sich mit SSH anmelden und weitere Dienste installieren.
+
+    ~$ nmap h913533.serverkompetenz.net 
+    Starting Nmap 4.03 ( http://www.insecure.org/nmap/ ) at 2006-05-29 08:16 CEST  
+    Interesting ports on h913533.serverkompetenz.net (81.169.155.197):  
+    (The 1672 ports scanned but not shown below are in state: closed)  
+    PORT STATE SERVICE  
+    22/tcp open ssh
+
+    Nmap finished: 1 IP address (1 host up) scanned in 0.281 seconds 
+
+## RemoteConsole
+
+Die STRATO RemoteConsole ist ein SSH-Server, der direkt mit Ihrem Server verbunden ist. Sie greifen per SSH-Programm auf die RemoteConsole zu und diese leitet Ihre Eingaben als Tastatureingabe über den seriellen Zugang an Ihren Server weiter.  
+Sie können bereits in dem Moment auf den Server zugreifen, wenn Linux gerade bootet und somit die Bootmeldungen mitlesen. Außerdem haben Sie mit der RemoteConsole auch dann noch Zugriff auf Ihren Server, wenn durch Arbeiten an einer Firewall oder an den Netzwerkdiensten keine Verbindung über die Netzwerkkarte möglich ist.  
+Eine ausführliche Anleitung, wie Sie mit der seriellen RemoteConsole eine Verbindung zu Ihrem Server herstellen, finden Sie im [FAQ-Bereich][7] von STRATO.
+
+## Wenn der Server nicht startet
+
+Sollte der Server nach einem Neustart nicht verfügbar sein, empfielt es sich, den Bootvorgang mit Hilfe der Seriellen Konsole zu verfolgen. In der Regel läßt sich hierbei bereits die Ursache erkennen. Um Änderungen am System vornehmen zu können, starten Sie den Server mit dem Rettungssystem und bauen wie schon bei der Installation eine chroot-Umgebung auf.
+
+    ~# swapon /dev/hda2  
+    ~# mkdir /mnt/gentoo  
+    ~# mount /dev/hda3 /mnt/gentoo  
+    ~# mount /dev/hda1 /mnt/gentoo/boot  
+    ~# mount -t proc none /mnt/gentoo/proc  
+    ~# mount -o bind /dev /mnt/gentoo/dev  
+    ~# chroot /mnt/gentoo /bin/bash  
+    / # env-update  
+    / # source /etc/profile  
+    / # export PS1=”(chroot) $PS1″ 
+
+Nun können Sie das System wie gewohnt administrieren und Änderungen vornehmen. Haben Sie die Ursache für die Nichterreichbarkeit des Servers gefunden und behoben, beenden Sie die chroot-Umgebung und starten den Server neu.
+
+    / # exit  
+    ~# cd  
+    ~# umount /mnt/gentoo/boot /mnt/gentoo/dev /mnt/gentoo/proc /mnt/gentoo  
+    ~# reboot
+
+ [7]: http://www.strato-faq.de/view.php4?articleid=1190

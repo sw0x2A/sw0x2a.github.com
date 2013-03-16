@@ -1,0 +1,71 @@
+---
+title: Geocaching mit Garmin eTrex H und Linux
+author: sw
+layout: post
+permalink: /2008/05/geocaching_mit_garmin_etrex_h/
+categories:
+  - Uncategorized
+tags:
+  - etrex
+  - garmin
+  - garmin etrex h
+  - geocaching
+  - googleearth
+  - gps
+  - gpsbabel
+  - gpx
+  - kml
+  - kmz
+  - linux
+  - loc
+---
+# 
+
+Mein Bruder hat mich besucht und bei mehreren Spaziergängen fürs [Geocaching][1] begeistern können. Zum Abschied hat er mir sein [Garmin eTrex H][2] geschenkt. Dazu auch ein in Deutschland [unverschämt teures USB-to-Serial-Adapterkabel][3] zum Anschluss des GPS-Empfänger an den PC. Doch wie greift man mit Linux auf den eTrex H zu? Das soll nun geklärt werden.
+
+ [1]: http://de.wikipedia.org/wiki/Geocaching
+ [2]: http://garmin.de/outdoor/produktbeschreibung/etrex_h/
+ [3]: http://garmin.de/diverses/show-zubehoer.php?znr[1]=200801
+
+Wird der GPS-Empfänger mit dem Adapterkabel am PC angeschlossen, werden die folgenden Kernelmeldungen ausgegeben.
+
+    [  221.546821] usb 4-1: new full speed USB device using uhci_hcd and address 2
+    [  221.701877] usb 4-1: configuration #1 chosen from 1 choice
+    [  222.199965] usbcore: registered new interface driver usbserial
+    [  222.201199] /build/buildd/linux-2.6.24/drivers/usb/serial/usb-serial.c: USB Serial support registered for generic
+    [  222.203032] usbcore: registered new interface driver usbserial_generic
+    [  222.203042] /build/buildd/linux-2.6.24/drivers/usb/serial/usb-serial.c: USB Serial Driver core
+    [  222.213108] /build/buildd/linux-2.6.24/drivers/usb/serial/usb-serial.c: USB Serial support registered for pl2303
+    [  222.214970] pl2303 4-1:1.0: pl2303 converter detected
+    [  222.216137] usb 4-1: pl2303 converter now attached to ttyUSB0
+    [  222.217288] usbcore: registered new interface driver pl2303
+    [  222.217299] /build/buildd/linux-2.6.24/drivers/usb/serial/pl2303.c: Prolific PL2303 USB to serial adaptor driver
+
+Es werden die Kernelmodule usb-serial und pl2303 nachgeladen. Erfolgt dies nicht automatisch kann mit `modprobe pl2303` manuell nachgeholfen werden. Sollten diese Module nicht zur Verfügung stehen (und nicht fest einkompiliert sein), müssen distributionsabhängig entweder die Module nachinstalliert oder der Kernel mit den aktivierten Modulen neu kompiliert werden. Das Garmin-Gerät sollte nun über `/dev/ttyUSB0` erreichbar sein.
+
+Um Waypoints, Routen und Tracks übertragen zu können, gibt es für Linux [GPSBabel][4]. Die Software kann die vielen gebräuchlichen [Formate umwandeln][5] und dabei vom PC auf den GPS-Empfänger (oder umgekehrt) übertragen.
+
+ [4]: http://www.gpsbabel.org/
+ [5]: http://www.gpsbabel.org/capabilities.html
+
+Die Koordinaten eines Geocaches von [Geocaching.com][6] als Waypoint an den Garmin eTrex H zu senden ist einfach. Es wird das “LOC Waypoint File” (geocaching.loc) heruntergeladen und mit dem folgenden Kommando übertragen:
+
+ [6]: http://www.geocaching.com/
+
+    $ gpsbabel -i geo -f geocaching.loc -o garmin -F /dev/ttyUSB0
+
+Placemarks aus GoogleEarth lassen sich ebenfalls umwandeln. Sollen Plätze aus GoogleEarth auf den Garmin übernommen werden, sind diese zuerst in der Keyhole Markup Language (Datei mit Endung KML) zu speichern. Liegen die Daten als KMZ-Datei vor, können diese mit `unzip` entpackt werden. Zum Vorschein kommt eine KML-Datei.
+
+    $ unzip GoogleEarth.kmz
+    Archive:  GoogleEarth.kmz
+    inflating: doc.kml
+    $ gpsbabel -i kml -f doc.kml -o garmin -F /dev/ttyUSB0
+
+Sollen alle im Garmin gespeicherten Waypoints (Parameter `-w`; default), Routen (`-r`) und Tracks (`-t`) in GoogleEarth übernommen werden, müssen sie ins KML-Format umgewandelt werden. Das geht ganz einfach mit dem folgenden Kommando:
+
+    $ gpsbabel -w -r -t -i garmin -f /dev/ttyUSB0 -o kml -F garmin.kml
+
+Danach kann man die Daten in GoogleEarth laden und visualisieren lassen.  
+Eine ausführliche Anleitung, wie man die Daten des Garmin mit Perl auswertet, ist im [Perl-Snapshot][7] des Linux Magazins zu finden.
+
+ [7]: http://www.linux-magazin.de/heft_abo/ausgaben/2006/07/hinterm_horizont

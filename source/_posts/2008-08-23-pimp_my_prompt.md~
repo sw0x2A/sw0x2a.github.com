@@ -1,0 +1,38 @@
+---
+title: Pimp my prompt
+author: sw
+layout: post
+permalink: /2008/08/pimp_my_prompt/
+categories:
+  - Uncategorized
+tags:
+  - bash
+  - command line
+  - customize
+  - linux
+  - mysql
+  - prompt
+  - shell
+---
+# 
+
+Bei der Arbeit auf einem managed server fand ich eine vergessene screen-Session des Hosters. Ich habe bisher nie die command prompts meiner Systeme angepasst, weil die diesbezüglichen Voreinstellungen der verschiedenen Linux-Distributionen meinen Anforderungen genügten. Nun, als ich diese screen-Session durchsah, bemerkte ich, was den Eingabeaufforderungen meiner Systeme fehlte, ohne dass ich es mir bewußt war: die Uhrzeit!
+
+`database ~ # export PS1='[h A w]# '; alias ls='ls --color=no -F'; export LANG=en_US
+[database 10:18 ~]# mysql -u admin -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or g.
+Your MySQL connection id is 2063
+Server version: 5.0.45-community-log MySQL Community Edition (GPL)
+Type 'help;' or 'h' for help. Type 'c' to clear the buffer.
+mysql> R [u@h|R:m|d]>_
+PROMPT set to '[u@h|R:m|d]>_'
+[admin@localhost|10:18|(none)]>`
+
+Um die Eingabeaufforderung beim Login automatisch anzupassen, kann man die Änderung in `~/.bashrc` respektive `~.my.cnf` vornehmen.
+
+`$ cat ~/.bashrc | grep PS1
+export PS1='[h A w]$ '
+$ cat ~/.my.cnf
+[mysql]
+prompt='[u@h|R:m|d]>_'`

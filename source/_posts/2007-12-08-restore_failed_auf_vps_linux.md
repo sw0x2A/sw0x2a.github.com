@@ -1,0 +1,242 @@
+---
+title: Restore failed auf VPS Linux
+author: sw
+layout: post
+permalink: /2007/12/restore_failed_auf_vps_linux/
+categories:
+  - Uncategorized
+tags:
+  - backup
+  - debian
+  - debootstrap
+  - linux
+  - restore
+  - virtuozzo
+  - vps
+---
+# 
+
+Vor Kurzem wurde hier beschrieben wie eine [Installation von Debian über debootstrap auf einem Virtuozzo VPS Linux bei Host Europe][1] durchgeführt werden kann. Leider führt diese Installation wie auch das von einer [vergleichbaren Anleitung][2] beschriebene Vorgehen zurzeit reproduzierbar zumindest bei Host Europe zu Fehlern beim Restore eines Backups über das Virtuozzo Control Panel. Obwohl das System vollständig funktions- und lauffähig ist und das Backup erfolgreich erstellt wurde, kann ein Restore nicht mehr durchgeführt werden. Im Control Panel wird folgende Fehlermeldung angezeigt:
+
+ [1]: http://syslog.warten.de/2007/12/debian-linux-mit-debootstrap-a.html
+ [2]: http://prehl.de/wp/howto/debian-auf-he-vps
+
+    Operation restore with the VPS(s) VEID12345 as remote from 172.17.0.25 is started.
+    Dec 03, 2007 02:11:48 PM
+    Operation restore with the VPS(s) VEID12345 as remote from 172.17.0.25 is finished with errors:
+    #2503 Can't restore: SSH_OPTS=-oProtocol=1 -oBatchMode=yes -T -oStrictHostKeyChecking=no -oUserKnownHostsFile=/tmp/tmp.file.o6toXu
+    Starting restore VE 12345(2007-12-03T140428 0100@lvps10-20-30-40.dedicated.hosteurope.de) on node lvps10-20-30-40.dedicated.hosteurope.de...
+    SSH_OPTS=-oProtocol=1 -oBatchMode=yes -T -oStrictHostKeyChecking=no -oUserKnownHostsFile=/tmp/tmp.file.o6toXu
+    Warning: Permanently added '87.230.92.25' (RSA1) to the list of known hosts.
+    Doing exec - /usr/share/vzbackup-3.0.0-16.swsoft/vzrestore1 -t 2007-12-03T140428 0100@lvps10-20-30-40.dedicated.hosteurope.de 12345 -.
+    Created /vz/private/12345-tmpC16592
+    Restoring VE...
+    Turn quota on -...
+    Turn quota off
+    No packages found matching apache2.
+    No packages found matching apache2-doc.
+    No packages found matching apache2-mpm-prefork.
+    No packages found matching apache2-utils.
+    No packages found matching apache2.2-common.
+    No packages found matching bind9.
+    No packages found matching binutils.
+    No packages found matching ca-certificates.
+    No packages found matching console-tools-dev.
+    No packages found matching cracklib-runtime.
+    No packages found matching cracklib2.
+    No packages found matching defoma.
+    No packages found matching exim4-base.
+    No packages found matching exim4-config.
+    No packages found matching exim4-daemon-light.
+    No packages found matching expat.
+    No packages found matching fetchmail.
+    No packages found matching ffingerd.
+    No packages found matching file.
+    No packages found matching finger.
+    No packages found matching fontconfig.
+    No packages found matching fontconfig-config.
+    No packages found matching ftp.
+    No packages found matching gawk.
+    No packages found matching gcc-3.3-base.
+    No packages found matching gettext-base.
+    No packages found matching host.
+    No packages found matching iputils-arping.
+    No packages found matching iputils-tracepath.
+    No packages found matching krb5-config.
+    No packages found matching libatm1.
+    No packages found matching libauthen-pam-perl.
+    No packages found matching libbind-dev.
+    No packages found matching libbind9-0.
+    No packages found matching libconvert-binhex-perl.
+    No packages found matching libcupsys2.
+    No packages found matching libcupsys2-gnutls10.
+    No packages found matching libcurl3.
+    No packages found matching libdb1-compat.
+    No packages found matching libdb3.
+    No packages found matching libdbi-perl.
+    No packages found matching libdevel-symdump-perl.
+    No packages found matching libdns22.
+    No packages found matching libfontconfig1.
+    No packages found matching libfreetype6.
+    No packages found matching libgdbmg1.
+    No packages found matching libglib2.0-0.
+    No packages found matching libhesiod0.
+    No packages found matching libhtml-parser-perl.
+    No packages found matching libhtml-tagset-perl.
+    No packages found matching libhtml-tree-perl.
+    No packages found matching libice6.
+    No packages found matching libidn11.
+    No packages found matching libio-stringy-perl.
+    No packages found matching libisc11.
+    No packages found matching libisccc0.
+    No packages found matching libisccfg1.
+    No packages found matching libjpeg-progs.
+    No packages found matching libjpeg62.
+    No packages found matching liblcms1.
+    No packages found matching libldap-2.3-0.
+    No packages found matching liblockfile1.
+    No packages found matching libltdl3.
+    No packages found matching liblwres9.
+    No packages found matching libmagic1.
+    No packages found matching libmailtools-perl.
+    No packages found matching libmd5-perl.
+    No packages found matching libmime-perl.
+    No packages found matching libmng1.
+    No packages found matching libnet-daemon-perl.
+    No packages found matching libnet-ssleay-perl.
+    No packages found matching libnss-ldap.
+    No packages found matching libpam-krb5.
+    No packages found matching libpaper1.
+    No packages found matching libpcap0.8.
+    No packages found matching libpcre3.
+    No packages found matching libplrpc-perl.
+    No packages found matching libpng12-0.
+    No packages found matching libpng3.
+    No packages found matching libruby1.8.
+    No packages found matching libsensors3.
+    No packages found matching libslang1-utf8.
+    No packages found matching libsm6.
+    No packages found matching libsnmp-base.
+    No packages found matching libsnmp9.
+    No packages found matching libstdc  2.10-glibc2.2.
+    No packages found matching libstdc  5.
+    No packages found matching libsysfs2.
+    No packages found matching libtiff4.
+    No packages found matching libtimedate-perl.
+    No packages found matching liburi-perl.
+    No packages found matching libwww-perl.
+    No packages found matching libx11-6.
+    No packages found matching libx11-data.
+    No packages found matching libxau6.
+    No packages found matching libxaw7.
+    No packages found matching libxdmcp6.
+    No packages found matching libxext6.
+    No packages found matching libxmu6.
+    No packages found matching libxpm4.
+    No packages found matching libxt6.
+    No packages found matching lprng.
+    No packages found matching lsb-release.
+    No packages found matching lsof.
+    No packages found matching lynx.
+    No packages found matching m4.
+    No packages found matching make.
+    No packages found matching man2html.
+    No packages found matching memtester.
+    No packages found matching metamail.
+    No packages found matching mime-support.
+    No packages found matching mingetty.
+    No packages found matching modconf.
+    No packages found matching ncompress.
+    No packages found matching nscd.
+    No packages found matching odbcinst1debian1.
+    No packages found matching portmap.
+    No packages found matching procinfo.
+    No packages found matching procmail.
+    No packages found matching psutils.
+    No packages found matching pwgen.
+    No packages found matching python.
+    No packages found matching python-minimal.
+    No packages found matching python2.4.
+    No packages found matching python2.4-minimal.
+    No packages found matching rsync.
+    No packages found matching ruby1.8.
+    No packages found matching sasl2-bin.
+    No packages found matching screen.
+    No packages found matching sharutils.
+    No packages found matching slocate.
+    No packages found matching smbfs.
+    No packages found matching snmp.
+    No packages found matching ssl-cert.
+    No packages found matching stunnel.
+    No packages found matching syslinux.
+    No packages found matching sysutils.
+    No packages found matching talk.
+    No packages found matching talkd.
+    No packages found matching tcpdump.
+    No packages found matching tcsh.
+    No packages found matching telnet.
+    No packages found matching tofrodos.
+    No packages found matching tree.
+    No packages found matching ttf-dejavu.
+    No packages found matching ucf.
+    No packages found matching units.
+    No packages found matching unixodbc.
+    No packages found matching unzip.
+    No packages found matching wwwconfig-common.
+    No packages found matching x11-common.
+    No packages found matching xbitmaps.
+    No packages found matching xcursor-themes.
+    No packages found matching xlibs-data.
+    ERROR: Cant download tzdata=2007b-1 package Failed to check template consistency Cleaning up...
+    Failed to restore lvps10-20-30-40.dedicated.hosteurope.de VE 12345 tag 2007-12-03T140428 0100@lvps10-20-30-40.dedicated.hosteurope.de. .
+
+Offenbar wird hier die Konsistenz des vorinstallierten Betriebssystems überprüft, das beim debootstrap überschrieben wurde, was den Check naheliegenderweise fehlschlagen lässt. Was genau geprüft wird und wie Konsistenz beim debootstraping sichergestellt werden kann, konnte leider kurzfristig nicht heraus gefunden werden. (Für Hinweise bin ich sehr dankbar.)
+
+Als Alternative, um die vielen unnötigerweise installierten Pakete des auf dem VPS vorinstallierten Systems zu entfernen, wurden auf dem “gedebootstrapten” System der Status der [Paketauswahl gesichert][3].
+
+ [3]: http://syslog.warten.de/files/debootstrap_packages%2Bssh%2Blocales%2Bconsole-data
+
+    # dpkg --get-selections > debootstrap_packages ssh locales console-data
+
+Über das Virtuozzo Control Panel wurde ein Reinstall des VPS beauftragt. Auf dem Standardsystem, dass beispielsweise apache2, bind9, Druckerdienste und X11-Komponenten mitbringt, wurde dann die Paketauswahl resettet und die Konfiguration aus dem debootstrap-System wiederhergestellt.
+
+    # dpkg --clear-selections
+    # dpkg --set-selections < debootstrap_packages ssh locales console-data
+
+Die Änderung an der Paketauswahl konnte nun mit dselect oder aptitude durchgeführt werden. Die überflüssigen Pakete werden per remove gelöscht.
+
+    The following packages will be REMOVED:
+    anacron apache2 apache2-doc apache2-mpm-prefork apache2-utils
+    apache2.2-common bind9 binutils bzip2 ca-certificates console-common
+    console-tools console-tools-dev cracklib-runtime cracklib2 debconf-utils
+    defoma exim4 exim4-base exim4-config exim4-daemon-light expat fetchmail
+    ffingerd file finger fontconfig fontconfig-config ftp gcc-3.3-base
+    gettext-base groff host iproute iputils-arping iputils-tracepath krb5-config
+    ldap-utils less libapr1 libaprutil1 libatm1 libauthen-pam-perl libbind-dev
+    libbind9-0 libconvert-binhex-perl libcupsys2 libcupsys2-gnutls10 libcurl3
+    libdb1-compat libdb3 libdbi-perl libdevel-symdump-perl libdns22 libexpat1
+    libfontconfig1 libfreetype6 libgdbmg1 libglib1.2 libglib2.0-0 libgpmg1
+    libhesiod0 libhtml-parser-perl libhtml-tagset-perl libhtml-tree-perl libice6
+    libidn11 libio-stringy-perl libisc11 libisccc0 libisccfg1 libjpeg-progs
+    libjpeg62 liblcms1 libldap-2.3-0 liblockfile1 libltdl3 liblwres9 libmagic1
+    libmailtools-perl libmd5-perl libmime-perl libmng1 libnet-daemon-perl
+    libnet-ssleay-perl libnss-ldap libpam-krb5 libpaper1 libpcap0.8 libpcre3
+    libperl5.8 libplrpc-perl libpng12-0 libpng3 libpq4 libruby1.8
+    libsasl2-modules libsensors3 libslang1-utf8 libsm6 libsnmp-base libsnmp9
+    libsqlite3-0 libstdc  2.10-glibc2.2 libstdc  5 libsysfs2 libtiff4
+    libtimedate-perl liburi-perl libwww-perl libx11-6 libx11-data libxau6
+    libxaw7 libxdmcp6 libxext6 libxmu6 libxpm4 libxt6 lprng lsb-release lsof
+    lynx m4 mailx make man2html memtester metamail mime-support mingetty modconf
+    modutils ncompress ncurses-term nscd odbcinst1debian1 openssl perl
+    perl-modules portmap procinfo procmail psmisc psutils pwgen python
+    python-minimal python2.4 python2.4-minimal quota rsync ruby1.8 samba-common
+    sasl2-bin screen sharutils slocate smbfs snmp ssl-cert stunnel sudo syslinux
+    sysutils talk talkd tcpdump tcsh telnet tofrodos tree ttf-dejavu ucf units
+    unixodbc unzip vim vim-runtime whois wwwconfig-common x11-common xbitmaps
+    xcursor-themes xinetd xlibs-data
+
+Um die Konfigurationsdateien dieser Pakete zu entfernen, musste ein purge wie beispielsweise mit dem folgenden Befehl ausgeführt werden.
+
+    # dpkg --get-selections | grep deinstall | cut -f1 | xargs dpkg --purge
+
+Das vorliegende Betriebssystem ist nun restorefähig und größtenteils mit einem über debootstrap installierten System vergleichbar. Die Einrichtung der benötigten Dienste kann nun beginnen.

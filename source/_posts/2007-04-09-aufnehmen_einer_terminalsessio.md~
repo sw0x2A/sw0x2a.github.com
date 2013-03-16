@@ -1,0 +1,25 @@
+---
+title: Aufnehmen einer Terminal-Session
+author: sw
+layout: post
+permalink: /2007/04/aufnehmen_einer_terminalsessio/
+categories:
+  - Uncategorized
+tags:
+  - script
+  - shell
+  - terminal
+---
+# 
+
+Mit dem Programm `script` kann man ein Protokoll einer Terminal-Sitzung anfertigen, um beispielsweise einen Installationsprozess zu dokumentieren. Um die Protokollierung zu starten, wird das Programm wie folgt aufgerufen:
+
+$ script -t 2>~/term-session.time -a ~/term-session.script 
+
+Die Option `-t` gibt den zeitlichen Ablauf auf STDERR aus, das hier in eine Datei umgeleitet wird, und `-a` schreibt das Typescript in eine Datei. Beendet wird die Aufnahme mit CTRL-D oder indem auf der Eingabeaufforderung `exit` eingegeben wird.
+
+Eine Wiedergabe des Scripts ist mit `less -R` möglich. Falls die Option `-t` von `script` benutzt wurde, kann das Programm `scriptreplay` verwendet werden, um die gesamte Sitzung wieder anzeigen zu lassen:
+
+$ scriptreplay ~/term-session.time ~/term-session.script 
+
+Mit `script` lässt sich einfach eine Mitlesegelegenheit für einen zweiten Benutzer einrichten. Führt der erste Benutzer den Befehl `` `mkfifo /tmp/terminal-session; script -f /tmp/terminal-session` `` aus, kann der zweite Benutzer mit `` `cat /tmp/terminal-session` `` die Terminal-Sitzung des ersten Benutzers überwachen.

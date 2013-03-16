@@ -1,0 +1,26 @@
+---
+title: 'AutoMySQLBackup: Bug in weekly rotation'
+author: sw
+layout: post
+permalink: /2008/11/automysqlbackup_bug_in_weekly/
+categories:
+  - Uncategorized
+tags:
+  - backup
+  - bug
+  - mysql
+  - patch
+---
+# 
+
+[AutoMySQLBackup][1] hat in der aktuellen Version 2.5 einen Bug bei der Rotation der wöchentlichen Sicherungen, was zur Folge hat, dass diese nicht gelöscht werden. Der Bug ist auf der [Project-Seite][2] dokumentiert und es wird ein [Patch][3] bereitgestellt.
+
+ [1]: http://sourceforge.net/projects/automysqlbackup/
+ [2]: http://sourceforge.net/tracker/index.php?func=detail&aid=1575311&group_id=101066&atid=628964
+ [3]: http://sourceforge.net/tracker/index.php?func=detail&aid=1580154&group_id=101066&atid=628966
+
+Die Änderung ist simpel und betrifft lediglich eine Zeile.
+
+`patch -p0 automysqlbackup.sh.2.5 < automysqlbackup.fix_weekly_rotation.patch
+mv automysqlbackup.sh.2.5 automysqlbackup.sh.2.5.fix_weekly_rotation.patch
+ln -s automysqlbackup.sh.2.5.fix_weekly_rotation.patch automysqlbackup`

@@ -1,0 +1,19 @@
+---
+author: sw
+layout: post
+permalink: /2010/03/666/
+categories:
+  - Uncategorized
+tags:
+  - calc
+  - excel
+  - openoffice
+  - tabellenkalkulation
+---
+# 
+
+Wer Tabellen in Excel oder Calc anhand einer Schlüsselspalte zusammenführen möchte, wird [VLOOKUP][1] nicht mehr missen wollen. In deutsch lokalisierten Versionen heißt es SVERWEIS.
+
+ [1]: http://wiki.services.openoffice.org/wiki/Documentation/How_Tos/Calc:_VLOOKUP_function
+
+Beispiel: `SVERWEIS(B2; $K$1:$L$800; 2; 0)` fügt anhand des Schlüssels in B2 den Wert aus Spalte Lx ein, wenn B2 und Kx identisch sind.

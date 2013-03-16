@@ -1,0 +1,55 @@
+---
+title: Mit Fail2Ban Dovecot absichern
+author: sw
+layout: post
+permalink: /2008/05/mit_fail2ban_dovecot_sichern/
+categories:
+  - Uncategorized
+tags:
+  - dovecot
+  - fail2ban
+  - ids
+  - iptables
+  - regex
+---
+# 
+
+**[EDIT: October 9, 2008 10:34 PM: Achtung: Das hier beschriebene Verfahren ist praktisch wirkungslos, wenn nicht die in den Kommentaren genannten Änderungen angewandt werden.]**
+
+Mit [Fail2Ban][1] lässt sich ein System recht flexibel gegen Einbruchsversuche absichern. Es kann durch reguläre Ausdrücke in den Logdateien fehlerhafte Authentifizierungsversuche (Passworteingaben) erkennen. Werden zu viele falsche Authentifizierungsversuche festgestellt, wird der zugreifende Host für eine bestimmte Zeit durch eine Firewallregel geblockt.
+
+ [1]: http://www.fail2ban.org/
+
+In der Standardkonfiguration von Fail2Ban ist leider kein Filter für den IMAP-Server Dovecot beigefügt, weshalb ich einen erstellt habe. Die folgenden Zeilen sind als Filter in `/etc/fail2ban/filter.d/dovecot.conf` zu speichern.
+
+    [Definition]
+    # Option:  failregex
+    # Notes.:  regex to match the password failures messages in the logfile. The
+    #          host must be matched by a group named "host". The tag "" can
+    #          be used for standard IP/hostname matching.
+    # Values:  TEXT
+    #
+    failregex = (?:imap|pop3)-login: Disconnected: user=, method=(?:LOGIN|PLAIN|(?:CRAM|DIGEST)-MD5), rip=, lip
+    # Option:  ignoreregex
+    # Notes.:  regex to ignore. If this regex matches, the line is ignored.
+    # Values:  TEXT
+    #
+    ignoreregex =
+    
+
+Danach ist ein Jail für Dovecot zu erstellen. Hierzu fügt man die folgenden Zeilen der Datei `/etc/fail2ban/jail.local` an:
+
+    [dovecot]
+    enabled  = true
+    port     = imap,imaps,pop3,pop3s
+    filter   = dovecot
+    logpath  = /var/log/mail.log
+    
+
+Damit der Filter von Fail2Ban genutzt werden kann, muss die Konfiguration neu geladen werden.
+
+    # fail2ban-client reload
+
+Mit dem folgenden Befehl kann geprüft werden, ob der neue Filter Matches in den Logs findet:
+
+    # fail2ban-regex /var/log/mail.log /etc/fail2ban/filter.d/dovecot.conf

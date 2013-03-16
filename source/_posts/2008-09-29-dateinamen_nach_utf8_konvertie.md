@@ -1,0 +1,16 @@
+---
+title: 'Dateinamen  nach UTF-8 konvertieren'
+author: sw
+layout: post
+permalink: /2008/09/dateinamen_nach_utf8_konvertie/
+categories:
+  - Uncategorized
+tags:
+  - convert
+  - linux
+  - unicode
+  - utf-8
+---
+# 
+
+    convmv -f iso-8859-1 -t utf8 -r --notest *

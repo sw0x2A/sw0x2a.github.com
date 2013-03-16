@@ -1,0 +1,92 @@
+---
+title: Versionsverwaltung für Konfigurationsdateien in /etc mit Subversion
+author: sw
+layout: post
+permalink: /2007/12/versionsverwaltung_fur_konfigu/
+categories:
+  - Uncategorized
+tags:
+  - debian
+  - etc
+  - linux
+  - subversion
+  - svn
+  - version control
+  - version control system
+  - versionskontrolle
+  - versionsverwaltung
+---
+# 
+
+Versionskontrolle wird hauptsächlich in der Softwareentwicklung eingesetzt. Aber auch ein Administrator kann sie für seine Zwecke nutzen. Die Konfigurationsdateien im Verzeichnis `/etc` eines Linux-Systems eignen sich hierfür als gutes Beispiel: Sie werden häufiger geändert, möglicherweise von verschiedenen Administratoren und es ist immer hilfreich zu wissen, wer was wann geändert hat. Den Überblick zu haben, das ermöglicht die Versionsverwaltung. Ein Backup ersetzt sie nicht, da Metadaten (Dateieigentümer, Zugriffsrechte u.a.) nicht gesichert werden (Eine vielversprechende Lösung für ein Backup mit Versionskontrolle ist das noch in Entwicklung befindliche [FSVS][1]).  
+In der folgenden Anleitung wird als Version Control System [Subversion][2] eingesetzt. Es ist ausführlich dokumentiert im frei erhältlichen Buch [Version Control with Subversion][3].
+
+ [1]: http://fsvs.tigris.org/
+ [2]: http://subversion.tigris.org/
+ [3]: http://svnbook.red-bean.com/
+
+Um die Administration zu erleichtern werden die Produktivdateien (/etc) gleichzeitig die working copy. Das Repository wird im Dateisystem abgelegt. Das macht Sinn, weil das System wie gewohnt konfiguriert wird und die Versionskontrolle nur die Funktion der Dokumenation übernehmen soll. In komplexen Systemen, wo Entwicklungsumgebungen existieren oder mehrere Systeme die identische Konfiguration erhalten sollen, ist ein solcher Trick weniger angebracht.
+
+Es geht los. Es wird ein Repository und eine Ordnerstruktur erstellt. Es folgt der erste Checkout und dann werden alle Dateien aus /etc dem Repository hinzugefügt. Wichtig ist, dass Änderungen am Repository zu bestätigten (commit) sind.
+
+    # aptitude install subversion  
+    # mkdir /var/lib/svn  
+    # svnadmin create –fs-type fsfs /var/lib/svn/repository  
+    # svn mkdir file:///var/lib/svn/repository/trunk -m “Make trunk”  
+    # svn mkdir file:///var/lib/svn/repository/trunk/etc -m “Make a directory in the repository to correspond to /etc”  
+    # cd /etc/  
+    # svn co file:///var/lib/svn/repository/trunk/etc .  
+    # svn add *  
+    # svn commit -m “Initial version. Base Debian install ssh subversion.” 
+
+Möglicherweise sollen nicht alle Dateien im Verzeichnis /etc unter die Aufsicht der Versionskontrolle gestellt werden: Dateien, die sehr häufig oder maschinell geändert werden; von Texteditoren angelegte Sicherungsdateien (mit Endungen *- oder *~); oder Dateien, die Passwörter in unverschlüsselter Form enthalten.
+
+    # cd /etc  
+    # svn propedit svn:ignore . 
+
+Das Repository steht und es kann mit der täglichen Arbeit begonnen werden. Es folgen häufig im Umgang mit dem Repository verwendete Befehle:
+
+Neue Dateien werden mit dem folgenden Befehl hinzugefügt. Wenn eine Datei im Repository bereits existiert, wird eine Warnung ausgegeben. *filename* kann auch ein Verzeichnis sein. Die Änderungen werden erst nach der Bestätigung (commit) ins Repository übernommen.
+
+    # svn add *filename*  
+    # svn commit -m “A new file.” 
+
+Neue Dateien in Unterverzeichnissen können nicht über eine Wildcard dem Repository hinzugefügt werden. Das folgende Kommando erledigt die Aufgabe.
+
+    # svn status | grep ^? | awk ‘{ print $2 }’ | xargs svn add  
+    # svn commit -m “Some new files.” 
+
+Dateioperation wie Löschen (rm), Verschieben oder Umbenennen (mv) oder Kopieren (cp) sollten nicht mehr auf Dateisystemebene durchgeführt werden. Die Befehle werden durch die entsprechenden Alternativen von Subversion ersetzt. Der Vorteil ist, dass so die Geschichte einer Datei erhalten bleibt. Wieder werden die Aktionen erst nach einem commit ins Repository übernommen; im Dateisystem sofort.
+
+    # svn rm *filename*  
+    # svn mv *filename*  
+    # svn cp *filename*  
+    # svn commit -m “Some file actions.” 
+
+Änderungen können rückgängig gemacht werden. Möchte man eine Datei auf den letzten ins Repository geschrieben Stand zurücksetzen oder nicht mit commit bestätigte Aktionen add, rm, mv oder cp ungeschehen machen, nutzt man dieses Kommando:
+
+    # svn revert *filename* 
+
+Eine Übersicht der geänderten Dateien seit dem letzen commit zeigt status:
+
+    # svn status 
+
+Die Änderungen im Detail im unified diff format werden mit dem folgenden Befehl angezeigt. Mit dem Parameter -r können verschiedene Revisionen miteinander verglichen werden.
+
+    # svn diff [-r *revision1*[:*revision2*]] [*filename*] 
+
+Eine Übersicht der verschiedenen Revisionen ist im Log zu finden …
+
+    # svn log [-r *revision1*[:*revision2*]] [*filename*] 
+
+… und die Ausgabe einer früheren Version einer Datei auf STDOUT ist mit folgendem Kommando zu bewirken:
+
+    # svn cat [-r *revision*] *filename* 
+
+Eine Liste der Dateien im Repository bringt …
+
+    # svn ls [*filename*] 
+
+… und eine aktuelle Version des Repository wird mit dem folgenden Befehl bezogen. Änderungen in der working copy bleiben erhalten, wenn die Dateien nicht im Repository geändert wurden (Konflikt). Wenn nur ein Administrator für die Verwaltug des Server zuständig ist, wird dieses Kommando kaum von Bedeutung sein.
+
+    # svn update

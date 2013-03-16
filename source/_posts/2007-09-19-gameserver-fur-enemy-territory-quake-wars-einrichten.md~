@@ -1,0 +1,216 @@
+---
+title: 'Gameserver für Enemy Territory: Quake Wars einrichten'
+author: sw
+layout: post
+permalink: /2007/09/gameserver-fur-enemy-territory-quake-wars-einrichten/
+categories:
+  - Uncategorized
+tags:
+  - anleitung
+  - debian
+  - enemy territory
+  - etqw
+  - games
+  - gameserver
+  - howto
+  - init
+  - linux
+  - quake wars
+  - start-stop-daemon
+---
+# 
+
+Die [Ankündigung][1] eines nativen Linux-Clients für [Enemy Territory: Quake Wars][2] (ETQW) hat mein Interesse an dem Spiel geweckt und die kürzlich erschienene Demo hat mir bisher viel Spaß gemacht. Es kam daher die Idee auf, einen eigenen Gameserver zu betreiben. Die Installation des Dienstes und sein Aufruf mit dem Start-Stop-Daemon über ein Init-Skript auf einem Server mit Debian GNU/Linux wird in diesem Artikel beschrieben.
+
+ [1]: http://community.enemyterritory.com/forums/showthread.php?p=63146#post63146
+ [2]: http://www.enemyterritory.com/
+
+Zuerst ist das Installationspaket herunterzuladen. Das Paket kann [über BitTorrent geladen][3] werden. Außerdem stehen viele Downloadmirrors (HTTP) zur Verfügung. Wer das Paket mit wget downloaden will, wird bei den meisten Mirrors auf Schwierigkeiten stossen. Bei [Internode][4] konnte zum Zeitpunkt des Entstehens dieses Artikels ohne Einschränkungen mit wget geladen werden.
+
+ [3]: http://zerowing.idsoftware.com:6969/
+ [4]: http://games.internode.on.net/filelist.php?app=263&menu=10
+
+Befindet sich das Installationspaket auf dem Server, können die MD5-Prüfsumme verifiziert, die Ausführrechte gesetzt und anschliessend die Installation gestartet werden. Es werden alle Voreinstellungen des Installers übernommen und die Programmdateien im Verzeichnis /usr/local/games/etqw.demo.server/ installiert.
+
+$ md5sum ETQW-demo-server.3.x86.run  
+e1744f7827e1cab9a4cc05b06028e7ac ETQW-demo-server.3.x86.run  
+$ chmod a x ETQW-demo-server.3.x86.run  
+# ./ETQW-demo-server.3.x86.run 
+
+Zur Konfiguration des Gameservers dient die Datei server.cfg im Verzeichnis base im Installationspfad. Für den unerfahrenen Administrator, der zum ersten Mail einen Gameserver einrichtet, mag der [Config file creator][5] eine Hilfe sein.  
+Im gleichen Verzeichnis befindet sich noch die Datei usergroups.dat, in der ein Passwort gesetzt werden kann, wenn eine Remote Administration des Gameservers gewünscht ist. Es sind die Kommentarzeichen (‘//’) zu entfernen und die Zeichenfolge “PASSWORD” durch das gewünschte Passwort zu ersetzen. Die zu ändernde Zeile sieht wie folgt aus:
+
+ [5]: http://www.infinity-gamehosting.net/config/etqw
+
+group Admin {  
+//password PASSWORD 
+
+An dieser Stelle sind Installation und Konfiguration des Gameservers abgeschlossen und der Dienst könnte gestartet werden. Aber wie? Der Hersteller sieht hierfür offenbar das Skript etqw-dedicated im Installationsverzeichnis vor. Der Nachteil ist, dass es mit den Rechten des aufrufenden Benutzers ausgeführt wird. Beendet der aufrufende Benutzer seine Terminalsitzung (beispielsweise SSH-Verbindung) wird außerdem der Serverdienst beendet. In den einschlägigen Foren sind Tipps zu finden, den Gameserver in einer screen-Session laufen zu lassen. Das ist ein Ausweg aus letztgenannter Einschränkung, aber weit weg von einer ordentlichen Lösung. Wie jeder andere Serverdienst soll auch der Gameserver über ein Init-Skript und den Start-Stop-Daemon mit eigenen Benutzerrechten gestartet werden. Eine entsprechende Lösung, die nicht auf screen und sudo-Spielereien setzt, konnte ich leider nicht finden und so entwickelte ich sie selbst.
+
+Zuerst wird ein neuer Systembenutzer benötigt, mit dessen Rechten der Gameserver gestartet werden soll. Der folgende Befehl legt den Systembenutzer und die Gruppe etqwded mit dem Homeverzeichnis /var/lib/etqw-dedicated an.
+
+# adduser –system –home /var/lib/etqw-dedicated –group etqwded 
+
+Als nächstes wird das Init-Skript mit dem folgenden Inhalt in /etc/init.d/etqw-dedicated gespeichert. Die Optionen “ set fs\_userpath $ETQW\_HOME set fs\_savepath $ETQW\_HOME” werden hier dauerhaft gesetzt, um zu gewährleisten, dass die Einstellungen in /var/lib/etqw-dedicated statt in ~/.etqw gespeichert werden.
+
+#! /bin/sh  
+### BEGIN INIT INFO  
+# Provides: etqwded.x86  
+# Required-Start: $local\_fs $remote\_fs  
+# Required-Stop: $local\_fs $remote\_fs  
+# Default-Start: 2 3 4 5  
+# Default-Stop: 0 1 6  
+# Short-Description: ETQW dedicated server  
+# Description: Enemy Territory: Quake Wars dedicated server  
+### END INIT INFO 
+# Debian init.d script for the Enemy Territory: Quake Wars dedicated server  
+# Copyright © 2007  
+# Stefan Warten   
+#  
+# This file is licensed under the terms of the GNU General Public License,  
+# Version 2 or any later version published by the Free Software Foundation.
+
+set -e  
+export LD\_LIBRARY\_PATH=“$LD\_LIBRARY\_PATH:.”
+
+ENABLED=
+
+. /lib/lsb/init-functions
+
+# Source defaults file. Edit that file to configure this script.  
+if [ -e /etc/default/etqw-dedicated ]; then  
+  . /etc/default/etqw-dedicated  
+fi
+
+# Quit quietly, if $ENABLED is 0.  
+test “$ENABLED” != “0″ || exit 
+
+if [ ! -x "$ETQW_DEDSERVER" ]; then  
+  log\_failure\_msg “ETQW dedicated server ‘$ETQW_DEDSERVER’ does not exist or is not “   
+    “executable.”  
+  exit 5  
+fi
+
+if [ ! -d "$ETQW_DIR" ]; then  
+  log\_failure\_msg “ETQW directory ‘$ETQW_DIR’ does not exist.”  
+  exit 6  
+fi
+
+if [ -z "$ETQW_USER" ]; then  
+  log\_failure\_msg “ETQW_USER variable is empty. Set it to a user to run “   
+    “the ETQW dedicated server.”  
+  exit 6  
+fi
+
+PIDFILE=/var/run/etqw-dedicated.pid  
+DESC=“ETQW dedicated server”  
+NAME=`basename $ETQW_DEDSERVER`  
+ETQW_OPTS=“ set net\_serverDedicated 1 set fs\_userpath $ETQW\_HOME set fs\_savepath $ETQW\_HOME $ETQW\_OPTS exec server.cfg”
+
+is_running()  
+{  
+  retval=1  
+  if [ -r $PIDFILE ]; then  
+    pid=`cat $PIDFILE`  
+    if [ -e /proc/$pid ]; then  
+      procname=`/bin/ps h -p $pid`  
+      [ -n "$procname" ] && retval=  
+    fi  
+  fi  
+  return $retval  
+}
+
+start()  
+{  
+  log\_begin\_msg “Starting $DESC: $NAME”  
+  if is_running; then  
+    log\_progress\_msg “already running”  
+  else  
+    start-stop-daemon –start –quiet –background –pidfile $PIDFILE   
+      –make-pidfile –user $ETQW_USER –chuid $ETQW_USER –chdir $ETQW_DIR   
+      –exec $ETQW_DEDSERVER — $ETQW_OPTS  
+  fi  
+  log\_end\_msg   
+}
+
+stop()  
+{  
+  log\_begin\_msg “Stopping $DESC: $NAME”  
+  if ! is_running; then  
+    log\_progress\_msg “not running”  
+  else  
+    start-stop-daemon –stop –quiet –oknodo –pidfile $PIDFILE   
+      –user $ETQW_USER –exec $ETQW_DEDSERVER  
+  fi
+
+  rm -f $PIDFILE  
+  log\_end\_msg   
+}
+
+status()  
+{  
+  STATUS=“Status of $DESC:”  
+  if is_running; then  
+    log\_success\_msg “$STATUS running.”  
+  else  
+    log\_success\_msg “$STATUS stopped.”  
+  fi  
+}
+
+case “$1″ in  
+  start)  
+    start  
+    ;;
+
+  stop)  
+    stop  
+    ;;
+
+  restart|force-reload)  
+    stop  
+    sleep 1  
+    start  
+    ;;
+
+  status)  
+    status  
+    ;;
+
+  *)  
+    log\_success\_msg “Usage: $0 {start|stop|restart|force-reload|status}” >&2  
+    exit 1  
+    ;;  
+esac
+
+exit   
+Das Init-Skript bezieht, wie bei Debian üblich, manche seiner Variablen über eine Konfigurationsdatei. Es ist die Datei /etc/default/etqw-dedicated mit dem folgenden Inhalt anzulegen. Der geneigte Administrator kann hier eigene Einstellungen vornehmen.
+
+# This file is /etc/default/etqw-dedicated, it is a configuration file for the  
+# /etc/init.d/etqw-dedicated init script. 
+# Set this to 1 to enable and to 0 to disable the init script.  
+ENABLED=“1″
+
+# The ETQW dedicated server will be started with the permissions of this user.  
+ETQW_USER=“etqwded”
+
+# This is the home directory of the user runnning the ETQW dedicated server.  
+ETQW_HOME=“/var/lib/etqw-dedicated”
+
+# This is the binary directory of the ETQW dedicated server.  
+ETQW_DIR=“/usr/local/games/etqw.demo.server”
+
+# This is the location of the ETQW dedicated server binary, that the init script uses.   
+ETQW_DEDSERVER=“$ETQW_DIR/etqwded.x86″
+
+# Here you can specify additional options to pass to the ETQW dedicated server.  
+#ETQW\_OPTS=” set net\_ip 10.20.30.40 set net_port 27733″ 
+Sind beide Dateien angelegt, müssen das Init-Skript noch ausführbar gemacht und die Links für Init gesetzt werden, damit der Dienst bei Änderungen des Runlevels automatisch gestartet oder beendet wird.
+
+# chmod a x /etc/init.d/etqw-dedicated  
+# update-rc.d etqw-dedicated defaults 
+
+Der Gameserver kann nun mit dem folgenden Kommando gestartet werden. Er wird dann über den Start-Stop-Daemon als Prozess des Benutzers etqwded ausgeführt. Die zur Laufzeit erstellten Dateien werden in /var/lib/etqw-dedicated gespeichert.
+
+# /etc/init.d/etqw-dedicated start 
+
+Um den Gameserver betreiben zu können, muss sichergestellt sein, dass eingehender Traffic auf den UDP-Ports 3074 und 27733 und ausgehender Traffic auf TCP-Port 3074 erlaubt ist. Es kann erforderlich sein, dass die Firewall (iptables) entsprechend angepasst werden muss.

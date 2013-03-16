@@ -1,0 +1,68 @@
+---
+title: Simple SFTP setup
+author: sw
+layout: post
+permalink: /2012/06/simple-sftp-setup/
+categories:
+  - Uncategorized
+tags:
+  - bash
+  - sftp
+  - ssh
+---
+# 
+
+SFTP is a subsystem of SSH and quiet easy to set up. It has some limitations compared with FTP and it is not to be confused with FTPS (FTP over SSL/TLS). The requirement is just to provide a way to transfer files from and to a server with secure authentication and connection. We also want to the user access be limited to the homedir using SSH ChrootDirectory directive and enforce SFTP protocol (user should not be able to use SSH instead).
+
+All changes that need to be applied on a SSH enabled host are that you have to add /usr/lib/openssh/sftp-server to /etc/shells and replace the Subsystem sftp line in /etc/ssh/sshd_config as below:
+
+    #Subsystem sftp /usr/lib/openssh/sftp-server
+    Subsystem sftp internal-sftp
+    
+
+Since we want to chroot the user to her homedir and do not want her to see names of other users, we have to create a little mess of subdirectories and chroot here. SSH requires chroot to be one level above homedir.
+
+We need two users per share. One should have read-write permissions (push), the other should have read-only access (pull). The addsftpuser script below creates the users and outputs a part of SSH config that defines some rules for the new users. Those lines should be added to /etc/ssh/sshd_config and SSH should be restarted to load the new config.
+
+    #!/bin/bash
+    
+    set -e
+    
+    if [ $# -ne 2 ]
+    then
+      echo "Usage: $(basename $0) username environment"
+      exit 1
+    fi
+    
+    USER=$1_push_$2
+    USERRO=$1_pull_$2
+    read -p "Password push-user: " PASS
+    read -p "Password pull-user: " PASSRO
+    
+    groupadd ${USER}
+    GROUP=$(getent group $USER | cut -d: -f3)
+    
+    mkdir -p /home/sftp/$USER
+    useradd -d /home/sftp/$USER/$USER -m -s /usr/lib/openssh/sftp-server
+    -g $GROUP -p $(openssl passwd -1 $PASS) ${USER}
+    useradd -d /home/sftp/$USER/$USER    -s /usr/lib/openssh/sftp-server
+    -g $GROUP -p $(openssl passwd -1 $PASSRO) ${USERRO}
+    
+    cat <<END
+    
+    To make the user able to connect via SFTP, you MUST add these lines to
+    your /etc/ssh/sshd_config and restart sshd afterwards:
+    
+    Match User $USER
+        ChrootDirectory /home/sftp/$USER
+        AllowTCPForwarding no
+        X11Forwarding no
+        ForceCommand internal-sftp
+    
+    Match User ${USERRO}
+        ChrootDirectory /home/sftp/$USER
+        AllowTCPForwarding no
+        X11Forwarding no
+        ForceCommand internal-sftp
+    
+    END

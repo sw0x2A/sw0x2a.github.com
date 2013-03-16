@@ -1,0 +1,137 @@
+---
+title: Aufbau eines Fileservers mit RAID-5 (mdadm)
+author: sw
+layout: post
+permalink: /2008/08/aufbau_eines_fileservers_mit_r/
+categories:
+  - Uncategorized
+tags:
+  - anleitung
+  - debian
+  - fileserver
+  - grub
+  - howto
+  - linux
+  - mdadm
+  - raid
+  - server
+  - storage
+---
+# 
+
+Der Aufbau des Fileserver geschah mit der Zielsetzung, Daten ausfallsicher verfügbar zu machen und zu lagern. Beim Ausfall einer Festplatte sollte es nicht zu einem Datenverlust kommen und das System sollte weiterhin einsatzfähig sein. Eine leichte Erweiterbarkeit war gewünscht. Zudem sollte der Preis pro nutzbarem GB günstig sein.
+
+Zum Einsatz kommen vier 1000 GB Festplatten, auf denen je identische Partitionen für `/boot`, `/`, `/data` und `swap` angelegt wurden.
+
+    # fdisk -l
+    Disk /dev/sda: 1000 GB, 1000202273280 bytes
+    255 heads, 63 sectors/track, 121601 cylinders
+    Units = cylinders of 16065 * 512 = 8225280 bytes
+    Device Boot      Start         End      Blocks   Id  System
+    /dev/sda1               1          32      257008   83  Linux
+    /dev/sda2              33      121601   976494960    f  Extended LBA
+    /dev/sda5              33          64      249007   82  Linux swap
+    /dev/sda6              65        1088     8217247   83  Linux
+    /dev/sda7            1089      121601   968012640   83  Linux
+    Disk /dev/sdb: 1000 GB, 1000202273280 bytes
+    255 heads, 63 sectors/track, 121601 cylinders
+    Units = cylinders of 16065 * 512 = 8225280 bytes
+    Device Boot      Start         End      Blocks   Id  System
+    /dev/sdb1               1          32      257008   83  Linux
+    /dev/sdb2              33      121601   976494960    f  Extended LBA
+    /dev/sdb5              33          64      249007   82  Linux swap
+    /dev/sdb6              65        1088     8217247   83  Linux
+    /dev/sdb7            1089      121601   968012640   83  Linux
+    Disk /dev/sdc: 1000 GB, 1000202273280 bytes
+    255 heads, 63 sectors/track, 121601 cylinders
+    Units = cylinders of 16065 * 512 = 8225280 bytes
+    Device Boot      Start         End      Blocks   Id  System
+    /dev/sdc1               1          32      257008   83  Linux
+    /dev/sdc2              33      121601   976494960    f  Extended LBA
+    /dev/sdc5              33          64      249007   82  Linux swap
+    /dev/sdc6              65        1088     8217247   83  Linux
+    /dev/sdc7            1089      121601   968012640   83  Linux
+    Disk /dev/sdd: 1000 GB, 1000202273280 bytes
+    255 heads, 63 sectors/track, 121601 cylinders
+    Units = cylinders of 16065 * 512 = 8225280 bytes
+    Device Boot      Start         End      Blocks   Id  System
+    /dev/sdd1               1          32      257008   83  Linux
+    /dev/sdd2              33      121601   976494960    f  Extended LBA
+    /dev/sdd5              33          64      249007   82  Linux swap
+    /dev/sdd6              65        1088     8217247   83  Linux
+    /dev/sdd7            1089      121601   968012640   83  Linux
+
+Die identischen Partitionen der verschiedenen Festplatten wurden dann mittels Software-[RAID][1] verknüpft. Wegen der oben beschriebenen Zielsetzung wurde ein RAID-5 zur Datenhaltung ausgewählt. Es bietet die geforderte Redundanz, die den Ausfall einer Festplatte unbeschadet übersteht sowie eine gute Ausnutzung der Speicherkapazität und Leistung. Allein aus technischen Gründen musste für die Boot-Partition auf ein anderes RAID-Level zurückgegriffen werden: Weil kein Bootloader auf ein Software-RAID-5-Device zugreifen kann, wurde ein RAID-1 ausgewählt. Hier werden die Daten in lesbarer Form auf alle Partitionen gespiegelt.
+
+ [1]: http://de.wikipedia.org/wiki/RAID
+
+    # mdadm --create --verbose /dev/md0 --level=1 --raid-device=4 /dev/sda1 /dev/sdb1 /dev/sdc1 /dev/sdd1
+    # mdadm --create --verbose /dev/md1 --level=5 --raid-device=4 /dev/sda5 /dev/sdb5 /dev/sdc5 /dev/sdd5
+    # mdadm --create --verbose /dev/md2 --level=5 --raid-device=4 /dev/sda6 /dev/sdb6 /dev/sdc6 /dev/sdd6
+    # mdadm --create --verbose /dev/md3 --level=5 --raid-device=4 /dev/sda7 /dev/sdb7 /dev/sdc7 /dev/sdd7
+
+Die Herstellung des RAIDs läuft im Hintergrund und dauert eine Weile. Nutzbar ist es schon.
+
+    # cat /proc/mdstat
+    Personalities : [linear] [raid0] [raid1] [raid10] [multipath] [raid6] [raid5] [raid4]
+    md3 : active raid5 sdd7[4] sdc7[2] sdb7[1] sda7[0]
+    2904061824 blocks level 5, 64k chunk, algorithm 2 [4/3] [UUU_]
+    [=>...................]  recovery =  5.7% (55536696/968020608) finish=202.3min speed=75137K/sec
+    md2 : active raid5 sdd6[3] sdc6[2] sdb6[1] sda6[0]
+    24675456 blocks level 5, 64k chunk, algorithm 2 [4/4] [UUUU]
+    md1 : active raid5 sdd5[3] sdc5[2] sdb5[1] sda5[0]
+    770688 blocks level 5, 64k chunk, algorithm 2 [4/4] [UUUU]
+    md0 : active raid1 sdd1[3] sdc1[2] sdb1[1] sda1[0]
+    256896 blocks [4/4] [UUUU]
+    unused devices: 
+
+Danach kann mit der Installation des Betriebssystems begonnen werden. Auf Details soll hier nicht näher eingegangen werden; es wird auf die [Dokumenationen][2] verwiesen.
+
+ [2]: http://www.debian.org/releases/testing/amd64/apds03.html.de
+
+    # mke2fs -j /dev/md0
+    # mkswap /dev/md1
+    # mke2fs -j /dev/md2
+    # mke2fs -j /dev/md3
+    # sync
+    # swapon /dev/md1
+    # mkdir /mnt/debinst
+    # mount /dev/md2 /mnt/debinst
+    # mkdir /mnt/debinst/boot
+    # mkdir /mnt/debinst/proc
+    # mkdir /mnt/debinst/dev
+    # mount /dev/md0 /mnt/debinst/boot
+    # mount --bind /dev /mnt/debinst/dev
+    # mount --bind /proc /mnt/debinst/proc
+    # debootstrap --arch amd64 lenny /mnt/debinst http://ftp.de.debian.org/debian
+
+Zum Abschluss wurde der Bootloader in den MBR aller Festplatten installiert, damit beim Ausfall der ersten Festplatte gegebenenfalls von einer anderen gebootet werden kann.
+
+    # /usr/sbin/grub-install /dev/sda
+    # /usr/sbin/grub-install /dev/sdb
+    # /usr/sbin/grub-install /dev/sdc
+    # /usr/sbin/grub-install /dev/sdd
+    Searching for GRUB installation directory ... found: /boot/grub
+    Installation finished. No error reported.
+    This is the contents of the device map /boot/grub/device.map.
+    Check if this is correct or not. If any of the lines is incorrect,
+    fix it and re-run the script `grub-install'.
+    (hd0)	/dev/sda
+    (hd1)	/dev/sdb
+    (hd2)	/dev/sdc
+    (hd3)	/dev/sdd
+    # update-grub
+    Searching for GRUB installation directory ... found: /boot/grub
+    Searching for default file ... found: /boot/grub/default
+    Testing for an existing GRUB menu.lst file ...
+    Generating /boot/grub/menu.lst
+    Searching for splash image ... none found, skipping ...
+    Found kernel: /vmlinuz-2.6.25-2-amd64
+    Updating /boot/grub/menu.lst ... done
+
+Sollte der verfügbare Speicher knapp werden, kann das hier vorgestellt System leicht erweitert werden. Durch den Einbau einer oder mehrerer Festplatten gleicher Kapazität und bei identischer Partitionierung können die einzelnen RAIDs jeweils wie folgt vergrößert werden. Der obligatorische Hinweis zur Datensicherung vor solchen Änderungen sei hiermit erfolgt.
+
+    mdadm --add /dev/md3 /dev/sde7
+    mdadm --grow /dev/md3 --raid-devices=5
+    fsck.ext3 /dev/md3
+    resize2fs /dev/md3

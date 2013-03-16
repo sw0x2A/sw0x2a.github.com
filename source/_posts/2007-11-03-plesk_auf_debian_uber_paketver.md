@@ -1,0 +1,43 @@
+---
+title: Plesk auf Debian über Paketverwaltung installieren
+author: sw
+layout: post
+permalink: /2007/11/plesk_auf_debian_uber_paketver/
+categories:
+  - Uncategorized
+tags:
+  - anleitung
+  - apt
+  - debian
+  - howto
+  - linux
+  - plesk
+  - psa
+  - swsoft
+---
+# 
+
+Das Konfigurationswerkzeug [Plesk][1] kann sehr einfach über die Paketverwaltung auf einem Debian Linux installieren werden. Im folgenden Beispiel wird Plesk 8.x.x auf einem Debian Etch installiert. Es stehen außerdem Repositories für Sarge sowie Ubuntu Dapper und Edgy zur Verfügung.
+
+ [1]: http://www.swsoft.com/plesk
+
+Zunächst muss das Plesk-Repository der Paketverwaltung bekannt gemacht werden. Es wird in der Datei /etc/apt/sources.list eingetragen.
+
+    # vi /etc/apt/sources.list 
+
+    deb http://autoinstall.plesk.com/debian/PSA8 etch all 
+
+Nachdem die neue Paketquelle hinzugefügt wurde, muss die Liste der Pakete aktualisiert werden. Dann kann Plesk installiert werden.
+
+    # aptitude update  
+    # aptitude install psa 
+
+Weitere Plesk-Komponenten können ebenfalls über die Paketverwaltung installiert werden.
+
+    # aptitude install psa-backup-manager psa-firewall psa-spamassassin psa-locale-de-de psa-mod-fcgid-configurator psa-vpn psa-watchdog 
+
+Eine Liste aller angebotenen Pakete kann man sich mit folgendem Befehl ausgeben lassen:
+
+    $ wget -qO – http://autoinstall.plesk.com/debian/PSA8/dists/etch/all/binary-i386/Packages.gz | zcat | grep ^Package: | awk ‘{print $2}’ | sort 
+
+Nach der Installation kann man Plesk über https://example.com:8443/ aufrufen. Die Zugangsdaten nach der Installation sind “admin” (Benutzername) und “setup” (Passwort) und sollten umgehend geändert werden. Das aktuelle Passwort kann in der Datei /etc/psa/.psa.shadow ausgelesen werden.

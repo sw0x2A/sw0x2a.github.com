@@ -1,0 +1,55 @@
+---
+title: Updates im Griff mit cron-apt
+author: sw
+layout: post
+permalink: /2008/05/updates_im_griff_mit_cronapt/
+categories:
+  - Uncategorized
+tags:
+  - apt
+  - cron-apt
+  - debian
+  - linux
+  - paketverwaltung
+  - ubuntu
+  - updates
+---
+# 
+
+Mit [cron-apt][1] lassen sich Systeme, die die Paketverwaltung von Debian nutzen, leicht automatisch aktuell halten. In der Standardkonfiguration aktualisiert cron-apt die in der Datei `/etc/apt/sources.list` eingetragenen Repositories und verschickt bei verfügbaren Updates eine E-Mail an den Administrator. Aufgerufen wird es dabei — wie der Name vermuten lässt — als Cron-Job. Die Benachrichtigung sieht wie im folgenden Beispiel aus:
+
+ [1]: http://packages.debian.org/cron-apt
+
+`CRON-APT RUN [/etc/cron-apt/config]: Tue May 13 14:00:01 CEST 2008
+CRON-APT SLEEP: 2558, Tue May 13 14:42:40 CEST 2008
+CRON-APT ACTION: 3-download
+CRON-APT LINE: /usr/bin/aptitude dist-upgrade -d -y -o APT::Get::Show-Upgraded=true
+Reading package lists...
+Building dependency tree...
+Reading extended state information...
+Initializing package states...
+Building tag database...
+The following packages will be upgraded:
+libssl0.9.8 openssl
+2 packages upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Need to get 3718kB of archives. After unpacking 0B will be used.
+Writing extended state information...
+Get:1 http://security.debian.org etch/updates/main libssl0.9.8 0.9.8c-4etch3 [2717kB]
+Get:2 http://security.debian.org etch/updates/main openssl 0.9.8c-4etch3 [1001kB]
+Fetched 3718kB in 4s (908kB/s)`
+
+Wer es sich traut, kann die verfügbaren Updates automatisch einpflegen lassen. Hierzu muss allein eine neue Action erstellt werden. (Alternativ kann der Parameter `-d` aus der zweiten Zeile in der Datei `/etc/cron-apt/action.d/3-download` entfernt werden. Der Parameter sorgt dafür, dass die Updates lediglich heruntergeladen und nicht installiert werden.) Die neue Action kann zum Beispiel so aussehen:
+
+`# cat /etc/cron-apt/action.d/9-safe-upgrade
+upgrade -y -o Aptitude::CmdLine::Show-Versions=true -o APT::Get::Show-Upgraded=true`
+
+Es sei davor gewarnt, Updates automatisch installieren zu lassen. Durch diesen Eingriff kann ein System unerwünschte oder unerwartete Veränderungen erfahren. Im Beispiel oben (dem [Debian-OpenSSL-Fiasko][2]) hätte sich ein Benutzer mit verwundbarem SSH-Key möglicherweise nicht mehr auf dem System anmelden können.
+
+ [2]: http://www.heise.de/newsticker/meldung/107808
+
+Sollen nur bestimmte Updates berücksichtigt werden, kann man die Auswahl auf ausgewählte Repositories beschränken. So werden nur Security-Updates automatisch eingespielt, wenn cron-apt eine Datei nur mit dem entsprechenden Repository übergeben wird. Eine paketbasierende Auswahl ist nicht möglich.
+
+`# cat /etc/cron-apt/config
+[...]
+OPTIONS="-o quiet=1 -o Dir::Etc::SourceList=/etc/apt/security.sources.list"
+[...]`

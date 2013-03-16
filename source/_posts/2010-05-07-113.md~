@@ -1,0 +1,17 @@
+---
+author: sw
+layout: post
+permalink: /2010/05/1004/
+categories:
+  - Uncategorized
+tags:
+  - bug
+  - networkmanager
+  - openvpn
+  - ubuntu
+---
+# 
+
+Habe Ubuntu 10.04 (Lucid Lynx) auf meinem Laptop installiert. Dabei habe ich den Aufbau der OpenVPN-Verbindungen vom Terminal mittels des Plugins NetworkManager-OpenVPN in den NetworkManager verschoben. Dummerweise überschreibt dieser die Default-Route und setzt stattdessen das VPN als Gateway. Etwas versteckt, ganz unten auf dem Reiter IPv4 Settings, kann hinter dem Button Routes das Routing geändert werden. Mit einem Haken in der Checkbox vor “Use this connection only for resources on its network” kann das Default-Verhalten von OpenVPN wieder hergestellt werden. Das sollte voreingestellt sein. Als ich einen Bugreport schreiben wollte, mußte ich feststellen, dass das Problem kein neues ist. Der [Bug][1] ist schon seit längerem bekannt.
+
+ [1]: https://bugs.launchpad.net/ubuntu/ source/network-manager-openvpn/ bug/330833

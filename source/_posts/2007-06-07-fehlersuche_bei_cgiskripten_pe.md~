@@ -1,0 +1,74 @@
+---
+title: Fehlersuche bei CGI-Skripten (Perl)
+author: sw
+layout: post
+permalink: /2007/06/fehlersuche_bei_cgiskripten_pe/
+categories:
+  - Uncategorized
+tags:
+  - 500
+  - cgi
+  - debug
+  - internal server error
+  - perl
+  - skripte
+---
+# 
+
+Kann ein CGI-Skript nicht ausgeführt werden, zeigt der Browser einen Fehler 500 “Internal Server Error” an. Diese Meldung gibt nur an, dass ein Fehler aufgetreten ist. Die Ursache bleibt unbekannt.
+
+Als Erstes sollte geprüft werden, ob die Datei “ausführbar” ist, also die Zugriffsrechte der Datei das eXecutiable-Bit gesetzt haben. Die Zugriffsrechte sollten “-rwxr-xr-x” oder 755 lauten. Die Zugriffsrechte können mit den meisten FTP-Programmen oder über den SSH-Zugang mit dem Kommando `chmod 755 /pfad/zur/datei.cgi` geändern werden.
+
+Sind die Zugriffsrechte in Ordnung, muss der Skriptcode geprüft werden. Die erste Zeile eines Perl-Skripts muss das Shebang sein. Die Shebang-Zeile enthält den Pfad zum Perl-Interpreter. In vielen Fällen ist das `/usr/bin/perl`.
+
+Weitere Einschränkungen können durch fehlerhafte Zeichencodierung auftreten. Enthält das Skript Windows-Zeilenumbrüche, kann es nicht ausgeführt werden. In diesem Fall ist die Datei vorher mit Unix-Zeilenumbrüchen zu konvertieren. Eine solche Funktion wird von vielen Texteditoren angeboten.  
+Einschränkungen können auch auftreten, wenn die Datei per FTP als Binary übertragen wurde. Die Skriptdatei muss im ASCII-Modus übertragen werden.
+
+Damit ein Perl-Skript Ausgaben an den Browser ausliefern kann, muss der Content-type übermittelt werden.
+
+    [print][1] “Content-type: text/html\n\n“;
+
+Diese Zeile sollte möglichst zu Beginn des Skripts, aber auf jeden Fall vor der ersten Ausgabe erfolgen.  
+Der Content-type kann auch auf anderen Wegen übermittelt werden. Macht das Skript etwa vom Modul CGI Gebrauch, kann der Content-type mit der Funktion `header()` übergeben werden.
+
+ [1]: http://perldoc.perl.org/functions/print.html
+
+Einfache Beispiele für Perl-CGI-Skripte:
+
+    #!/usr/bin/perl  
+    [print][1] “Content-type: text/htmlnn“;  
+    [print][1] “Hello, world!”;
+
+
+
+    #!/usr/bin/perl  
+    use CGI;  
+    my $query = new CGI;  
+    my $message = “Hello, world!”;  
+    [print][1] $query->header,  
+          $query->start_html( -title=>$message ),  
+          $query->p( $message ),  
+          $query->end_html;
+
+Sind alle diese Bedingungen erfüllt, muss eine fehlerhafte Anweisung im Skript verantwortlich für den “Internal Server Error” sein. Die Einschränkung sollte zu einer Fehlermeldung des Perl-Interpreters führen, die aber leider nicht im Browser angezeigt wird. Dieses Verhalten lässt sich unterdrücken, indem im Skript mit der folgenden Zeile Perl angewiesen wird, Fehlermeldungen an den Browser auszuliefern:
+
+    use CGI::Carp [qw][2]( fatalsToBrowser );
+
+Hat man SSH-Zugriff kann das Skript direkt auf der Shell ausgeführt werden und die Fehlermeldung wird auch ohne oben genannte Änderung ausgegeben.
+
+ [2]: http://perldoc.perl.org/functions/qw.html
+
+Eine Syntax-Prüfung kann auf der Shell mit folgendem Kommando durchgeführt werden:
+
+    perl -c /pfad/zum/skript.cgi 
+
+Das folgende Skript demonstriert die Ausgabe einer Fehlermeldung an den Browser. In der letzten Zeile wird Perl angewiesen 1 durch 0 zu teilen. Die Division durch Null ist unzulässig und Perl liefert eine Fehlermeldung:
+
+    #!/usr/bin/perl  
+    use CGI::Carp [qw][2]( fatalsToBrowser );  
+    [print][1] “Content-type: text/htmlnn“;  
+    [print][1] “Hello, world!”;  
+    [print][1] “Division durch Null: “ . 1/;
+
+Ohne die zweite Zeile wäre die Ausgabe nur der Fehler 500 “Internal Server Error”.  
+Anhand der Fehlermeldung sollte es nun möglich sein, den Fehler im Skript zu finden und zu beheben.

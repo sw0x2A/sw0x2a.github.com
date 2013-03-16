@@ -1,0 +1,53 @@
+---
+title: Movable Type auf STRATO Webhosting installieren
+author: sw
+layout: post
+permalink: /2007/05/movable_type_auf_strato_webhos/
+categories:
+  - Uncategorized
+tags:
+  - anleitung
+  - blog
+  - cgi
+  - cms
+  - howto
+  - movable type
+  - perl
+  - ssh
+  - strato
+  - webhosting
+---
+# 
+
+Die folgende Anleitung beschreibt die notwendigen Schritte, um [Movable Type][1] auf einem STRATO Webhosting-Paket zu installieren. Für die Installation wird der [SSH-Zugang benutzt][2], der zum Leistungsumfang der Premium-Pakete und des PowerWeb S gehört.
+
+ [1]: http://www.sixapart.com/movabletype/
+ [2]: http://www.strato-faq.de/view.php4?articleid=1282&subcatid=3.0.2.13
+
+Das Installationsarchiv wird auf dem Webspace abgelegt. Im Beispiel heisst es `MT-3.35-en.tar.gz` und liegt im Grundverzeichnis. Die Installation erfolgt weitestgehend nach Anleitung des Herstellers: Das Archiv wird in `/cgi-bin` entpackt, umbenannt und das Verzeichnis `mt-static` in den Homepagebereich verschoben.
+
+    example.com> ls -l ~/MT-3.35-en.tar.gz  
+    -rw-r–r– 1 123456 customer 2479696 May 22 08:30 MT-3.35-en.tar.gz  
+    example.com> cd ~/cgi-bin/  
+    example.com> tar xzf ~/MT-3.35-en.tar.gz  
+    example.com> mv MT-3.35-en mt  
+    example.com> cd mt/  
+    example.com> mv mt-static ~ 
+
+Soll Movable Type auf einer intern umgeleiteten Domain (in einem Unterverzeichnis) installiert werden, sind die Pfade entsprechend anzupassen.
+
+Da STRATO als traditionsbewusster Webhoster unter `/usr/bin/perl` das 1999 veröffentlichte Perl 5.004_05 zur Verfügung stellt, muss die Shebang-Zeile der CGI-Skripte angepasst werden. Bei STRATO ist eine aktuellere Perl-Version unter `/usr/bin/perl58` zu finden.
+
+    example.com> bash  
+    bash-3.00$ for i in *.cgi; do perl -i -pe ‘s#/usr/bin/perl#/usr/bin/perl58#’ $i; done 
+
+Wenn Movable Type in einem PowerWeb-Paket installiert werden soll, muss das Suffix der Skripte geändert werden. In den PowerWeb-Paketen können eigene CGI-Skripte nur mit der Dateiendung .pl ausgeführt werden.
+
+    bash-3.00$ for i in *.cgi; do mv “$i” “${i/.cgi}”.pl; done 
+
+Ich empfehle, die Konfigurationsdatei `mt-config.cgi` nicht selbst zu editieren, sondern vom Installationsskript erstellen zu lassen. Es wird automatisch ausgeführt, wenn Movable Type aufgerufen wird.
+
+    http://www.example.com/cgi-bin/mt/mt.cgi
+
+Es wird der static web path URL abgefragt. Im Beispiel ist das `http://example.com/mt-static`. Im nächsten Schritt ist der Zugang zur Datenbank zu konfigurieren und der letzte Teil der Konfiguration fragt den Pfad zu `sendmail` ab. Bei STRATO ist es unter `/usr/lib/sendmail` zu finden.  
+Damit ist die Installation von Movable Type auf einem STRATO Webhosting-Paket abgeschlossen.
