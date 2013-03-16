@@ -1,0 +1,442 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Gameserver für Enemy Territory: Quake Wars einrichten - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Die Ankündigung eines nativen Linux-Clients für Enemy Territory: Quake Wars (ETQW) hat mein Interesse an dem Spiel geweckt und die kürzlich &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2007/09/gameserver-fur-enemy-territory-quake-wars-einrichten">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Gameserver Für Enemy Territory: Quake Wars Einrichten</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-19T00:00:00+02:00" pubdate data-updated="true">Sep 19<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Die <a href="http://community.enemyterritory.com/forums/showthread.php?p=63146#post63146">Ankündigung</a> eines nativen Linux-Clients für <a href="http://www.enemyterritory.com/">Enemy Territory: Quake Wars</a> (ETQW) hat mein Interesse an dem Spiel geweckt und die kürzlich erschienene Demo hat mir bisher viel Spaß gemacht. Es kam daher die Idee auf, einen eigenen Gameserver zu betreiben. Die Installation des Dienstes und sein Aufruf mit dem Start-Stop-Daemon über ein Init-Skript auf einem Server mit Debian GNU/Linux wird in diesem Artikel beschrieben.</p>
+
+<p>Zuerst ist das Installationspaket herunterzuladen. Das Paket kann <a href="http://zerowing.idsoftware.com:6969/">über BitTorrent geladen</a> werden. Außerdem stehen viele Downloadmirrors (HTTP) zur Verfügung. Wer das Paket mit wget downloaden will, wird bei den meisten Mirrors auf Schwierigkeiten stossen. Bei <a href="http://games.internode.on.net/filelist.php?app=263&amp;menu=10">Internode</a> konnte zum Zeitpunkt des Entstehens dieses Artikels ohne Einschränkungen mit wget geladen werden.</p>
+
+<p>Befindet sich das Installationspaket auf dem Server, können die MD5-Prüfsumme verifiziert, die Ausführrechte gesetzt und anschliessend die Installation gestartet werden. Es werden alle Voreinstellungen des Installers übernommen und die Programmdateien im Verzeichnis /usr/local/games/etqw.demo.server/ installiert.</p>
+
+<pre><code>$ md5sum ETQW-demo-server.3.x86.run  
+e1744f7827e1cab9a4cc05b06028e7ac ETQW-demo-server.3.x86.run  
+$ chmod a x ETQW-demo-server.3.x86.run  
+# ./ETQW-demo-server.3.x86.run 
+</code></pre>
+
+<p>Zur Konfiguration des Gameservers dient die Datei server.cfg im Verzeichnis base im Installationspfad. Für den unerfahrenen Administrator, der zum ersten Mail einen Gameserver einrichtet, mag der <a href="http://www.infinity-gamehosting.net/config/etqw">Config file creator</a> eine Hilfe sein.<br/>
+Im gleichen Verzeichnis befindet sich noch die Datei usergroups.dat, in der ein Passwort gesetzt werden kann, wenn eine Remote Administration des Gameservers gewünscht ist. Es sind die Kommentarzeichen (‘//’) zu entfernen und die Zeichenfolge “PASSWORD” durch das gewünschte Passwort zu ersetzen. Die zu ändernde Zeile sieht wie folgt aus:</p>
+
+<pre><code>group Admin {  
+//password PASSWORD 
+</code></pre>
+
+<p>An dieser Stelle sind Installation und Konfiguration des Gameservers abgeschlossen und der Dienst könnte gestartet werden. Aber wie? Der Hersteller sieht hierfür offenbar das Skript etqw-dedicated im Installationsverzeichnis vor. Der Nachteil ist, dass es mit den Rechten des aufrufenden Benutzers ausgeführt wird. Beendet der aufrufende Benutzer seine Terminalsitzung (beispielsweise SSH-Verbindung) wird außerdem der Serverdienst beendet. In den einschlägigen Foren sind Tipps zu finden, den Gameserver in einer screen-Session laufen zu lassen. Das ist ein Ausweg aus letztgenannter Einschränkung, aber weit weg von einer ordentlichen Lösung. Wie jeder andere Serverdienst soll auch der Gameserver über ein Init-Skript und den Start-Stop-Daemon mit eigenen Benutzerrechten gestartet werden. Eine entsprechende Lösung, die nicht auf screen und sudo-Spielereien setzt, konnte ich leider nicht finden und so entwickelte ich sie selbst.</p>
+
+<p>Zuerst wird ein neuer Systembenutzer benötigt, mit dessen Rechten der Gameserver gestartet werden soll. Der folgende Befehl legt den Systembenutzer und die Gruppe etqwded mit dem Homeverzeichnis /var/lib/etqw-dedicated an.</p>
+
+<pre><code># adduser –system –home /var/lib/etqw-dedicated –group etqwded 
+</code></pre>
+
+<p>Als nächstes wird das Init-Skript mit dem folgenden Inhalt in /etc/init.d/etqw-dedicated gespeichert. Die Optionen “ set fs_userpath $ETQW_HOME set fs_savepath $ETQW_HOME” werden hier dauerhaft gesetzt, um zu gewährleisten, dass die Einstellungen in /var/lib/etqw-dedicated statt in ~/.etqw gespeichert werden.</p>
+
+<pre><code>#! /bin/sh  
+### BEGIN INIT INFO  
+# Provides: etqwded.x86  
+# Required-Start: $local\_fs $remote\_fs  
+# Required-Stop: $local\_fs $remote\_fs  
+# Default-Start: 2 3 4 5  
+# Default-Stop: 0 1 6  
+# Short-Description: ETQW dedicated server  
+# Description: Enemy Territory: Quake Wars dedicated server  
+### END INIT INFO 
+# Debian init.d script for the Enemy Territory: Quake Wars dedicated server  
+# Copyright © 2007  
+# Stefan Warten   
+#  
+# This file is licensed under the terms of the GNU General Public License,  
+# Version 2 or any later version published by the Free Software Foundation.
+
+set -e  
+export LD\_LIBRARY\_PATH=“$LD\_LIBRARY\_PATH:.”
+
+ENABLED=
+
+. /lib/lsb/init-functions
+
+# Source defaults file. Edit that file to configure this script.  
+if [ -e /etc/default/etqw-dedicated ]; then  
+  . /etc/default/etqw-dedicated  
+fi
+
+# Quit quietly, if $ENABLED is 0.  
+test “$ENABLED” != “0″ || exit 
+
+if [ ! -x "$ETQW_DEDSERVER" ]; then  
+  log\_failure\_msg “ETQW dedicated server ‘$ETQW_DEDSERVER’ does not exist or is not “   
+    “executable.”  
+  exit 5  
+fi
+
+if [ ! -d "$ETQW_DIR" ]; then  
+  log\_failure\_msg “ETQW directory ‘$ETQW_DIR’ does not exist.”  
+  exit 6  
+fi
+
+if [ -z "$ETQW_USER" ]; then  
+  log\_failure\_msg “ETQW_USER variable is empty. Set it to a user to run “   
+    “the ETQW dedicated server.”  
+  exit 6  
+fi
+
+PIDFILE=/var/run/etqw-dedicated.pid  
+DESC=“ETQW dedicated server”  
+NAME=`basename $ETQW_DEDSERVER`  
+ETQW_OPTS=“ set net\_serverDedicated 1 set fs\_userpath $ETQW\_HOME set fs\_savepath $ETQW\_HOME $ETQW\_OPTS exec server.cfg”
+
+is_running()  
+{  
+  retval=1  
+  if [ -r $PIDFILE ]; then  
+    pid=`cat $PIDFILE`  
+    if [ -e /proc/$pid ]; then  
+      procname=`/bin/ps h -p $pid`  
+      [ -n "$procname" ] &amp;&amp; retval=  
+    fi  
+  fi  
+  return $retval  
+}
+
+start()  
+{  
+  log\_begin\_msg “Starting $DESC: $NAME”  
+  if is_running; then  
+    log\_progress\_msg “already running”  
+  else  
+    start-stop-daemon –start –quiet –background –pidfile $PIDFILE   
+      –make-pidfile –user $ETQW_USER –chuid $ETQW_USER –chdir $ETQW_DIR   
+      –exec $ETQW_DEDSERVER — $ETQW_OPTS  
+  fi  
+  log\_end\_msg   
+}
+
+stop()  
+{  
+  log\_begin\_msg “Stopping $DESC: $NAME”  
+  if ! is_running; then  
+    log\_progress\_msg “not running”  
+  else  
+    start-stop-daemon –stop –quiet –oknodo –pidfile $PIDFILE   
+      –user $ETQW_USER –exec $ETQW_DEDSERVER  
+  fi
+
+  rm -f $PIDFILE  
+  log\_end\_msg   
+}
+
+status()  
+{  
+  STATUS=“Status of $DESC:”  
+  if is_running; then  
+    log\_success\_msg “$STATUS running.”  
+  else  
+    log\_success\_msg “$STATUS stopped.”  
+  fi  
+}
+
+case “$1″ in  
+  start)  
+    start  
+    ;;
+
+  stop)  
+    stop  
+    ;;
+
+  restart|force-reload)  
+    stop  
+    sleep 1  
+    start  
+    ;;
+
+  status)  
+    status  
+    ;;
+
+  *)  
+    log\_success\_msg “Usage: $0 {start|stop|restart|force-reload|status}” &gt;&amp;2  
+    exit 1  
+    ;;  
+esac
+
+exit
+</code></pre>
+
+<p>Das Init-Skript bezieht, wie bei Debian üblich, manche seiner Variablen über eine Konfigurationsdatei. Es ist die Datei /etc/default/etqw-dedicated mit dem folgenden Inhalt anzulegen. Der geneigte Administrator kann hier eigene Einstellungen vornehmen.</p>
+
+<pre><code># This file is /etc/default/etqw-dedicated, it is a configuration file for the  
+# /etc/init.d/etqw-dedicated init script. 
+# Set this to 1 to enable and to 0 to disable the init script.  
+ENABLED=“1″
+
+# The ETQW dedicated server will be started with the permissions of this user.  
+ETQW_USER=“etqwded”
+
+# This is the home directory of the user runnning the ETQW dedicated server.  
+ETQW_HOME=“/var/lib/etqw-dedicated”
+
+# This is the binary directory of the ETQW dedicated server.  
+ETQW_DIR=“/usr/local/games/etqw.demo.server”
+
+# This is the location of the ETQW dedicated server binary, that the init script uses.   
+ETQW_DEDSERVER=“$ETQW_DIR/etqwded.x86″
+
+# Here you can specify additional options to pass to the ETQW dedicated server.  
+#ETQW\_OPTS=” set net\_ip 10.20.30.40 set net_port 27733″
+</code></pre>
+
+<p>Sind beide Dateien angelegt, müssen das Init-Skript noch ausführbar gemacht und die Links für Init gesetzt werden, damit der Dienst bei Änderungen des Runlevels automatisch gestartet oder beendet wird.</p>
+
+<pre><code># chmod a x /etc/init.d/etqw-dedicated  
+# update-rc.d etqw-dedicated defaults 
+</code></pre>
+
+<p>Der Gameserver kann nun mit dem folgenden Kommando gestartet werden. Er wird dann über den Start-Stop-Daemon als Prozess des Benutzers etqwded ausgeführt. Die zur Laufzeit erstellten Dateien werden in /var/lib/etqw-dedicated gespeichert.</p>
+
+<pre><code># /etc/init.d/etqw-dedicated start 
+</code></pre>
+
+<p>Um den Gameserver betreiben zu können, muss sichergestellt sein, dass eingehender Traffic auf den UDP-Ports 3074 und 27733 und ausgehender Traffic auf TCP-Port 3074 erlaubt ist. Es kann erforderlich sein, dass die Firewall (iptables) entsprechend angepasst werden muss.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-19T00:00:00+02:00" pubdate data-updated="true">Sep 19<span>th</span>, 2007</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2007/09/gameserver-fur-enemy-territory-quake-wars-einrichten/" data-via="" data-counturl="http://sw0x2A.github.com/2007/09/gameserver-fur-enemy-territory-quake-wars-einrichten/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2007/08/sslzertifikate_erstellen_und_m/" title="Previous Post: SSL-Zertifikate erstellen und mit Apache nutzen">&laquo; SSL-Zertifikate erstellen und mit Apache nutzen</a>
+      
+      
+        <a class="basic-alignment right" href="/2007/10/compiz_und_window-decorations/" title="Next Post: Compiz und Window-Decorations">Compiz und Window-Decorations &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

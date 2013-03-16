@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Debian-Pakete aus source packages bauen - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Debian bietet sehr viele Programme fertig kompiliert als binary packages zur einfachen Installation über die distributionseigene Paketverwaltung an &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2007/05/debianpakete_aus_source_packag">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Debian-Pakete Aus Source Packages Bauen</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-05-19T00:00:00+02:00" pubdate data-updated="true">May 19<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Debian bietet sehr viele Programme fertig kompiliert als binary packages zur einfachen Installation über die distributionseigene Paketverwaltung an. Ist man mit den angebotenen Paketen aus irgend einem Grund nicht zufrieden, kann man sich die Vorteile vom Opensource-Prinzip zu Nutze machen und selbst den Compiler starten.</p>
+
+<p>Wie ein Debian package aus einem source package gebaut wird, beschreibt die folgende Anleitung am Beispiel von FuzzyOCR. (Da FuzzyOCR ein Perl-Skript ist, muss es nicht kompiliert werden. Die Schritte auf dem Weg zum fertigen Paket ändern sich dadurch aber nicht und lassen sich auf Quellcode-Pakete in zu kompilierenden Sprachen übertragen, da der build-Prozess automatisch erfolgt.)</p>
+
+<p>FuzzyOCR ist nicht in der stable Distribution (etch) enthalten. Die Sourcen aus anderen Distributionen (in diesem Fall testing) können gegen stable Pakete kompiliert und somit verfügbar gemacht werden. Um an das Quelltext-Paket zu kommen, muss in diesem Beispiel die <code>sources.list</code> erweitert werden.</p>
+
+<pre><code># cat /etc/apt/sources.list  
+[...]  
+deb-src http://ftp.de.debian.org/debian/ testing main contrib non-free 
+</code></pre>
+
+<p>Um source packages bauen zu können, müssen einige Pakete vorhanden sein. Im Beispiel waren <code>dpkg-dev</code>, <code>fakeroot</code> und <code>debhelper</code> nachzuinstallieren (da mit diesem System noch kein source package kompiliert wurde).</p>
+
+<pre><code># aptitude install dpkg-dev fakeroot debhelper 
+</code></pre>
+
+<p>Abhängigkeiten von Paketen, die zum Kompilieren von source packages benötigt werden, lassen sich mit dem Modus <code>build-dep</code> von <code>apt-get</code> auflösen und installieren.</p>
+
+<pre><code># apt-get build-dep fuzzyocr 
+</code></pre>
+
+<p>Um den Quelltext zu empfangen, wird der nächste Befehl ausgeführt.</p>
+
+<pre><code># apt-get source fuzzyocr 
+</code></pre>
+
+<p>Im aktuellen Verzeichnis finden sich nach dem Download neben dem Originalquellcodearchiv (<code>.orig.tar.gz</code>), Debian-Patches (<code>.diff.gz</code>) und der Paketbeschreibung (<code>.dsc</code>) ein Verzeichnis, das den entpackten und gepatchten Sourcecode enthält.</p>
+
+<pre><code># ls -l  
+total 140  
+[...]  
+drwxr-xr-x 4 root root  4096 May 19 15:07 fuzzyocr-2.3b  
+-rw-r–r– 1 root root  8327 Jan  6 11:02 fuzzyocr_2.3b-2.diff.gz  
+-rw-r–r– 1 root root   556 Jan  6 11:02 fuzzyocr_2.3b-2.dsc  
+-rw-r–r– 1 root root   849 May 19 15:07 fuzzyocr\_2.3b-2\_i386.changes  
+-rw-r–r– 1 root root 76411 Dec  7 12:02 fuzzyocr_2.3b.orig.tar.gz 
+</code></pre>
+
+<p>In diesem Verzeichnis können bei Bedarf Änderungen am Code oder der Konfiguration vorgenommen werden, bevor mit dem folgenden Kommando das Paket gebaut wird. Sind keine Änderungen vorgesehen, kann das Paket gleich mit <code>apt-get -b source fuzzyocr</code> erstellt werden.</p>
+
+<pre><code># dpkg-buildpackage -rfakeroot -uc -b 
+</code></pre>
+
+<p>Bevor FuzzyOCR installiert werden kann, müssen noch Abhängigkeiten aufgelöst werden. Danach kann das neue Paket installiert werden.</p>
+
+<pre><code># aptitude install gocr netpbm libungif-bin libstring-approx-perl  
+# dpkg -i fuzzyocr\_2.3b-2\_all.deb
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-05-19T00:00:00+02:00" pubdate data-updated="true">May 19<span>th</span>, 2007</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2007/05/debianpakete_aus_source_packag/" data-via="" data-counturl="http://sw0x2A.github.com/2007/05/debianpakete_aus_source_packag/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2007/05/ftplicity_timeout_der_ftpverbi/" title="Previous Post: ftplicity: Timeout der FTP-Verbindung">&laquo; ftplicity: Timeout der FTP-Verbindung</a>
+      
+      
+        <a class="basic-alignment right" href="/2007/05/movable_type_auf_strato_webhos/" title="Next Post: Movable Type auf STRATO Webhosting installieren">Movable Type auf STRATO Webhosting installieren &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

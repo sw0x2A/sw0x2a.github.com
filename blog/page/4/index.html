@@ -1,0 +1,583 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Um häufig benutzte, komplizierte Shell-Kommandos abzukürzen, kann man ein kurzes alias definieren. Leider können so keine Parameter bzw. Variablen &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/blog/page/4">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/06/bash_function_alias_mit_variablen/">BASH Function: Alias Mit Variablen</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-09T00:00:00+02:00" pubdate data-updated="true">Jun 9<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Um häufig benutzte, komplizierte Shell-Kommandos abzukürzen, kann man ein kurzes <code>alias</code> definieren. Leider können so keine Parameter bzw. Variablen übergeben werden. Alternativ kann man in seiner <code>.bashrc</code> eine Funktion schreiben:</p>
+
+<pre><code>function sshlnxp () { 
+    ssh -A user@lnxp-$*.srv.mediaways.net;
+}
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/06/mysqldump_mit_where_clause/">Mysqldump Mit Where Clause</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-08T00:00:00+02:00" pubdate data-updated="true">Jun 8<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Soll nur eine Teilmenge einer Tabelle gesichert werden, kann auch dies mit mysqldump erledigt werden. Es bietet hierzu den Parameter <code>--where</code> an, mit dem man eine übliche where clause setzen kann.</p>
+
+<p><code>mysqldump --where "column=1" dbname tablename</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/05/ec2_flash_kann_x-domain-policy_nicht_laden/">EC2: Flash Kann X-Domain-Policy Nicht Laden</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-28T00:00:00+02:00" pubdate data-updated="true">May 28<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Der Flash Player versucht die Crossdomain-Policy erst vom Port 843/tcp zu laden. Bekommt er dort keine Antwort, versucht er es auf dem Service-Port, den es zu kontaktieren gilt. Bei unseren Anwendung im Amazon EC2 konnten wir dabei ein Problem auf Windows-Systemen beobachten (Mac und Linux hatten keine Schwierigkeiten). Der Flash Player fragte auf 843 an, mehrfach, aber erst viel zu spät auf dem Port des Dienstes, der die Policy ausliefert. Der Flash Player hatte bereits vorher die Verbindung gekappt.</p>
+
+<p>Die Ursache ist nicht ganz klar, scheint aber im NATing zu liegen, dass Amazon für die öffentlichen IPs betreibt. Hierbei wird die Anfrage auf Port 843 ausgebremst. Als wir den Port in der Security Group freigegeben haben (ohne dafür einen Service anzubieten), ging die Anfrage durch, wurde vom Server zurückgewiesen und der Flash Player fragte unsere Anwendung auf dem Service-Port wie gewünscht nach der Policy.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/05/ec2_elastic_ip_fur_private_adressen/">EC2: Elastic IP Für Private Adressen</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-28T00:00:00+02:00" pubdate data-updated="true">May 28<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Die Instanzen im Amazon EC2 bekommen dynamische Hostnamen und IP-Adressen. Zur dauerhaften Adressierung kann man Elastic IPs allocieren, die jedoch öffentliche Adressen sind. Will man auf eine andere Instanz in der Cloud zugreifen, möchte man selbstverständlich die lokale IP (RFC1918) nutzen und keine öffentliche (das ist ja auch eine Kostenfrage). Doch Amazon bietet hier eine Möglichkeit: Der Reverse-DNS-Hostname der IP-Adresse wird von den Amazon-Nameservern auf die private Adresse aufgelöst, während er sonst auf die Öffentliche zeigt.</p>
+
+<pre><code>root@domU-xx-xx-xx-xx-xx-xx:~# host 184.73.175.xxx
+xxx.175.73.184.in-addr.arpa domain name pointer ec2-184-73-175-xxx.compute-1.amazonaws.com.
+root@domU-xx-xx-xx-xx-xx-xx:~# host ec2-184-73-175-xxx.compute-1.amazonaws.com
+ec2-184-73-175-xxx.compute-1.amazonaws.com has address 10.253.87.xxx
+sw@external:~$ host ec2-184-73-175-xxx.compute-1.amazonaws.com
+ec2-184-73-175-xxx.compute-1.amazonaws.com has address 184.73.175.xxx
+</code></pre>
+
+<p>Mit dem Reverse-DNS-Eintrag der Elastic IP hat man also auch eine statische Adresse für internen Traffic im EC2.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/05/chsmbpasswd/">Chsmbpasswd</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-21T00:00:00+02:00" pubdate data-updated="true">May 21<span>st</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<pre><code>#!/bin/bash
+# Reads username:password per line in plain text from stdin
+# and feeds smbpasswd to add/update users, similiar to chpasswd
+while read line
+do
+    username="$(echo ${line} | cut -d: -f1)"
+    password="$(echo ${line} | cut -d: -f2)"
+    (echo $password; echo $password) | smbpasswd -s -a $username
+done
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/05/113/">113</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-07T00:00:00+02:00" pubdate data-updated="true">May 7<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Habe Ubuntu 10.04 (Lucid Lynx) auf meinem Laptop installiert. Dabei habe ich den Aufbau der OpenVPN-Verbindungen vom Terminal mittels des Plugins NetworkManager-OpenVPN in den NetworkManager verschoben. Dummerweise überschreibt dieser die Default-Route und setzt stattdessen das VPN als Gateway. Etwas versteckt, ganz unten auf dem Reiter IPv4 Settings, kann hinter dem Button Routes das Routing geändert werden. Mit einem Haken in der Checkbox vor “Use this connection only for resources on its network” kann das Default-Verhalten von OpenVPN wieder hergestellt werden. Das sollte voreingestellt sein. Als ich einen Bugreport schreiben wollte, mußte ich feststellen, dass das Problem kein neues ist. Der <a href="https://bugs.launchpad.net/ubuntu/">Bug</a> ist schon seit längerem bekannt.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/03/112/">112</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-31T00:00:00+02:00" pubdate data-updated="true">Mar 31<span>st</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Wer Tabellen in Excel oder Calc anhand einer Schlüsselspalte zusammenführen möchte, wird <a href="http://wiki.services.openoffice.org/wiki/Documentation/How_Tos/Calc:_VLOOKUP_function">VLOOKUP</a> nicht mehr missen wollen. In deutsch lokalisierten Versionen heißt es SVERWEIS.</p>
+
+<p>Beispiel: <code>SVERWEIS(B2; $K$1:$L$800; 2; 0)</code> fügt anhand des Schlüssels in B2 den Wert aus Spalte Lx ein, wenn B2 und Kx identisch sind.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/03/bash_friert_ein_bei_ctrl-s/">Bash Friert Ein Bei Ctrl-S</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-17T00:00:00+01:00" pubdate data-updated="true">Mar 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Weil das hier gerade aufkam, kurz zur Erklärung: Wenn eine Terminalsitzung “einfriert”, hat der Benutzer vermutlich vorher die Tastenkombination Ctrl-S gedrückt. Ctrl-S steht für XOFF, das für die <a href="http://de.wikipedia.org/wiki/Datenflusskontrolle">Datenflusskontrolle</a> von asynchronen seriellen Verbindungen benutzt wird. Das Gegenstück ist XON (Ctrl-Q). Ich kenne das noch von den alten Modem-Verbindungen. Also: Wenn das Terminal nicht mehr reagiert, mit Ctrl-Q XON auslösen und weiter geht’s!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/03/110/">Die_tastatur_meines_dell_latitude</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-14T00:00:00+01:00" pubdate data-updated="true">Mar 14<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Die Tastatur meines Dell Latitude D530 erzeugte Zeichen, die nie getippt wurden. Das geschah vor allem in bestimmten Neigungswinkeln des Notebooks, was mich eine Art Kurzschluß, eine ungewünschte Kontaktbrücke aufgrund Verschmutzung oder sowas vermuten ließ. Ich wollte die Tastatur ausbauen und prüfen und zu meiner Überraschung findet sich sogar eine detaillierte <a href="http://support.dell.com/support/edocs/systems/latd530/en/sm/index.htm">Anleitung</a> dazu auf den Seiten des Herstellers. Nachdem <a href="http://support.dell.com/support/edocs/systems/latd530/en/sm/keyboard.htm#wp1180225">Hinge Cover</a> und <a href="http://support.dell.com/support/edocs/systems/latd530/en/sm/hingecvr.htm#wp1180224">Keyboard</a> herausgelöst waren, konnte ich es reinigen und seit dem Wiedereinbau ist mein Ghostwriter im Ruhestand.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/03/110/">110</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-14T00:00:00+01:00" pubdate data-updated="true">Mar 14<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Die Tastatur meines Dell Latitude D530 erzeugte Zeichen, die nie getippt wurden. Das geschah vor allem in bestimmten Neigungswinkeln des Notebooks, was mich eine Art Kurzschluß, eine ungewünschte Kontaktbrücke aufgrund Verschmutzung oder sowas vermuten ließ. Ich wollte die Tastatur ausbauen und prüfen und zu meiner Überraschung findet sich sogar eine detaillierte <a href="http://support.dell.com/support/edocs/systems/latd530/en/sm/index.htm">Anleitung</a> dazu auf den Seiten des Herstellers. Nachdem <a href="http://support.dell.com/support/edocs/systems/latd530/en/sm/keyboard.htm#wp1180225">Hinge Cover</a> und <a href="http://support.dell.com/support/edocs/systems/latd530/en/sm/hingecvr.htm#wp1180224">Keyboard</a> herausgelöst waren, konnte ich es reinigen und seit dem Wiedereinbau ist mein Ghostwriter im Ruhestand.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/5/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/3/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Dovecot LDA mit Sieve einrichten - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Es ist ein Mailserver mit Postfix und Dovecot um die Möglichkeit zu erweitern Sieve zu nutzen. Dovecot bringt den Local Delivery Agent (LDA) deliver &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2008/02/dovecot_lda_mit_sieve_einrichten">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Dovecot LDA Mit Sieve Einrichten</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-02-02T00:00:00+01:00" pubdate data-updated="true">Feb 2<span>nd</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Es ist ein Mailserver mit Postfix und Dovecot um die Möglichkeit zu erweitern <a href="http://www.ietf.org/html.charters/sieve-charter.html">Sieve</a> zu nutzen. Dovecot bringt den Local Delivery Agent (LDA) deliver mit, der mit einem <a href="http://wiki.dovecot.org/LDA/Sieve">Sieve Plugin</a> erweitert werden kann. Dessen Einrichtung wird im Folgenden beschrieben. Es wird vorausgesetzt, dass Postfix und Dovecot bereits korrekt konfiguriert sind.</p>
+
+<p>In <code>/etc/postfix/master.cf</code> muss deliver eingetragen werden.</p>
+
+<pre><code>dovecot   unix  -       n       n       -       -       pipe
+flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/deliver -f ${sender} -d ${recipient}
+</code></pre>
+
+<p>In <code>/etc/postfix/main.cf</code> wird dann der Transport über deliver (das in der master.cf dovecot genannt wird) festgelegt:</p>
+
+<pre><code>dovecot_destination_recipient_limit = 1
+virtual_transport = dovecot
+</code></pre>
+
+<p>In der Dovecot-Konfiguration <code>/etc/dovecot/dovecot.conf</code> ist der LDA auszukommentieren und das Plugin cmusieve einzutragen. Weiterhin muss der Pfad zu den Sieve-Skripten definiert werden. Im Beispiel wird ein statischer Eintrag auf die Datei <code>.dovecot.sieve</code> im Maildir des Benutzers benutzt.</p>
+
+<pre><code>protocol lda {
+    postmaster_address = postmaster@example.com
+    auth_socket_path = /var/run/dovecot/auth-master
+    mail_plugins = cmusieve
+}
+[...]
+auth default {
+    [...]
+    userdb static {
+        args = uid=111 gid=111 sieve=/var/spool/virtual/%d/%n/.dovecot.sieve
+    }
+    [...]
+    socket listen {
+        master {
+        path = /var/run/dovecot/auth-master
+        mode = 0600
+        user = vmail # User running Dovecot LDA
+        group = vmail # Or alternatively mode 0660   LDA user in this group
+    }
+}
+</code></pre>
+
+<p>Jetzt wird der Mailtransport über den Dovecot LDA abgewickelt und Dank Sieve wie gewünscht behandelt.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-02-02T00:00:00+01:00" pubdate data-updated="true">Feb 2<span>nd</span>, 2008</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2008/02/dovecot_lda_mit_sieve_einrichten/" data-via="" data-counturl="http://sw0x2A.github.com/2008/02/dovecot_lda_mit_sieve_einrichten/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2008/01/pong/" title="Previous Post: Pong">&laquo; Pong</a>
+      
+      
+        <a class="basic-alignment right" href="/2008/03/munin-plugin_vzfree/" title="Next Post: Munin-Plugin: vzfree">Munin-Plugin: vzfree &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

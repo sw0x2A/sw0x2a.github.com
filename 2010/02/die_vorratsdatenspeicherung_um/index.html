@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Die Vorratsdatenspeicherung umgedreht - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Wer im Internet unterwegs ist, hinterläßt dabei seine Spuren unter anderem in Form der IP-Adresse des verwendeten Zugangs. Diese Adressen werden von &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2010/02/die_vorratsdatenspeicherung_um">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Die Vorratsdatenspeicherung Umgedreht</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-02-22T00:00:00+01:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Wer im Internet unterwegs ist, hinterläßt dabei seine Spuren unter anderem in Form der IP-Adresse des verwendeten Zugangs. Diese Adressen werden von den Providern zum Zweck der Strafverfolgung gespeichert (siehe Vorratsdatenspeicherung). Außerdem kann die IP-Adresse vom Kommunikationspartner, also Webservern, Chatkontakten, Teilnehmern von P2P-Netzwerken usw. gespeichert werden.</p>
+
+<p>Am Wochenende las ich einen haarsträubenden Bericht über den Umgang mit IP-Adressen in straf- und zivilrechtlichen Prozessen, wodurch Unschuldige wegen unbeweisbarer Behauptungen und Übertragungsfehlern zu Unrecht unschöner Dinge verdächtigt wurden. Dabei kam mir die Idee, die Vorratsdatenspeicherung umzudrehen und die von mir benutzten IP-Adressen selbst zu speichern. Sollte ich einmal in die unangenehme Situation kommen, solchen Verdächtigungen ausgesetzt zu sein, kann ich wenigstens für mich selbst überprüfen, ob es wirklich von meinem Anschluß geschah. Ob das juristisch von Bedeutung und bei der eigenen Verteidigung verwertbar ist, weiß ich nicht. Aber es würde wenigstens die eigenen Zweifel ausräumen.</p>
+
+<p>Daher habe ich also eine kleine Lösung entwickelt. Benötigt wird in diesem Fall ein Linux-System mit Perl und MySQL sowie ein Webserver, der CGIs (ebenfalls Perl) ausführen kann.</p>
+
+<p>Zunächst wird ein Datenbankschema mit einer Tabelle angelegt. Die Tabelle wird später zur Speicherung der IP-Adressen und Start- sowie Enddatum deren Nutzung gebraucht.</p>
+
+<pre><code>CREATE DATABASE `remote_addr_logger` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `remote_addr_logger`;
+CREATE TABLE IF NOT EXISTS `remote_addr` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `remote_addr` int(10) unsigned NOT NULL COMMENT 'Remote ip address. Use INET_NTOA() to convert.',
+  `date_start` datetime NOT NULL COMMENT 'Address used between ...',
+  `date_end` datetime NOT NULL COMMENT 'and ...',
+  PRIMARY KEY (`id`),
+  KEY `remote_addr` (`remote_addr`),
+  KEY `date_start` (`date_start`),
+  KEY `date_end` (`date_end`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+</code></pre>
+
+<p>Für den Zugriff auf die Datenbank wird noch ein Benutzer angelegt.</p>
+
+<pre><code>GRANT SELECT , INSERT , UPDATE ON `remote_addr_logger` . * TO 'remote_addr'@'localhost' IDENTIFIED BY '***';
+</code></pre>
+
+<p>Als Nächstes braucht es eine Möglichkeit, die IP-Adresse seines Gateways (DSL-Router etc.) zu ermitteln. Hier gibt es viele Möglichkeiten mit verschiedenen Vor- und Nachteilen. Ich entschied mich kurzerhand für ein winziges CGI-Skript, das später vom Hauptprogramm via HTTP request aufgerufen werden soll und die eigene remote address in einem kleinen XML output ausgibt.</p>
+
+<pre><code>#!/usr/bin/perl
+
+my $remote_addr = $ENV{'REMOTE_ADDR'};
+
+print "Content-type: text/htmlnn";
+print "n";
+print "$remote_addrn";
+</code></pre>
+
+<p>Nun fehlt nur noch das Hauptprogramm, das das CGI-Skript aufruft, die XML-Datei empfängt und auswertet und die IP-Adresse samt Datum in die Datenbank schreibt. Hier sind zu Beginn die URL des CGI-Skripts sowie die Zugangsdaten zur Datenbank einzutragen.</p>
+
+<pre><code>#!/usr/bin/perl
+
+use strict;
+use warnings;
+use LWP::Simple;
+use DBI;
+
+my $get_remote_addr_cgi_url = 'http://example.com/cgi-bin/get_remote_addr.cgi';
+
+my $db_name = 'remote_addr_logger';
+my $db_host = 'localhost';
+my $db_user = 'remote_addr';
+my $db_pass = 'yoursecretpassword';
+
+sub parse_xml_data {
+    my $xml_data = shift;
+    my $tag = 'remote_addr';
+    my $inet_addr = '(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)';
+    my $pattern = "($inet_addr)";
+    if ( $xml_data =~ /$pattern/ ) {
+        my $remote_addr = $1;
+        return $remote_addr;
+    } else {
+        return -1;
+    }
+}
+
+sub get_remote_addr {
+    my $xml_data = get($get_remote_addr_cgi_url);
+    if ( defined( $xml_data )) {
+        my $remote_addr = parse_xml_data( $xml_data );
+        return $remote_addr;
+    } else {
+        return -1;
+    }
+}
+
+my $remote_addr = get_remote_addr();
+unless ( $remote_addr eq -1 ) {
+    my $dsn = "dbi:mysql:$db_name:$db_host";
+    my $dbh = DBI-&gt;connect($dsn, $db_user, $db_pass);
+    my ($id) = $dbh-&gt;selectrow_array("SELECT `id` FROM `remote_addr` WHERE `remote_addr` = INET_ATON( '$remote_addr' ) AND `id` IN ( SELECT MAX(`id`) FROM `remote_addr`);");
+    if ( defined($id) and $id gt 0 ) {
+        $dbh-&gt;do("UPDATE `remote_addr` SET `date_end` = NOW() WHERE `id`=$id;");
+    } else {
+        $dbh-&gt;do("INSERT INTO `remote_addr` ( `remote_addr`, `date_start`, `date_end` ) VALUES ( INET_ATON( '$remote_addr'), NOW(), NOW() );");
+    }
+    $dbh-&gt;disconnect;
+}
+</code></pre>
+
+<p>Die Funktionsweise ist recht simpel. Die IP-Adresse wird mit der des letzten Eintrags in der Tabelle verglichen. Hat sie sich nicht geändert, wird das Enddatum mit der aktuellen Zeit aktualisiert. Ist es eine andere Adresse, wird ein neuer Eintrag eingefügt.<br/>
+Jetzt muß das Skript nur noch regelmäßig aufgerufen werden. Sinnvollerweise erledigt das cron.</p>
+
+<p><code>*/1 * * * * /usr/local/bin/remote_addr_logger</code></p>
+
+<p>Die Einträge können wie folgt aus der Datenbank ausgelesen werden:</p>
+
+<pre><code>SELECT INET_NTOA(`remote_addr`), `date_start`, `date_end` FROM `remote_addr`;
+</code></pre>
+
+<p>Und jetzt bin ich mal gespannt…</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-02-22T00:00:00+01:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2010/02/die_vorratsdatenspeicherung_um/" data-via="" data-counturl="http://sw0x2A.github.com/2010/02/die_vorratsdatenspeicherung_um/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2010/02/the_weird_sense_of_duty/" title="Previous Post: 107">&laquo; 107</a>
+      
+      
+        <a class="basic-alignment right" href="/2010/02/wochenendehttpstackoverflowcomquestions84556whats-your-favorite-programmer-cartoon196006/
+/" title="Next Post: 108">108 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

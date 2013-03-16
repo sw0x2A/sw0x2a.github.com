@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Simple SFTP setup - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="SFTP is a subsystem of SSH and quiet easy to set up. It has some limitations compared with FTP and it is not to be confused with FTPS (FTP over SSL/ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2012/06/simple-sftp-setup">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Simple SFTP Setup</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-18T00:00:00+02:00" pubdate data-updated="true">Jun 18<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>SFTP is a subsystem of SSH and quiet easy to set up. It has some limitations compared with FTP and it is not to be confused with FTPS (FTP over SSL/TLS). The requirement is just to provide a way to transfer files from and to a server with secure authentication and connection. We also want to the user access be limited to the homedir using SSH ChrootDirectory directive and enforce SFTP protocol (user should not be able to use SSH instead).</p>
+
+<p>All changes that need to be applied on a SSH enabled host are that you have to add /usr/lib/openssh/sftp-server to /etc/shells and replace the Subsystem sftp line in /etc/ssh/sshd_config as below:</p>
+
+<pre><code>#Subsystem sftp /usr/lib/openssh/sftp-server
+Subsystem sftp internal-sftp
+</code></pre>
+
+<p>Since we want to chroot the user to her homedir and do not want her to see names of other users, we have to create a little mess of subdirectories and chroot here. SSH requires chroot to be one level above homedir.</p>
+
+<p>We need two users per share. One should have read-write permissions (push), the other should have read-only access (pull). The addsftpuser script below creates the users and outputs a part of SSH config that defines some rules for the new users. Those lines should be added to /etc/ssh/sshd_config and SSH should be restarted to load the new config.</p>
+
+<pre><code>#!/bin/bash
+
+set -e
+
+if [ $# -ne 2 ]
+then
+  echo "Usage: $(basename $0) username environment"
+  exit 1
+fi
+
+USER=$1_push_$2
+USERRO=$1_pull_$2
+read -p "Password push-user: " PASS
+read -p "Password pull-user: " PASSRO
+
+groupadd ${USER}
+GROUP=$(getent group $USER | cut -d: -f3)
+
+mkdir -p /home/sftp/$USER
+useradd -d /home/sftp/$USER/$USER -m -s /usr/lib/openssh/sftp-server
+-g $GROUP -p $(openssl passwd -1 $PASS) ${USER}
+useradd -d /home/sftp/$USER/$USER    -s /usr/lib/openssh/sftp-server
+-g $GROUP -p $(openssl passwd -1 $PASSRO) ${USERRO}
+
+cat &lt;&lt;END
+
+To make the user able to connect via SFTP, you MUST add these lines to
+your /etc/ssh/sshd_config and restart sshd afterwards:
+
+Match User $USER
+    ChrootDirectory /home/sftp/$USER
+    AllowTCPForwarding no
+    X11Forwarding no
+    ForceCommand internal-sftp
+
+Match User ${USERRO}
+    ChrootDirectory /home/sftp/$USER
+    AllowTCPForwarding no
+    X11Forwarding no
+    ForceCommand internal-sftp
+
+END
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-18T00:00:00+02:00" pubdate data-updated="true">Jun 18<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2012/06/simple-sftp-setup/" data-via="" data-counturl="http://sw0x2A.github.com/2012/06/simple-sftp-setup/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2012/05/425/" title="Previous Post: 425">&laquo; 425</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/03/16/hello-world/" title="Next Post: Hello world">Hello world &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

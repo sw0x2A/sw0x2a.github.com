@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Uncategorized | syslog.warten.de]]></title>
+  <link href="http://sw0x2A.github.com/blog/categories/uncategorized/atom.xml" rel="self"/>
+  <link href="http://sw0x2A.github.com/"/>
+  <updated>2013-03-16T19:41:10+01:00</updated>
+  <id>http://sw0x2A.github.com/</id>
+  <author>
+    <name><![CDATA[SW]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Simple SFTP setup]]></title>
+    <link href="http://sw0x2A.github.com/2012/06/simple-sftp-setup/"/>
+    <updated>2012-06-18T00:00:00+02:00</updated>
+    <id>http://sw0x2A.github.com/2012/06/simple-sftp-setup</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>SFTP is a subsystem of SSH and quiet easy to set up. It has some limitations compared with FTP and it is not to be confused with FTPS (FTP over SSL/TLS). The requirement is just to provide a way to transfer files from and to a server with secure authentication and connection. We also want to the user access be limited to the homedir using SSH ChrootDirectory directive and enforce SFTP protocol (user should not be able to use SSH instead).</p>
+
+<p>All changes that need to be applied on a SSH enabled host are that you have to add /usr/lib/openssh/sftp-server to /etc/shells and replace the Subsystem sftp line in /etc/ssh/sshd_config as below:</p>
+
+<pre><code>#Subsystem sftp /usr/lib/openssh/sftp-server
+Subsystem sftp internal-sftp
+</code></pre>
+
+<p>Since we want to chroot the user to her homedir and do not want her to see names of other users, we have to create a little mess of subdirectories and chroot here. SSH requires chroot to be one level above homedir.</p>
+
+<p>We need two users per share. One should have read-write permissions (push), the other should have read-only access (pull). The addsftpuser script below creates the users and outputs a part of SSH config that defines some rules for the new users. Those lines should be added to /etc/ssh/sshd_config and SSH should be restarted to load the new config.</p>
+
+<pre><code>#!/bin/bash
+
+set -e
+
+if [ $# -ne 2 ]
+then
+  echo "Usage: $(basename $0) username environment"
+  exit 1
+fi
+
+USER=$1_push_$2
+USERRO=$1_pull_$2
+read -p "Password push-user: " PASS
+read -p "Password pull-user: " PASSRO
+
+groupadd ${USER}
+GROUP=$(getent group $USER | cut -d: -f3)
+
+mkdir -p /home/sftp/$USER
+useradd -d /home/sftp/$USER/$USER -m -s /usr/lib/openssh/sftp-server
+-g $GROUP -p $(openssl passwd -1 $PASS) ${USER}
+useradd -d /home/sftp/$USER/$USER    -s /usr/lib/openssh/sftp-server
+-g $GROUP -p $(openssl passwd -1 $PASSRO) ${USERRO}
+
+cat &lt;&lt;END
+
+To make the user able to connect via SFTP, you MUST add these lines to
+your /etc/ssh/sshd_config and restart sshd afterwards:
+
+Match User $USER
+    ChrootDirectory /home/sftp/$USER
+    AllowTCPForwarding no
+    X11Forwarding no
+    ForceCommand internal-sftp
+
+Match User ${USERRO}
+    ChrootDirectory /home/sftp/$USER
+    AllowTCPForwarding no
+    X11Forwarding no
+    ForceCommand internal-sftp
+
+END
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[425]]></title>
+    <link href="http://sw0x2A.github.com/2012/05/425/"/>
+    <updated>2012-05-06T00:00:00+02:00</updated>
+    <id>http://sw0x2A.github.com/2012/05/425</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p><a href="http://unix.stackexchange.com/questions/4105/how-do-i-count-all-the-files-recursively-through-directories">How do I count all the files recursively through directories</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Separate webapps from Tomcat]]></title>
+    <link href="http://sw0x2A.github.com/2012/03/separate-webapps-from-tomcat/"/>
+    <updated>2012-03-31T00:00:00+02:00</updated>
+    <id>http://sw0x2A.github.com/2012/03/separate-webapps-from-tomcat</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>Until last week I thought it would be necessary to configure Tomcat and its webapps as a big monolithic system. What a great mistake! I have learned that there is a much easier way to run webapps in Tomcat. Actually each webapps becomes its own application server, executed with a dedicated user. I will demonstrate this way by showing how to install Jenkins.</p>
+
+<p>First install <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java JDK</a> and <a href="http://tomcat.apache.org/">Tomcat</a> into /opt. In this case, I have just unpacked the tarballs there and created symlinks to have an easy way to upgrade to newer versions.</p>
+
+<pre><code>root@debian:/opt# ls -l
+total 8
+drwxr-xr-x 9 root root [...] apache-tomcat-6.0.35
+lrwxrwxrwx 1 root root [...] java7 -&gt; jdk1.7.0_03
+drwxr-xr-x 8 root root [...] jdk1.7.0_03
+lrwxrwxrwx 1 root root [...] tomcat6 -&gt; apache-tomcat-6.0.35
+</code></pre>
+
+<p>Add a new user for Jenkins and create the base skeleton of Tomcat directories in its homedir /home/jenkins. Copy the conf directory from your Tomcat installation. The other directories are empty. Download the <a href="http://mirrors.jenkins-ci.org/war/latest/jenkins.war">Jenkins WAR file</a> and save it in the webapps directory.</p>
+
+<pre><code>root@debian:/home/jenkins# ls -l
+total 28
+drwxr-xr-x 2 jenkins nogroup [...] conf
+drwxr-xr-x 6 jenkins nogroup [...] data
+drwxr-xr-x 2 jenkins nogroup [...] logs
+drwxr-xr-x 3 jenkins nogroup [...] temp
+drwxr-xr-x 3 jenkins nogroup [...] webapps
+drwxr-xr-x 3 jenkins nogroup [...] work
+</code></pre>
+
+<p>Create /home/jenkins/.profile to define the application server environment variables.</p>
+
+<pre><code># Applicationserver enviroment
+export JENKINS_HOME=/home/jenkins/data
+export JENKINS_BASEDIR=${HOME}
+export CATALINA_HOME=/opt/tomcat6
+export CATALINA_BASE=${HOME}
+export JAVA_HOME=/opt/java7
+export CATALINA_PID=${JENKINS_BASEDIR}/jenkins.pid
+export CATALINA_OPTS="-Xms2048m -Xmx2048m -Djava.awt.headless=true"
+export PATH=${CATALINA_HOME}/bin:${JAVA_HOME}/bin:${PATH}
+</code></pre>
+
+<p>Last step is to put an init script for Jenkins into /etc/init.d/jenkins.</p>
+
+<pre><code>#!/bin/bash
+#
+# Startup / shutdown script for the jenkins server.
+#
+### BEGIN INIT INFO
+# Provides:             jenkins
+# Required-Start:       $network $local_fs
+# Required-Stop:
+# Should-Start:         $named
+# Should-Stop:
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description:    Jenkins
+# Description:          Jenkins Continuous Integration server
+### END INIT INFO
+
+SCRIPT_USER=jenkins
+LOCKFILE=/var/lock/jenkins
+export TOMCAT_HOME=/opt/tomcat6
+[ -f $TOMCAT_HOME/bin/catalina.sh ] || exit 0
+case "$1" in
+  start)
+        # Start daemon.
+        echo -n "Starting Jenkins: "
+        su -l $SCRIPT_USER -c "$TOMCAT_HOME/bin/catalina.sh start"
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] &amp;&amp; touch $LOCKFILE
+        ;;
+  stop)
+        # Stop daemons.
+        echo -n "Shutting down Jenkins: "
+        su -l $SCRIPT_USER -c "$TOMCAT_HOME/bin/catalina.sh stop"
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] &amp;&amp; rm -f $LOCKFILE
+        ;;
+  restart)
+        $0 stop
+        $0 start
+        ;;
+  condrestart)
+       [ -e $LOCKFILE ] &amp;&amp; $0 restart
+       ;;
+  status)
+        status jenkins
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        exit 1
+esac
+exit 0
+</code></pre>
+
+<p>Now you can start Jenkins as a seperate service. Repeat the steps from above for each webapp that you need.</p>
+
+<p>This setup makes it possible to start or stop each webapp independent from the others. It also allows you to run webapps with different Java or Tomcat versions or easily change the underlying Java and Tomcat versions (just refer to them in .profile).</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Simple and secure Subversion server]]></title>
+    <link href="http://sw0x2A.github.com/2012/03/simple-and-secure-subversion-server/"/>
+    <updated>2012-03-10T00:00:00+01:00</updated>
+    <id>http://sw0x2A.github.com/2012/03/simple-and-secure-subversion-server</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>In most environments, people want to access their Subversion repositories over a HTTPS connection. This requires a webserver like Apache, which provides WebDAV and SVN modules. I just switched over to nginx and do not want to install Apache just for SVN only. So I started to search for an alternative method which should be easy and secure.</p>
+
+<p>I found <code>svn ssh</code>. I knew SVN over SSH already but I remembered that there were some problems with file permissions and I did not really liked the idea of having Unix accounts for each SVN user on the system. What I realized then was that there is a pretty nice workaround perfect solution.</p>
+
+<p>First of all, let us create a new SVN user. Only this user will access the repositories.</p>
+
+<pre><code>adduser --home /var/svn --shell /bin/bash --disabled-password svn
+</code></pre>
+
+<p>Next step is to create a new repository and import the basic directory structure.</p>
+
+<pre><code>for dir in trunk branches tags; do mkdir -p /tmp/project1/$dir; done
+mkdir /var/svn/repos
+svnadmin create /var/svn/repos/project1
+svn import /tmp/project1 file:///var/svn/repos/project1 -m "Initial import"
+</code></pre>
+
+<p>All the magic is done in the SVN user’s SSH <code>authorized_keys</code> file.</p>
+
+<pre><code>command="/usr/bin/svnserve -t -r /var/svn/repos --tunnel-user=user1",no-port-forwarding,no-pty,no-agent-forwarding,no-X11-forwarding ssh-rsa AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== user1@example.com
+command="/usr/bin/svnserve -t -r /var/svn/repos --tunnel-user=user2",no-port-forwarding,no-pty,no-agent-forwarding,no-X11-forwarding ssh-rsa AAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB== user2@example.com
+</code></pre>
+
+<p>You can limit user access per SSH public key. In this case we force the user to execute <code>svnserve</code>, we can limit to repository and we can set a username with <code>--tunnel-user</code> which is used for commits. Additionally, we can disallow all non-SVN stuff to prevent login to shell or port-forwarding etc.</p>
+
+<p>That’s it. Check out your repository and start working with it.</p>
+
+<pre><code>svn co svn ssh://svn@example.com/project1/trunk project1
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[DELL XPS 8300 NIC hardware problem]]></title>
+    <link href="http://sw0x2A.github.com/2012/03/dell-xps-8300-nic-hardware-problem/"/>
+    <updated>2012-03-10T00:00:00+01:00</updated>
+    <id>http://sw0x2A.github.com/2012/03/dell-xps-8300-nic-hardware-problem</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>It seems like there is a hardware problem at least on some motherboards of <a href="http://en.community.dell.com/support-forums/desktop/f/3514/p/19389902/19906490.aspx">DELL XPS 8300</a>. It appears to be an initialization issue of the network chipset (Broadcom NetLink BCM57788 Gigabit) when you turn on the computer at low temperatures. When OS starts, the NIC is not detected and therefore not usable. As soon as the PC warms up (usually after some minutes), you can restart and the problem is gone until next cold restart.</p>
+
+<p>Seriously, those PCs needs preheating like an old diesel engine. Since there is no choke, you can try with a hair dryer instead. Let’s see how DELL support handles this…</p>
+]]></content>
+  </entry>
+  
+</feed>

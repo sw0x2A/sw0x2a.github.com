@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Fehlersuche bei CGI-Skripten (Perl) - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Kann ein CGI-Skript nicht ausgeführt werden, zeigt der Browser einen Fehler 500 “Internal Server Error” an. Diese Meldung gibt nur an, dass ein &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2007/06/fehlersuche_bei_cgiskripten_pe">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Fehlersuche Bei CGI-Skripten (Perl)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-06-07T00:00:00+02:00" pubdate data-updated="true">Jun 7<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Kann ein CGI-Skript nicht ausgeführt werden, zeigt der Browser einen Fehler 500 “Internal Server Error” an. Diese Meldung gibt nur an, dass ein Fehler aufgetreten ist. Die Ursache bleibt unbekannt.</p>
+
+<p>Als Erstes sollte geprüft werden, ob die Datei “ausführbar” ist, also die Zugriffsrechte der Datei das eXecutiable-Bit gesetzt haben. Die Zugriffsrechte sollten “-rwxr-xr-x” oder 755 lauten. Die Zugriffsrechte können mit den meisten FTP-Programmen oder über den SSH-Zugang mit dem Kommando <code>chmod 755 /pfad/zur/datei.cgi</code> geändern werden.</p>
+
+<p>Sind die Zugriffsrechte in Ordnung, muss der Skriptcode geprüft werden. Die erste Zeile eines Perl-Skripts muss das Shebang sein. Die Shebang-Zeile enthält den Pfad zum Perl-Interpreter. In vielen Fällen ist das <code>/usr/bin/perl</code>.</p>
+
+<p>Weitere Einschränkungen können durch fehlerhafte Zeichencodierung auftreten. Enthält das Skript Windows-Zeilenumbrüche, kann es nicht ausgeführt werden. In diesem Fall ist die Datei vorher mit Unix-Zeilenumbrüchen zu konvertieren. Eine solche Funktion wird von vielen Texteditoren angeboten.<br/>
+Einschränkungen können auch auftreten, wenn die Datei per FTP als Binary übertragen wurde. Die Skriptdatei muss im ASCII-Modus übertragen werden.</p>
+
+<p>Damit ein Perl-Skript Ausgaben an den Browser ausliefern kann, muss der Content-type übermittelt werden.</p>
+
+<pre><code>print "Content-type: text/html\n\n";
+</code></pre>
+
+<p>Diese Zeile sollte möglichst zu Beginn des Skripts, aber auf jeden Fall vor der ersten Ausgabe erfolgen.<br/>
+Der Content-type kann auch auf anderen Wegen übermittelt werden. Macht das Skript etwa vom Modul CGI Gebrauch, kann der Content-type mit der Funktion <code>header()</code> übergeben werden.</p>
+
+<p>Einfache Beispiele für Perl-CGI-Skripte:</p>
+
+<pre><code>#!/usr/bin/perl  
+print “Content-type: text/htmlnn“;  
+print “Hello, world!”;
+
+
+
+#!/usr/bin/perl  
+use CGI;  
+my $query = new CGI;  
+my $message = “Hello, world!”;  
+print $query-&gt;header,  
+      $query-&gt;start_html( -title=&gt;$message ),  
+      $query-&gt;p( $message ),  
+      $query-&gt;end_html;
+</code></pre>
+
+<p>Sind alle diese Bedingungen erfüllt, muss eine fehlerhafte Anweisung im Skript verantwortlich für den “Internal Server Error” sein. Die Einschränkung sollte zu einer Fehlermeldung des Perl-Interpreters führen, die aber leider nicht im Browser angezeigt wird. Dieses Verhalten lässt sich unterdrücken, indem im Skript mit der folgenden Zeile Perl angewiesen wird, Fehlermeldungen an den Browser auszuliefern:</p>
+
+<pre><code>use CGI::Carp qw( fatalsToBrowser );
+</code></pre>
+
+<p>Hat man SSH-Zugriff kann das Skript direkt auf der Shell ausgeführt werden und die Fehlermeldung wird auch ohne oben genannte Änderung ausgegeben.</p>
+
+<p>Eine Syntax-Prüfung kann auf der Shell mit folgendem Kommando durchgeführt werden:</p>
+
+<pre><code>perl -c /pfad/zum/skript.cgi 
+</code></pre>
+
+<p>Das folgende Skript demonstriert die Ausgabe einer Fehlermeldung an den Browser. In der letzten Zeile wird Perl angewiesen 1 durch 0 zu teilen. Die Division durch Null ist unzulässig und Perl liefert eine Fehlermeldung:</p>
+
+<pre><code>#!/usr/bin/perl  
+use CGI::Carp qw( fatalsToBrowser );  
+print “Content-type: text/htmlnn“;  
+print “Hello, world!”;  
+print “Division durch Null: “ . 1/;
+</code></pre>
+
+<p>Ohne die zweite Zeile wäre die Ausgabe nur der Fehler 500 “Internal Server Error”.<br/>
+Anhand der Fehlermeldung sollte es nun möglich sein, den Fehler im Skript zu finden und zu beheben.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-06-07T00:00:00+02:00" pubdate data-updated="true">Jun 7<span>th</span>, 2007</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2007/06/fehlersuche_bei_cgiskripten_pe/" data-via="" data-counturl="http://sw0x2A.github.com/2007/06/fehlersuche_bei_cgiskripten_pe/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2007/06/eigene_perlmodule_auf_strato_w/" title="Previous Post: Eigene Perl-Module auf STRATO Webhosting installieren">&laquo; Eigene Perl-Module auf STRATO Webhosting installieren</a>
+      
+      
+        <a class="basic-alignment right" href="/2007/06/magic_sysrq_keys_benutzen/" title="Next Post: Magic SysRq keys benutzen">Magic SysRq keys benutzen &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

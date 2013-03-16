@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Schlüssel für Repository in Secure APT importieren - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Mit Debian 4.0 (Etch) hat Secure APT Einzug in die Paketverwaltung gefunden. Es soll sicherstellen, dass nur vom Herausgeber signierte Debian- &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2007/07/schlussel_fur_repository_in_se">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Schlüssel Für Repository in Secure APT Importieren</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-07-09T00:00:00+02:00" pubdate data-updated="true">Jul 9<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Mit Debian 4.0 (Etch) hat Secure APT Einzug in die Paketverwaltung gefunden. Es soll sicherstellen, dass nur vom Herausgeber signierte Debian-Archive installiert werden. Die Repositories enthalten hierfür eine Datei “Release”, die neben Informationen über die Releases selbst auch Prüfsummen der Paketindizes beinhaltet. Die Datei “Release” wird anhand einer GnuPG-Signatur verifiziert.</p>
+
+<p>Für die Hauptrepositories sind die öffentlichen Schlüssel (public keys) bereits hinterlegt. Möchte man weitere Installationsquellen hinzufügen, beklagt die Paketverwaltung, dass der zuständige Schlüssel fehlt.</p>
+
+<pre><code>W: GPG error: http://dl.google.com stable Release: The following signatures couldn’t be verified because the public key is not available: NO_PUBKEY A040830F7FAC5991  
+W: You may want to run apt-get update to correct these problems 
+</code></pre>
+
+<p>Mit den folgenden drei Schritten lässt sich der fehlende Schlüssel importieren:</p>
+
+<ol>
+<li><p>Der gewünschte Schlüssel kann von Keyservern heruntergeladen werden.</p>
+
+<pre><code># gpg –keyserver subkeys.pgp.net –recv-key A040830F7FAC5991  
+gpg: requesting key 7FAC5991 from hkp server subkeys.pgp.net  
+gpg: key 7FAC5991: public key “Google, Inc. Linux Package Signing Key ” imported  
+gpg: no ultimately trusted keys found  
+gpg: Total number processed: 1  
+gpg: imported: 1 
+</code></pre></li>
+<li><p>Prüfen Sie den Fingerabdruck des neuen Schlüssels.</p>
+
+<pre><code># gpg –fingerprint A040830F7FAC5991  
+pub 1024D/7FAC5991 2007-03-08  
+    Key fingerprint = 4CCA 1EAF 950C EE4A B839 76DC A040 830F 7FAC 5991  
+uid Google, Inc. Linux Package Signing Key   
+sub 2048g/C07CB649 2007-03-08 
+</code></pre></li>
+<li><p>Können Sie davon ausgehen, dass es sich um den passenden Schlüssel für das hinzugefügte Repository handelt, exportieren Sie ihn aus Ihrem Schlüsselbund in ASCII-Armor-Form und übergeben ihn an <code>apt-key</code>.</p>
+
+<pre><code># gpg –armor –export 7FAC5991 | apt-key add -  
+OK
+</code></pre></li>
+</ol>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-07-09T00:00:00+02:00" pubdate data-updated="true">Jul 9<span>th</span>, 2007</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2007/07/schlussel_fur_repository_in_se/" data-via="" data-counturl="http://sw0x2A.github.com/2007/07/schlussel_fur_repository_in_se/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2007/06/magic_sysrq_keys_benutzen/" title="Previous Post: Magic SysRq keys benutzen">&laquo; Magic SysRq keys benutzen</a>
+      
+      
+        <a class="basic-alignment right" href="/2007/07/spamassassin_rules_emporium_sa/" title="Next Post: SpamAssassin Rules Emporium (SARE) benutzen">SpamAssassin Rules Emporium (SARE) benutzen &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,1247 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Perl 5.10 wurde Ende 2007 veröffentlicht, fand aber keinen Einzug in das kürzlich erschienene Ubuntu 8.04 LTS. Wer die neuen Features von Perl 5.10 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/blog/page/10">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/05/perl_510_auf_ubuntu_zusatzlich/">Perl 5.10 Auf Ubuntu (Zusätzlich) Installieren</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-05-01T00:00:00+02:00" pubdate data-updated="true">May 1<span>st</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Perl 5.10 wurde Ende 2007 <a href="http://dev.perl.org/perl5/news/2007/perl-5.10.0.html">veröffentlicht</a>, fand aber keinen Einzug in das kürzlich erschienene Ubuntu 8.04 LTS. Wer die neuen Features von Perl 5.10 ausprobieren oder nutzen möchte, muss es separat hinzuinstallieren. Die vorinstallierte Perl-Version (5.8.8) sollte bestehen bleiben und weiterhin als Standard ausgeführt werden.</p>
+
+<p>Zunächst wird der aktuelle Tarball von Perl 5.10 heruntergeladen und entpackt. Danach werden mit den folgenden vier Befehlen Perl kompiliert und installiert. Die <a href="http://search.cpan.org/~rgarcia/perl-5.10.0/INSTALL">Installationsanleitung</a> erklärt die Details.</p>
+
+<pre><code>$ sh Configure -de
+$ make
+$ make test
+$ sudo make install PERLNAME=perl510
+</code></pre>
+
+<p>Mit dem Parameter PERLNAME wird der Name des Perl-Binary übergeben. So ist sichergestellt, das `perl` weiterhin den vorinstallierten Perl-Interpreter aufruft. Mit dem Kommando `perl510` wird dann Perl 5.10 ausgeführt.</p>
+
+<pre><code>$ perl -v | head -n 2
+This is perl, v5.8.8 built for i486-linux-gnu-thread-multi
+$ perl510 -v | head -n 2
+This is perl, v5.10.0 built for i686-linux
+</code></pre>
+
+<p>Ein Beispielskript und seine Ausgabe:</p>
+
+<pre><code>$ cat first.pl
+use feature ':5.10';
+say "Hello, world!";
+$ perl510 first.pl
+Hello, world!
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/04/nolisting_reduziert_spamlast/">Nolisting Reduziert Spam-Last</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-04-05T00:00:00+02:00" pubdate data-updated="true">Apr 5<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><a href="http://nolisting.org/">Nolisting</a> ist eine dem <a href="http://projects.puremagic.com/greylisting/">Greylisting</a> ähnliche Maßnahme zur <a href="http://de.wikipedia.org/wiki/Spam">Spam</a>-Bekämpfung. Ihr Vorteil ist, dass sie keiner Softwareinstallation oder Konfigurationsänderung auf dem Mailserver bedarf. Da die meisten Spammer noch immer nach dem Fire-and-Forget-Prinzip vorgehen, also eine Mail einzuliefern versuchen und im Fehlerfall die Zustellung nicht wiederholen, können sie durch absichtlich herbeigeführte, temporäre Fehler ausgetrickst werden. Beim Nolisting ist dieser Fehler, dass der am höchsten priorisierte Mailserver (MX) grundsätzlich nicht auf SMTP antwortet, während der tatsächliche Mailserver auf Platz 2 bereit steht. Nach <a href="http://www.ietf.org/rfc/rfc2821.txt">RFC 2821</a> (Simple Mail Transfer Protocol) muss ein Client jeden MX der Reihe nach durchprobieren, wenn der jeweils vorherige Host nicht erreichbar war. Demnach — so die Annahme — sollten Spammer nach dem ersten Versuch auf dem inaktiven MX keinen weiteren Einlieferungsversuch unternehmen, RFC-konforme Mailserver aber den richten Mailserver finden und die Zahl der Verbindungen und somit die Last auf diesem sinken. In einem Test konnte ich mich davon überzeugen, wie sehr diese Annahme zutreffend ist.</p>
+
+<p>Auf einem von mir betrieben Mailserver, der bereits einige Spamschutz-Maßnahmen (darunter sehr erfolgreich Greylisting) implementiert hat, wurde Nolisting zusätzlich eingesetzt. Zu erwarten war ein Rückgang der Verbindungsversuche ingesamt, der Rejects und der durchs Greylisting abgewehrten Clients.</p>
+
+<p>In der folgenden Statistik wurden die angenommenen und abgelehnten E-Mails sowie die durchs Greylisting geblockten Verbindungen normalisiert erfasst. Der Durchschnittswert entspricht 100%. Die tatsächlichen Werte wurden relativ zu diesem angegeben.</p>
+
+<p><a href="/assets/2008/04/nolisting.png"><img src="/assets/2008/04/nolisting.png" alt="" /></a></p>
+
+<p>Es ist deutlich zu sehen, dass mit Beginn des Nolistings sowohl rejected als auch greylisted connections auf etwa 25% absinken und die Zahl der angenommenen E-Mails (mehr oder weniger) konstant bleibt. Daraus folgt, dass lediglich jede vierte Spam-Mail den Server überhaupt erreicht und der Server dadurch entsprechend entlastet wird. Eine Entlastung des Servers wird vom Monitoring bestätigt.</p>
+
+<p>Das Ergebnis ist leider nicht allgemein verbindlich. Das Mailaufkommen auf dem Testsystem ist insgesamt gering und starken Schwankungen unterlegen. Zudem sorgten die Osterfeiertage für ein geändertes Nutzungsverhalten und möglicherweise wurde das gute Ergebnis durch ein generell geringeres Spam-Aufkommen (http://www.heise.de/newsticker/meldung/105737) während des Test-Zeitraums begünstigt.</p>
+
+<p>Trotz dieser Meßungenauigkeit kann Nolisting zweifellos als erfolgreiche und praktisch kostenlose Maßnahme gegen Spam empfohlen werden. Es bleibt, wie beim Greylisting auch, abzuwarten, ob oder wann die Spammer Mailqueues einsetzen werden, die dieses Verfahren dann übergehen können.</p>
+
+<p>Was ist mit false positives (Servern, die gewünschte E-Mails einliefern sollen, aber am Durchprobieren der Mailserver scheitern)? Während des Tests wurde mir kein false positive bekannt. Leider lässt sich auf der Empfängerseite kaum klären, ob ein solcher Fall eingetreten ist, weil keine Verbindung zum Mailserver hergestellt wird. (Allein eine Firewall-Regel o.ä. auf dem toten MX könnte hier Informationen sammeln.) Letztlich können nur Server betroffen sein, die den RFC nicht korrekt umgesetzt haben und die Verantwortung für die Zustellung einer E-Mail liegt beim Sender, also ist das ein <a href="http://de.wikipedia.org/wiki/Problem_anderer_Leute">PAL</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/03/cgiskripte_zum_prufen_der_grun/">CGI-Skripte Zum Prüfen Der Grundfunktionalität</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-03-27T00:00:00+01:00" pubdate data-updated="true">Mar 27<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Zur Prüfung der Grundfunktionen des Webservers in Verbindung mit dem Common Gateway Interface (CGI) habe ich <a href="/assets/2008/03/cgi-test.tar.gz">ein paar simple CGI-Skripte in Perl geschrieben</a>:</p>
+
+<ul>
+<li>hello.cgi — Ausgabe von “Hello, world!”</li>
+<li>hello.fcgi — “Hello, world!” mit FCGI (FastCGI)</li>
+<li>hellooo.cgi — “Hello, world!” mit CGI-Modul (objekt-orientiert)</li>
+<li>mysql.cgi — Mit MySQL-Datenbank verbinden</li>
+<li>sendmail.cgi — E-Mail über sendmail versenden</li>
+<li>upload.cgi — Dateiupload</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/03/munin-plugin_vzfree/">Munin-Plugin: Vzfree</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-03-23T00:00:00+01:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Die Software <a href="http://munin.projects.linpro.no/">Munin</a> ist ein Monitoring-Tool zur Status- und Prozess-Visualisierung und -Überwachung. Um den Speicherbedarf von <a href="http://openvz.org/">OpenVZ</a>/<a href="http://www.parallels.com/de/products/virtuozzo/">Virtuozzo</a> VPS erfassen zu können, habe ich basierend auf dem populären Skript <a href="http://www.google.com/search?q=vzfree">vzfree</a> ein Plugin für Munin geschrieben. Es werden der momentan genutzte, maximal genutzte, garantierte und maximal mögliche Speicher des VPS in Megabyte (MB) erfasst.</p>
+
+<p><a href="/assets/2008/03/vzfree-day.png"><img src="/assets/2008/03/vzfree-day.png" alt="" /></a></p>
+
+<p>Die Installation ist einfach: Das Plugin wird im Munin Plugin-Verzeichnis (<code>/etc/munin/plugins/</code> in Debian) mit dem Namen <a href="https://github.com/sw0x2A/vzfree/blob/master/vzfree">vzfree</a> gespeichert und ausführbar gemacht.</p>
+
+<pre><code>#!/bin/sh
+#
+# vzfree - Munin plugin to monitor memory in a OpenVZ/Virtuozzo environment
+#
+# Author: Stefan Warten 
+# Website: http://syslog.warten.de/2008/03/munin-plugin-vzfree.html
+# Copyright: (C) 2008 Stefan Warten
+# Licence: GPL-2 
+#
+# Usage: Place this file in the Munin plugins directory, make it executable
+# and add these lines to the Munin node config:
+#
+# [vzfree]
+# user root
+#
+# Parameters understood:
+#
+# config (required)
+# autoconf (optional - used by munin-config)
+#
+#
+# Magic markers - optional - used by installation scripts and
+# munin-config:
+#
+#%# family=auto
+#%# capabilities=autoconf
+
+
+if [ "$1" = "autoconf" ]; then
+if [ -r /proc/user_beancounters ]; then
+echo yes
+                exit 0
+        else
+echo no
+                exit 1
+        fi
+fi
+
+if [ "$1" = "config" ]; then
+echo 'graph_title vzfree memory usage'
+        echo 'graph_order limit maxheld held guaranteed'
+        echo 'graph_args -l 0'
+        echo 'graph_category system'
+        echo 'graph_vlabel MB'
+        echo 'graph_period minute'
+        echo 'held.label held'
+        echo 'held.type GAUGE'
+        echo 'held.info Used memory'
+        echo 'maxheld.label maxheld'
+        echo 'maxheld.type GAUGE'
+        echo 'maxheld.info Maximum used memory'
+        echo 'guaranteed.label guaranteed'
+        echo 'guaranteed.type GAUGE'
+        echo 'guaranteed.info Out-of-memory kill guarantee'
+        echo 'limit.label maximum'
+        echo 'limit.type GAUGE'
+        echo 'limit.info Memory allocation limit'
+        exit 0
+fi
+
+x=$(cat /proc/user_beancounters | grep privvmpages | 
+        awk 'BEGIN{ cur=max=lim=0; }{ cur =$2;max =$3;lim =$5 } 
+END {print cur*4/1024,max*4/1024,lim*4/1024}')
+guaranteed=$(cat /proc/user_beancounters | grep oomguarpages | 
+        awk 'BEGIN{ cur=max=lim=0; }{ lim =$4 } END { print lim*4/1024}')
+
+held=$(echo ${x} | awk '{print $1}')
+maxheld=$(echo ${x} | awk '{print $2}')
+limit=$(echo ${x} | awk '{print $3}')
+
+echo "held.value ${held}"
+echo "maxheld.value ${maxheld}"
+echo "guaranteed.value ${guaranteed}"
+echo "limit.value ${limit}"
+</code></pre>
+
+<p>Weil die Datei <code>/proc/user_beancouters</code> nur von root gelesen werden kann, muss das Plugin mit den Rechten von root ausgeführt werden. Dazu werden in der Konfigurationsdatei des Munin-Nodes (in Debian ist das <code>/etc/munin/plugin-conf.d/munin-node</code>) noch die folgenden Zeilen eingefügt:</p>
+
+<pre><code>[vzfree]
+user root
+</code></pre>
+
+<p>Nach einem Neustart des Munin-Nodes wird nun der Arbeitsspeicher des VPS überwacht und visualisiert.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/02/dovecot_lda_mit_sieve_einrichten/">Dovecot LDA Mit Sieve Einrichten</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-02-02T00:00:00+01:00" pubdate data-updated="true">Feb 2<span>nd</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Es ist ein Mailserver mit Postfix und Dovecot um die Möglichkeit zu erweitern <a href="http://www.ietf.org/html.charters/sieve-charter.html">Sieve</a> zu nutzen. Dovecot bringt den Local Delivery Agent (LDA) deliver mit, der mit einem <a href="http://wiki.dovecot.org/LDA/Sieve">Sieve Plugin</a> erweitert werden kann. Dessen Einrichtung wird im Folgenden beschrieben. Es wird vorausgesetzt, dass Postfix und Dovecot bereits korrekt konfiguriert sind.</p>
+
+<p>In <code>/etc/postfix/master.cf</code> muss deliver eingetragen werden.</p>
+
+<pre><code>dovecot   unix  -       n       n       -       -       pipe
+flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/deliver -f ${sender} -d ${recipient}
+</code></pre>
+
+<p>In <code>/etc/postfix/main.cf</code> wird dann der Transport über deliver (das in der master.cf dovecot genannt wird) festgelegt:</p>
+
+<pre><code>dovecot_destination_recipient_limit = 1
+virtual_transport = dovecot
+</code></pre>
+
+<p>In der Dovecot-Konfiguration <code>/etc/dovecot/dovecot.conf</code> ist der LDA auszukommentieren und das Plugin cmusieve einzutragen. Weiterhin muss der Pfad zu den Sieve-Skripten definiert werden. Im Beispiel wird ein statischer Eintrag auf die Datei <code>.dovecot.sieve</code> im Maildir des Benutzers benutzt.</p>
+
+<pre><code>protocol lda {
+    postmaster_address = postmaster@example.com
+    auth_socket_path = /var/run/dovecot/auth-master
+    mail_plugins = cmusieve
+}
+[...]
+auth default {
+    [...]
+    userdb static {
+        args = uid=111 gid=111 sieve=/var/spool/virtual/%d/%n/.dovecot.sieve
+    }
+    [...]
+    socket listen {
+        master {
+        path = /var/run/dovecot/auth-master
+        mode = 0600
+        user = vmail # User running Dovecot LDA
+        group = vmail # Or alternatively mode 0660   LDA user in this group
+    }
+}
+</code></pre>
+
+<p>Jetzt wird der Mailtransport über den Dovecot LDA abgewickelt und Dank Sieve wie gewünscht behandelt.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/01/pong/">Pong</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-01-01T00:00:00+01:00" pubdate data-updated="true">Jan 1<span>st</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Beim Stöbern in den Untiefen meiner Festplatte fiel mir ein kurzes Perl-Skript in die Hände, das ich vor zwei Jahren geschrieben habe, als ich mich ein wenig mit der Curses-Bibliothek beschäftigt habe. Es ist eine Version des klassischen <a href="http://de.wikipedia.org/wiki/Breakout">Breakout</a> (jedoch ohne Steine) bzw. ein Solo-<a href="http://de.wikipedia.org/wiki/Pong">Pong</a> und ich hatte ein paar Minuten Spaß damit.</p>
+
+<p><a href="/assets/2008/01/pong.png"><img src="/assets/2008/01/pong.png" alt="" /></a></p>
+
+<p>Damals schrieb ich es, um mich mit den Grundkonzept von Curses vertraut zu machen. Ich habe es nicht weiterentwickelt, weil es seinen Zweck erfüllt hatte. Heute denke ich, dass eine weiterentwickelte Version auf jedem meiner Systeme verfügbar sein sollte. Wenn ich Zeit habe….</p>
+
+<pre><code>#!/usr/bin/env perl
+###################
+#
+# pong -- A version of the classic game written in perl using curses
+#
+# Author:    Stefan Warten 
+# Copyright: (C) 2006 Stefan Warten
+# Licence:   GPL-2 
+#
+
+use strict;
+use warnings;
+use Curses;
+use Time::HiRes qw(gettimeofday);
+
+initscr();
+cbreak();
+noecho();
+keypad(1);
+nodelay(1);
+curs_set(0);
+
+my $racket           = " ===== ";
+my $racket_column    = int( $COLS / 2 - length($racket) / 2 );
+my $racket_line      = $LINES - 2;
+my $ball_column      = int( $COLS / 2 );
+my $ball_line        = 1;
+my $ballspeed_column = 1;
+my $ballspeed_line   = 1;
+my $time_before      = gettimeofday();
+my $time_now;
+my $old_ball_column;
+my $old_ball_line;
+
+while (1) {
+    $old_ball_column = $ball_column;
+    $old_ball_line   = $ball_line;
+    $time_now        = gettimeofday();
+    my $time_elapsed = ( $time_now - $time_before ) * 1000;
+
+    if ( $time_elapsed &gt; 100 ) {
+        $time_before = $time_now;
+
+        if ( $ball_column == 0 or $ball_column == $COLS - 1 ) {
+            $ballspeed_column = -$ballspeed_column;
+        }
+        $ball_column  = $ballspeed_column;
+
+        if (
+            $ball_line == 0
+            or (    $ball_line == $racket_line - 1
+                and $ball_column &gt; $racket_column
+                and $ball_column &lt; $racket_column   length($racket) )
+          )
+        {
+            $ballspeed_line = -$ballspeed_line;
+        }
+        $ball_line  = $ballspeed_line;
+
+        if ( $ball_line &gt; $racket_line ) {
+            my $gameover = "GAME OVER";
+            addstr( int( $LINES / 2 ),
+                int( $COLS / 2 - length($gameover) / 2 ), $gameover );
+            refresh();
+            sleep(4);
+            endwin();
+            exit;
+        }
+        addstr( $old_ball_line, $old_ball_column, " " );
+        addstr( $ball_line,     $ball_column,     "O" );
+        refresh();
+    }
+
+    my $char = getch();
+    if ( $char eq "q" ) {
+        endwin();
+        exit;
+    }
+    elsif ( $char eq KEY_LEFT ) {
+        $racket_column-- if $racket_column &gt; 0;
+    }
+    elsif ( $char eq KEY_RIGHT ) {
+        $racket_column   if $racket_column &lt; $COLS - length($racket);
+    }
+    addstr( $racket_line, $racket_column, $racket );
+    refresh();
+}
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/12/versionsverwaltung_fur_konfigu/">Versionsverwaltung Für Konfigurationsdateien in /etc Mit Subversion</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-12T00:00:00+01:00" pubdate data-updated="true">Dec 12<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Versionskontrolle wird hauptsächlich in der Softwareentwicklung eingesetzt. Aber auch ein Administrator kann sie für seine Zwecke nutzen. Die Konfigurationsdateien im Verzeichnis <code>/etc</code> eines Linux-Systems eignen sich hierfür als gutes Beispiel: Sie werden häufiger geändert, möglicherweise von verschiedenen Administratoren und es ist immer hilfreich zu wissen, wer was wann geändert hat. Den Überblick zu haben, das ermöglicht die Versionsverwaltung. Ein Backup ersetzt sie nicht, da Metadaten (Dateieigentümer, Zugriffsrechte u.a.) nicht gesichert werden (Eine vielversprechende Lösung für ein Backup mit Versionskontrolle ist das noch in Entwicklung befindliche <a href="http://fsvs.tigris.org/">FSVS</a>).<br/>
+In der folgenden Anleitung wird als Version Control System <a href="http://subversion.tigris.org/">Subversion</a> eingesetzt. Es ist ausführlich dokumentiert im frei erhältlichen Buch <a href="http://svnbook.red-bean.com/">Version Control with Subversion</a>.</p>
+
+<p>Um die Administration zu erleichtern werden die Produktivdateien (/etc) gleichzeitig die working copy. Das Repository wird im Dateisystem abgelegt. Das macht Sinn, weil das System wie gewohnt konfiguriert wird und die Versionskontrolle nur die Funktion der Dokumenation übernehmen soll. In komplexen Systemen, wo Entwicklungsumgebungen existieren oder mehrere Systeme die identische Konfiguration erhalten sollen, ist ein solcher Trick weniger angebracht.</p>
+
+<p>Es geht los. Es wird ein Repository und eine Ordnerstruktur erstellt. Es folgt der erste Checkout und dann werden alle Dateien aus /etc dem Repository hinzugefügt. Wichtig ist, dass Änderungen am Repository zu bestätigten (commit) sind.</p>
+
+<pre><code># aptitude install subversion  
+# mkdir /var/lib/svn  
+# svnadmin create –fs-type fsfs /var/lib/svn/repository  
+# svn mkdir file:///var/lib/svn/repository/trunk -m “Make trunk”  
+# svn mkdir file:///var/lib/svn/repository/trunk/etc -m “Make a directory in the repository to correspond to /etc”  
+# cd /etc/  
+# svn co file:///var/lib/svn/repository/trunk/etc .  
+# svn add *  
+# svn commit -m “Initial version. Base Debian install ssh subversion.” 
+</code></pre>
+
+<p>Möglicherweise sollen nicht alle Dateien im Verzeichnis /etc unter die Aufsicht der Versionskontrolle gestellt werden: Dateien, die sehr häufig oder maschinell geändert werden; von Texteditoren angelegte Sicherungsdateien (mit Endungen <em>- oder </em>~); oder Dateien, die Passwörter in unverschlüsselter Form enthalten.</p>
+
+<pre><code># cd /etc  
+# svn propedit svn:ignore . 
+</code></pre>
+
+<p>Das Repository steht und es kann mit der täglichen Arbeit begonnen werden. Es folgen häufig im Umgang mit dem Repository verwendete Befehle:</p>
+
+<p>Neue Dateien werden mit dem folgenden Befehl hinzugefügt. Wenn eine Datei im Repository bereits existiert, wird eine Warnung ausgegeben. <em>filename</em> kann auch ein Verzeichnis sein. Die Änderungen werden erst nach der Bestätigung (commit) ins Repository übernommen.</p>
+
+<pre><code># svn add *filename*  
+# svn commit -m “A new file.” 
+</code></pre>
+
+<p>Neue Dateien in Unterverzeichnissen können nicht über eine Wildcard dem Repository hinzugefügt werden. Das folgende Kommando erledigt die Aufgabe.</p>
+
+<pre><code># svn status | grep ^? | awk ‘{ print $2 }’ | xargs svn add  
+# svn commit -m “Some new files.” 
+</code></pre>
+
+<p>Dateioperation wie Löschen (rm), Verschieben oder Umbenennen (mv) oder Kopieren (cp) sollten nicht mehr auf Dateisystemebene durchgeführt werden. Die Befehle werden durch die entsprechenden Alternativen von Subversion ersetzt. Der Vorteil ist, dass so die Geschichte einer Datei erhalten bleibt. Wieder werden die Aktionen erst nach einem commit ins Repository übernommen; im Dateisystem sofort.</p>
+
+<pre><code># svn rm *filename*  
+# svn mv *filename*  
+# svn cp *filename*  
+# svn commit -m “Some file actions.” 
+</code></pre>
+
+<p>Änderungen können rückgängig gemacht werden. Möchte man eine Datei auf den letzten ins Repository geschrieben Stand zurücksetzen oder nicht mit commit bestätigte Aktionen add, rm, mv oder cp ungeschehen machen, nutzt man dieses Kommando:</p>
+
+<pre><code># svn revert *filename* 
+</code></pre>
+
+<p>Eine Übersicht der geänderten Dateien seit dem letzen commit zeigt status:</p>
+
+<pre><code># svn status 
+</code></pre>
+
+<p>Die Änderungen im Detail im unified diff format werden mit dem folgenden Befehl angezeigt. Mit dem Parameter -r können verschiedene Revisionen miteinander verglichen werden.</p>
+
+<pre><code># svn diff [-r *revision1*[:*revision2*]] [*filename*] 
+</code></pre>
+
+<p>Eine Übersicht der verschiedenen Revisionen ist im Log zu finden …</p>
+
+<pre><code># svn log [-r *revision1*[:*revision2*]] [*filename*] 
+</code></pre>
+
+<p>… und die Ausgabe einer früheren Version einer Datei auf STDOUT ist mit folgendem Kommando zu bewirken:</p>
+
+<pre><code># svn cat [-r *revision*] *filename* 
+</code></pre>
+
+<p>Eine Liste der Dateien im Repository bringt …</p>
+
+<pre><code># svn ls [*filename*] 
+</code></pre>
+
+<p>… und eine aktuelle Version des Repository wird mit dem folgenden Befehl bezogen. Änderungen in der working copy bleiben erhalten, wenn die Dateien nicht im Repository geändert wurden (Konflikt). Wenn nur ein Administrator für die Verwaltug des Server zuständig ist, wird dieses Kommando kaum von Bedeutung sein.</p>
+
+<pre><code># svn update
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/12/restore_failed_auf_vps_linux/">Restore Failed Auf VPS Linux</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-08T00:00:00+01:00" pubdate data-updated="true">Dec 8<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Vor Kurzem wurde hier beschrieben wie eine <a href="http://syslog.warten.de/2007/12/debian-linux-mit-debootstrap-a.html">Installation von Debian über debootstrap auf einem Virtuozzo VPS Linux bei Host Europe</a> durchgeführt werden kann. Leider führt diese Installation wie auch das von einer <a href="http://prehl.de/wp/howto/debian-auf-he-vps">vergleichbaren Anleitung</a> beschriebene Vorgehen zurzeit reproduzierbar zumindest bei Host Europe zu Fehlern beim Restore eines Backups über das Virtuozzo Control Panel. Obwohl das System vollständig funktions- und lauffähig ist und das Backup erfolgreich erstellt wurde, kann ein Restore nicht mehr durchgeführt werden. Im Control Panel wird folgende Fehlermeldung angezeigt:</p>
+
+<pre><code>Operation restore with the VPS(s) VEID12345 as remote from 172.17.0.25 is started.
+Dec 03, 2007 02:11:48 PM
+Operation restore with the VPS(s) VEID12345 as remote from 172.17.0.25 is finished with errors:
+#2503 Can't restore: SSH_OPTS=-oProtocol=1 -oBatchMode=yes -T -oStrictHostKeyChecking=no -oUserKnownHostsFile=/tmp/tmp.file.o6toXu
+Starting restore VE 12345(2007-12-03T140428 0100@lvps10-20-30-40.dedicated.hosteurope.de) on node lvps10-20-30-40.dedicated.hosteurope.de...
+SSH_OPTS=-oProtocol=1 -oBatchMode=yes -T -oStrictHostKeyChecking=no -oUserKnownHostsFile=/tmp/tmp.file.o6toXu
+Warning: Permanently added '87.230.92.25' (RSA1) to the list of known hosts.
+Doing exec - /usr/share/vzbackup-3.0.0-16.swsoft/vzrestore1 -t 2007-12-03T140428 0100@lvps10-20-30-40.dedicated.hosteurope.de 12345 -.
+Created /vz/private/12345-tmpC16592
+Restoring VE...
+Turn quota on -...
+Turn quota off
+No packages found matching apache2.
+No packages found matching apache2-doc.
+No packages found matching apache2-mpm-prefork.
+No packages found matching apache2-utils.
+No packages found matching apache2.2-common.
+No packages found matching bind9.
+No packages found matching binutils.
+No packages found matching ca-certificates.
+No packages found matching console-tools-dev.
+No packages found matching cracklib-runtime.
+No packages found matching cracklib2.
+No packages found matching defoma.
+No packages found matching exim4-base.
+No packages found matching exim4-config.
+No packages found matching exim4-daemon-light.
+No packages found matching expat.
+No packages found matching fetchmail.
+No packages found matching ffingerd.
+No packages found matching file.
+No packages found matching finger.
+No packages found matching fontconfig.
+No packages found matching fontconfig-config.
+No packages found matching ftp.
+No packages found matching gawk.
+No packages found matching gcc-3.3-base.
+No packages found matching gettext-base.
+No packages found matching host.
+No packages found matching iputils-arping.
+No packages found matching iputils-tracepath.
+No packages found matching krb5-config.
+No packages found matching libatm1.
+No packages found matching libauthen-pam-perl.
+No packages found matching libbind-dev.
+No packages found matching libbind9-0.
+No packages found matching libconvert-binhex-perl.
+No packages found matching libcupsys2.
+No packages found matching libcupsys2-gnutls10.
+No packages found matching libcurl3.
+No packages found matching libdb1-compat.
+No packages found matching libdb3.
+No packages found matching libdbi-perl.
+No packages found matching libdevel-symdump-perl.
+No packages found matching libdns22.
+No packages found matching libfontconfig1.
+No packages found matching libfreetype6.
+No packages found matching libgdbmg1.
+No packages found matching libglib2.0-0.
+No packages found matching libhesiod0.
+No packages found matching libhtml-parser-perl.
+No packages found matching libhtml-tagset-perl.
+No packages found matching libhtml-tree-perl.
+No packages found matching libice6.
+No packages found matching libidn11.
+No packages found matching libio-stringy-perl.
+No packages found matching libisc11.
+No packages found matching libisccc0.
+No packages found matching libisccfg1.
+No packages found matching libjpeg-progs.
+No packages found matching libjpeg62.
+No packages found matching liblcms1.
+No packages found matching libldap-2.3-0.
+No packages found matching liblockfile1.
+No packages found matching libltdl3.
+No packages found matching liblwres9.
+No packages found matching libmagic1.
+No packages found matching libmailtools-perl.
+No packages found matching libmd5-perl.
+No packages found matching libmime-perl.
+No packages found matching libmng1.
+No packages found matching libnet-daemon-perl.
+No packages found matching libnet-ssleay-perl.
+No packages found matching libnss-ldap.
+No packages found matching libpam-krb5.
+No packages found matching libpaper1.
+No packages found matching libpcap0.8.
+No packages found matching libpcre3.
+No packages found matching libplrpc-perl.
+No packages found matching libpng12-0.
+No packages found matching libpng3.
+No packages found matching libruby1.8.
+No packages found matching libsensors3.
+No packages found matching libslang1-utf8.
+No packages found matching libsm6.
+No packages found matching libsnmp-base.
+No packages found matching libsnmp9.
+No packages found matching libstdc  2.10-glibc2.2.
+No packages found matching libstdc  5.
+No packages found matching libsysfs2.
+No packages found matching libtiff4.
+No packages found matching libtimedate-perl.
+No packages found matching liburi-perl.
+No packages found matching libwww-perl.
+No packages found matching libx11-6.
+No packages found matching libx11-data.
+No packages found matching libxau6.
+No packages found matching libxaw7.
+No packages found matching libxdmcp6.
+No packages found matching libxext6.
+No packages found matching libxmu6.
+No packages found matching libxpm4.
+No packages found matching libxt6.
+No packages found matching lprng.
+No packages found matching lsb-release.
+No packages found matching lsof.
+No packages found matching lynx.
+No packages found matching m4.
+No packages found matching make.
+No packages found matching man2html.
+No packages found matching memtester.
+No packages found matching metamail.
+No packages found matching mime-support.
+No packages found matching mingetty.
+No packages found matching modconf.
+No packages found matching ncompress.
+No packages found matching nscd.
+No packages found matching odbcinst1debian1.
+No packages found matching portmap.
+No packages found matching procinfo.
+No packages found matching procmail.
+No packages found matching psutils.
+No packages found matching pwgen.
+No packages found matching python.
+No packages found matching python-minimal.
+No packages found matching python2.4.
+No packages found matching python2.4-minimal.
+No packages found matching rsync.
+No packages found matching ruby1.8.
+No packages found matching sasl2-bin.
+No packages found matching screen.
+No packages found matching sharutils.
+No packages found matching slocate.
+No packages found matching smbfs.
+No packages found matching snmp.
+No packages found matching ssl-cert.
+No packages found matching stunnel.
+No packages found matching syslinux.
+No packages found matching sysutils.
+No packages found matching talk.
+No packages found matching talkd.
+No packages found matching tcpdump.
+No packages found matching tcsh.
+No packages found matching telnet.
+No packages found matching tofrodos.
+No packages found matching tree.
+No packages found matching ttf-dejavu.
+No packages found matching ucf.
+No packages found matching units.
+No packages found matching unixodbc.
+No packages found matching unzip.
+No packages found matching wwwconfig-common.
+No packages found matching x11-common.
+No packages found matching xbitmaps.
+No packages found matching xcursor-themes.
+No packages found matching xlibs-data.
+ERROR: Cant download tzdata=2007b-1 package Failed to check template consistency Cleaning up...
+Failed to restore lvps10-20-30-40.dedicated.hosteurope.de VE 12345 tag 2007-12-03T140428 0100@lvps10-20-30-40.dedicated.hosteurope.de. .
+</code></pre>
+
+<p>Offenbar wird hier die Konsistenz des vorinstallierten Betriebssystems überprüft, das beim debootstrap überschrieben wurde, was den Check naheliegenderweise fehlschlagen lässt. Was genau geprüft wird und wie Konsistenz beim debootstraping sichergestellt werden kann, konnte leider kurzfristig nicht heraus gefunden werden. (Für Hinweise bin ich sehr dankbar.)</p>
+
+<p>Als Alternative, um die vielen unnötigerweise installierten Pakete des auf dem VPS vorinstallierten Systems zu entfernen, wurden auf dem “gedebootstrapten” System der Status der <a href="http://syslog.warten.de/files/debootstrap_packages%2Bssh%2Blocales%2Bconsole-data">Paketauswahl gesichert</a>.</p>
+
+<pre><code># dpkg --get-selections &gt; debootstrap_packages ssh locales console-data
+</code></pre>
+
+<p>Über das Virtuozzo Control Panel wurde ein Reinstall des VPS beauftragt. Auf dem Standardsystem, dass beispielsweise apache2, bind9, Druckerdienste und X11-Komponenten mitbringt, wurde dann die Paketauswahl resettet und die Konfiguration aus dem debootstrap-System wiederhergestellt.</p>
+
+<pre><code># dpkg --clear-selections
+# dpkg --set-selections &lt; debootstrap_packages ssh locales console-data
+</code></pre>
+
+<p>Die Änderung an der Paketauswahl konnte nun mit dselect oder aptitude durchgeführt werden. Die überflüssigen Pakete werden per remove gelöscht.</p>
+
+<pre><code>The following packages will be REMOVED:
+anacron apache2 apache2-doc apache2-mpm-prefork apache2-utils
+apache2.2-common bind9 binutils bzip2 ca-certificates console-common
+console-tools console-tools-dev cracklib-runtime cracklib2 debconf-utils
+defoma exim4 exim4-base exim4-config exim4-daemon-light expat fetchmail
+ffingerd file finger fontconfig fontconfig-config ftp gcc-3.3-base
+gettext-base groff host iproute iputils-arping iputils-tracepath krb5-config
+ldap-utils less libapr1 libaprutil1 libatm1 libauthen-pam-perl libbind-dev
+libbind9-0 libconvert-binhex-perl libcupsys2 libcupsys2-gnutls10 libcurl3
+libdb1-compat libdb3 libdbi-perl libdevel-symdump-perl libdns22 libexpat1
+libfontconfig1 libfreetype6 libgdbmg1 libglib1.2 libglib2.0-0 libgpmg1
+libhesiod0 libhtml-parser-perl libhtml-tagset-perl libhtml-tree-perl libice6
+libidn11 libio-stringy-perl libisc11 libisccc0 libisccfg1 libjpeg-progs
+libjpeg62 liblcms1 libldap-2.3-0 liblockfile1 libltdl3 liblwres9 libmagic1
+libmailtools-perl libmd5-perl libmime-perl libmng1 libnet-daemon-perl
+libnet-ssleay-perl libnss-ldap libpam-krb5 libpaper1 libpcap0.8 libpcre3
+libperl5.8 libplrpc-perl libpng12-0 libpng3 libpq4 libruby1.8
+libsasl2-modules libsensors3 libslang1-utf8 libsm6 libsnmp-base libsnmp9
+libsqlite3-0 libstdc  2.10-glibc2.2 libstdc  5 libsysfs2 libtiff4
+libtimedate-perl liburi-perl libwww-perl libx11-6 libx11-data libxau6
+libxaw7 libxdmcp6 libxext6 libxmu6 libxpm4 libxt6 lprng lsb-release lsof
+lynx m4 mailx make man2html memtester metamail mime-support mingetty modconf
+modutils ncompress ncurses-term nscd odbcinst1debian1 openssl perl
+perl-modules portmap procinfo procmail psmisc psutils pwgen python
+python-minimal python2.4 python2.4-minimal quota rsync ruby1.8 samba-common
+sasl2-bin screen sharutils slocate smbfs snmp ssl-cert stunnel sudo syslinux
+sysutils talk talkd tcpdump tcsh telnet tofrodos tree ttf-dejavu ucf units
+unixodbc unzip vim vim-runtime whois wwwconfig-common x11-common xbitmaps
+xcursor-themes xinetd xlibs-data
+</code></pre>
+
+<p>Um die Konfigurationsdateien dieser Pakete zu entfernen, musste ein purge wie beispielsweise mit dem folgenden Befehl ausgeführt werden.</p>
+
+<pre><code># dpkg --get-selections | grep deinstall | cut -f1 | xargs dpkg --purge
+</code></pre>
+
+<p>Das vorliegende Betriebssystem ist nun restorefähig und größtenteils mit einem über debootstrap installierten System vergleichbar. Die Einrichtung der benötigten Dienste kann nun beginnen.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/12/deutsche_ubersetzung_der_lpifr/">Deutsche Übersetzung Der LPI-Fragen Fehlerhaft</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-03T00:00:00+01:00" pubdate data-updated="true">Dec 3<span>rd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Letzte Woche habe ich an einer <a href="http://www.lpi.org/">LPI-Zertifizierungsprüfung</a> teilgenommen. Qualität und Schwierigkeitsgrad der Fragen waren wie erwartet.</p>
+
+<p>Enttäuscht war ich von der Qualität der deutschen Übersetzungen. Über einfache Rechtschreibfehler (wie etwa “Prufüng” im Prüfungszeugnis) kann ich hinwegsehen. Mindestens eine der Multiple-Choice-Prüfungsfragen war jedoch aufgrund der fehlerhaften Übersetzung nicht lösbar. Glücklicherweise war es möglich, sich die englische Originalfrage anzeigen zu lassen. Es war eine Frage zur maximalen Anzahl von Festplatten an einem SCSI-1-Bus. Bei den deutschen Antworten waren devices und hard disks jeweils mit “Platten” übersetzt worden, mit der Folge, dass keine der deutschen Antworten richtig war.</p>
+
+<p>Verunsichert durch diesen Fehler habe ich manche der weiteren Fragen erst nach Prüfung der englischen Fragen beantwortet. Für die nächste Prüfung überlege ich nun, gleich den englischen Test zu machen.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/12/debian_linux_mit_debootstrap_a/">Debian Linux Mit Debootstrap Auf Host Europe VPS Installieren</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-01T00:00:00+01:00" pubdate data-updated="true">Dec 1<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><strong>[EDIT: December 8, 2007 9:45 PM: Das nachfolgend beschriebene Vorgehen führt zu Fehlern beim Restore eines über das Virtuozzo Control Panel erstellten Backups. Es ist daher nicht zu empfehlen, wenn die Backup-Funktionalität des Control Panels genutzt werden soll. Weitere Informationen zur Beeinträchtigung finden Sie in diesem <a href="http://syslog.warten.de/2007/12/restore-failed-auf-vps-linux.html">Artikel</a>.]</strong></p>
+
+<p>Das Debian-Image der <a href="http://www.hosteurope.de/produkte/VPS-Linux">VPS Linux bei Host Europe</a> hat mehr Pakete vorinstalliert als für manche Zwecke notwendig sind. Diese könnten natürlich einfach entfernt werden. In diesem Fall soll jedoch ein Debian Linux mit debootstrap auf dem virtuellen Server komplett neu installiert werden. Das Vorgehen orientiert sich weitgehend an der <a href="http://www.debian.org/releases/stable/hppa/apds03.html.de">Installationsanleitung</a> der Debian-Entwickler. Durch die Virtualisierungstechnik sind jedoch einige Besonderheiten zu beachten.</p>
+
+<p>Zu Beginn ist der Server über das Virtuozzo Power Panel im Menüpunkt VPS Management > Maintenance in den Repair Mode zu versetzen. Das Virtuozzo Power Panel ist über https://VPS-IP:4643/ aufzurufen. Im Repair Mode ist das Dateisystem der VPS nach /repair gemountet.</p>
+
+<p>Das Dateisystem der VPS wird komplett gelöscht, danach debootstrap installiert und ausgeführt.</p>
+
+<pre><code># rm -rf /repair/*  
+# mkdir /tmp/work  
+# cd /tmp/work/  
+# wget http://ftp.hosteurope.de/mirror/ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap\_1.0.7\_all.deb  
+# ar -xf debootstrap\_1.0.7\_all.deb  
+# cd /  
+# zcat /tmp/work/data.tar.gz | tar xv  
+# /usr/sbin/debootstrap –arch i386 etch /repair http://ftp.hosteurope.de/mirror/ftp.debian.org/debian/ 
+</code></pre>
+
+<p>Nachdem das Basissystem installiert ist, müssen ein paar Anpassungen vorgenommen werden. In der Regel können die Konfigurationsdateien aus dem Repair Mode mit <code>cp -a /etc/filename /repair/etc/filename</code> übernommen werden. Es werden die Pseudo-Dateisysteme in fstab hinzugefügt, …</p>
+
+<pre><code># vi /repair/etc/fstab 
+
+proc  /proc       proc    defaults    0    0  
+none  /dev/pts    devpts  rw          0    0 
+</code></pre>
+
+<p>… ein Template für die Netzwerkkonfiguration hinterlegt, …</p>
+
+<pre><code># vi /repair/etc/network/interfaces.template 
+
+auto lo  
+iface lo inet loopback  
+       address 127.0.0.1  
+       netmask 255.0.0.0  
+       broadcast 127.255.255.255  
+       up ip route replace 127.0.0.0/8 dev lo 
+</code></pre>
+
+<p>… die sources.list erweitert, …</p>
+
+<pre><code># vi /repair/etc/apt/sources.list 
+
+#Host Europe server:  
+deb http://ftp.hosteurope.de/mirror/ftp.debian.org/debian etch main  
+deb http://ftp.hosteurope.de/mirror/ftp.debian.org/debian-security etch/updates main 
+deb http://security.debian.org etch/updates main  
+deb-src http://security.debian.org/ etch/updates main
+
+#deb http://ftp.de.debian.org/debian/ etch main contrib non-free  
+#deb-src http://ftp.de.debian.org/debian etch main contrib non-free  
+… die hosts-Datei angepasst und …
+
+# vi /repair/etc/hosts 
+
+127.0.0.1     localhost localhost.localdomain  
+10.20.30.40   example.com 
+</code></pre>
+
+<p>… in der inittab werden die Konsolen einkommentiert, da sie auf dem VPS nicht nutzbar sind.</p>
+
+<pre><code># vi /repair/etc/inittab   
+[...]  
+# Note that on most Debian systems tty7 is used by the X Window System,  
+# so if you want to add more getty’s go ahead but skip tty7 if you run X.  
+#  
+#1:2345:respawn:/sbin/getty 38400 tty1  
+#2:23:respawn:/sbin/getty 38400 tty2  
+#3:23:respawn:/sbin/getty 38400 tty3  
+#4:23:respawn:/sbin/getty 38400 tty4  
+#5:23:respawn:/sbin/getty 38400 tty5  
+#6:23:respawn:/sbin/getty 38400 tty6  
+[...] 
+</code></pre>
+
+<p>Es wird eine chroot-Umgebung aufgebaut, damit zusätzliche Pakete installiert und das neue System bearbeitet und konfiguriert werden können.</p>
+
+<pre><code># LANG=C chroot /repair /bin/bash 
+</code></pre>
+
+<p>Zuerst wird die Zeitzone eingestellt.</p>
+
+<pre><code># tzconfig 
+</code></pre>
+
+<p>Dann muss der sshd installiert werden. Außerdem werden locales und console-data installiert, um Sprach- und Lokalisierungsanpassungen vornehmen zu können. Um beispielsweise ein englischsprachiges System mit einer deutschen Tastaturbelegung zu nutzen, wird bei den locales “en_US.UTF-8″ und in console_data die Keymap “pc / qwertz / German / Standard / latin1″ ausgewählt.</p>
+
+<pre><code># aptitude update  
+# aptitude install openssh-server  
+# aptitude install locales  
+# dpkg-reconfigure locales  
+# aptitude install console-data  
+# dpkg-reconfigure console-data 
+</code></pre>
+
+<p>Da bei jedem Neustart des V-Servers der Hostname zurückgesetzt wird, muss er beim Booten neu geschrieben werden. Es wird hierfür die in der <a href="http://www.hosteurope.de/faq/index.php?cpid=11517">Host Europe FAQ</a> vorgeschlagene Lösung eingesetzt.</p>
+
+<pre><code># vi /etc/init.d/hostname_vps 
+
+#!/bin/bash  
+HOSTNAME=example.com  
+echo $HOSTNAME &gt; /etc/hostname  
+/bin/hostname $HOSTNAME  
+if [ -f /etc/my.resolv.conf ]; then cp /etc/my.resolv.conf /etc/resolv.conf ; fi  
+exit  
+</code></pre>
+
+<p>Das Init-Skript wird erstellt, mit Ausführrechten versehen und verlinkt, damit es bei jedem Bootvorgang ausgeführt wird.</p>
+
+<pre><code># chmod x /etc/init.d/hostname_vps  
+# update-rc.d hostname_vps defaults 09 
+</code></pre>
+
+<p>Zum Abschluß wird das root-Passwort gesetzt, die chroot-Umgebung verlassen und ausgeloggt.</p>
+
+<pre><code># /etc/init.d/ssh stop  
+# passwd  
+# exit  
+# logout 
+</code></pre>
+
+<p>Die Installation von Debian Linux ist nun vollständig abgeschlossen und der Server muss rebootet werden. Hierzu wird der Repair Mode im Virtuozzo Power Panel beendet. Nach ein paar Sekunden sollte man sich auf dem neugestarteten Server anmelden können.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/11/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/9/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Konsistenz einer MySQL-Replikation testen - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Einen einfachen und schnellen Weg, die Datenkonsistenz einer Replikation in MySQL zu überprüfen, bietet mk-table-checksum aus Maatkit. Das Perl- &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2010/03/konsistenz_einer_mysql-replika">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Konsistenz Einer MySQL-Replikation Testen</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-04T00:00:00+01:00" pubdate data-updated="true">Mar 4<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Einen einfachen und schnellen Weg, die Datenkonsistenz einer Replikation in MySQL zu überprüfen, bietet mk-table-checksum aus <a href="http://www.maatkit.org/">Maatkit</a>. Das Perl-Skript erstellt Prüfsummen der Tabellen und schreibt diese in eine eigene Tabelle. Durch die Replikation wird diese Tabelle auf den Slave übertragen und dort ebenfalls die Prüfsummen ermittelt. Hinterher lassen sich auf dem Slave die Prüfsummen vergleichen und eventuelle Veränderungen der Datenbestände feststellen. Diese lassen sich dann beispielsweise mit mk-table-sync aus der selben Tool-Sammlung wieder synchronisieren.</p>
+
+<p>Bevor es losgeht, muß auf dem Master eine neue Datenbank (hier <code>test</code>) und die folgende Tabelle erstellt werden.</p>
+
+<pre><code>CREATE TABLE checksum (
+    db         char(64)     NOT NULL,
+    tbl        char(64)     NOT NULL,
+    chunk      int          NOT NULL,
+    boundaries char(100)    NOT NULL,
+    this_crc   char(40)     NOT NULL,
+    this_cnt   int          NOT NULL,
+    master_crc char(40)         NULL,
+    master_cnt int              NULL,
+    ts         timestamp    NOT NULL,
+    PRIMARY KEY (db, tbl, chunk)
+);
+</code></pre>
+
+<p>Danach wird das Skript ausgeführt.</p>
+
+<p><code>mk-table-checksum --replicate=test.checksum h=localhost,u=username,p=password,S=/data/db/mysql.sock</code></p>
+
+<p>Ist das Programm durchgelaufen, kann man hinterher auf dem Slave prüfen, ob die Prüfsummen von Master und Slave abweichend sind.</p>
+
+<pre><code>SELECT db, tbl, chunk, this_cnt-master_cnt AS cnt_diff,
+    this_crc  master_crc OR ISNULL(master_crc)  ISNULL(this_crc)
+        AS crc_diff
+FROM checksum
+WHERE master_cnt  this_cnt OR master_crc  this_crc
+    OR ISNULL(master_crc)  ISNULL(this_crc);
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-04T00:00:00+01:00" pubdate data-updated="true">Mar 4<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2010/03/konsistenz_einer_mysql-replika/" data-via="" data-counturl="http://sw0x2A.github.com/2010/03/konsistenz_einer_mysql-replika/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2010/02/wochenendehttpstackoverflowcomquestions84556whats-your-favorite-programmer-cartoon196006/
+/" title="Previous Post: 108">&laquo; 108</a>
+      
+      
+        <a class="basic-alignment right" href="/2010/03/zugangsdaten_fur_den_router_siemens/" title="Next Post: 109">109 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,751 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Mit SSH lassen sich Kommandos direkt auf entfernten Rechnern ausführen. Werden für das Kommando die Rechte des Superusers benötigt (und man kann &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/blog/page/8">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/12/sudo_mit_ssh_auf_remote_hosts/">Sudo Mit SSH Auf Remote Hosts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-15T00:00:00+01:00" pubdate data-updated="true">Dec 15<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Mit SSH lassen sich Kommandos direkt auf entfernten Rechnern ausführen. Werden für das Kommando die Rechte des Superusers benötigt (und man kann sich nicht direkt als root anmelden), kann in den meisten Fällen sudo nicht sofort helfen.</p>
+
+<pre><code>$ ssh host "sudo mycommand"
+sudo: sorry, you must have a tty to run sudo
+</code></pre>
+
+<p>Aus Sicherheitsgründen ist bei den meisten Linux-Distributionen in der Konfiguration von sudo mit ‘requiretty’ das Vorhandensein einer Terminal-Sitzung verpflichtend, wie sie auch nach einer Anmeldung mittels SSH besteht.</p>
+
+<pre><code># grep requiretty /etc/sudoers
+Defaults    requiretty
+</code></pre>
+
+<p>Im Fall des mit SSH übermitteln Kommandos findet jedoch üblicherweise keine tty-Belegung statt. Forcieren kann man eine pseudo-tty allocation mit dem Parameter <code>-t</code> in SSH und dann funktioniert auch sudo bei der Kommandoübergabe mit SSH.</p>
+
+<pre><code>$ ssh -t hostname "sudo mycommand"
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/12/bug_network-manager_speichert/">Bug: Network-Manager Speichert PPP-Einstellungen Nicht</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-15T00:00:00+01:00" pubdate data-updated="true">Dec 15<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Die aktuelle Version des network-manager (network-manager-gnome: 0.7~~svn20081020t000444-0ubuntu1) in Ubuntu 8.10 <a href="https://bugs.launchpad.net/bugs/306303">speichert nicht die PPP-Einstellungen für Mobile Broadband-Verbindungen</a>. Welche Änderungen auch gemacht werden, die Software schreibt undefinierte Werte nach gconf.</p>
+
+<p>Mit dem gconf-editor kann man die Werte manuell setzen. In /system/networking/connections/NUMMER/ppp) werden bei Änderungen im network-manager die keys mit undefinierten Werten geschrieben, die man dann selbst setzen muss.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/12/get_in_bash/">GET / Im Terminal</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-10T00:00:00+01:00" pubdate data-updated="true">Dec 10<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Da staunte ich eben nicht schlecht als meine telnet-Session abbrach und das Kommando <code>GET /</code> im Terminal ausgeführt wurde. Als Ausgabe wurde ein HTML-formatiertes <code>ls -1a /</code> zurückgegeben.</p>
+
+<pre><code>$ telnet example.com 80
+Trying 208.77.188.166...
+GET /
+telnet: Unable to connect to remote host: Connection timed out
+$ GET /
+&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;TITLE&gt;Directory /&lt;/TITLE&gt;
+&lt;BASE HREF="file:/"&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;H1&gt;Directory listing of /&lt;/H1&gt;
+&lt;UL&gt;
+&lt;LI&gt;&lt;A HREF="./"&gt;./&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="../"&gt;../&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF=".rnd"&gt;.rnd&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="aquota.group"&gt;aquota.group&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="aquota.user"&gt;aquota.user&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="bin/"&gt;bin/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="boot/"&gt;boot/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="dev/"&gt;dev/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="etc/"&gt;etc/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="home/"&gt;home/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="initrd/"&gt;initrd/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="lib/"&gt;lib/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="media/"&gt;media/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="mnt/"&gt;mnt/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="opt/"&gt;opt/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="proc/"&gt;proc/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="root/"&gt;root/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="sbin/"&gt;sbin/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="srv/"&gt;srv/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="sys/"&gt;sys/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="tmp/"&gt;tmp/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="usr/"&gt;usr/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="var/"&gt;var/&lt;/A&gt;
+&lt;/UL&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;
+</code></pre>
+
+<p>Des Rätsels Lösung war schnell gefunden und ernüchternd. GET ist ein symbolischer Link auf <a href="http://search.cpan.org/~gaas/libwww-perl-5.805/bin/lwp-request">lwp-request</a>, das benutzt werden kann, um Anfragen an WWW-Server und das lokale Dateisystem zu senden.</p>
+
+<pre><code>$ ls -l `which GET`
+lrwxrwxrwx 1 root root 11 2008-11-02 21:09 /usr/bin/GET -&gt; lwp-request
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/11/mysql_ein_benutzer_fur_datenba/">MySQL: Ein Benutzer Für Datenbanknamensschema</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-11-10T00:00:00+01:00" pubdate data-updated="true">Nov 10<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Will man einen Benutzer für beliebig viele Datenbanken eines bestimmten Namensschemas anlegen, also für beispielsweise db_1, db_2, db_3, …, kann der variable Teil im Datenbanknamen durch die wildcard % ersetzt werden:</p>
+
+<pre><code>GRANT ALL ON `db_%`.* TO 'user'@'localhost' IDENTIFIED BY 'password';
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/11/automysqlbackup_bug_in_weekly/">AutoMySQLBackup: Bug in Weekly Rotation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-11-10T00:00:00+01:00" pubdate data-updated="true">Nov 10<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><a href="http://sourceforge.net/projects/automysqlbackup/">AutoMySQLBackup</a> hat in der aktuellen Version 2.5 einen Bug bei der Rotation der wöchentlichen Sicherungen, was zur Folge hat, dass diese nicht gelöscht werden. Der Bug ist auf der <a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1575311&amp;group_id=101066&amp;atid=628964">Project-Seite</a> dokumentiert und es wird ein <a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1580154&amp;group_id=101066&amp;atid=628966">Patch</a> bereitgestellt.</p>
+
+<p>Die Änderung ist simpel und betrifft lediglich eine Zeile.</p>
+
+<pre><code>patch -p0 automysqlbackup.sh.2.5 &lt; automysqlbackup.fix_weekly_rotation.patch
+mv automysqlbackup.sh.2.5 automysqlbackup.sh.2.5.fix_weekly_rotation.patch
+ln -s automysqlbackup.sh.2.5.fix_weekly_rotation.patch automysqlbackup
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/10/redirect_aller_webseiten_auf_e/">Redirect Aller Webseiten Auf Eine Datei</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-10-02T00:00:00+02:00" pubdate data-updated="true">Oct 2<span>nd</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Wenn man beispielsweise wegen Wartungsarbeiten an der Infrastruktur den ordentlichen Betrieb einer Website nicht mehr aufrecht erhalten kann und für den Zeitraum der Arbeiten eine Seite anzeigen möchte, die den Besucher kurz über die Wartungsarbeiten informiert und vertröstet, kann das recht einfach mit rewrite-Regeln im Webserver lösen.</p>
+
+<pre><code>RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/offline.php$
+RewriteRule (^$|.(html|php)$) http://www.example.com/offline.php [L]
+</code></pre>
+
+<p>Das Beispiel leitet beim direkten Aufruf des Domainnamens sowie beim Aufruf von HTML- und PHP-Dateien auf eine bestimmte Seite weiter. Diese Seite wird zuvor als Ausnahme von der Regel ausgenommen. Da nur HTML- und PHP-Dateien weitergeleitet werden, bleiben die Links zu Images und CSS o.ä. erhalten.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/10/perl_text_am_anfang_einer_date/">Perl: Text Am Anfang Einer Datei Einfügen</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-10-02T00:00:00+02:00" pubdate data-updated="true">Oct 2<span>nd</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<pre><code>perl -i -pe 'print "Dieser Text soll in die erste Zeilen" if $. == 1' filename
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/09/dateinamen_nach_utf8_konvertie/">Dateinamen Nach UTF-8 Konvertieren</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-09-29T00:00:00+02:00" pubdate data-updated="true">Sep 29<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<pre><code>convmv -f iso-8859-1 -t utf8 -r --notest *
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/09/backuprestore_mit_dd_oder_tar/">Backup/Restore Mit Dd Oder Tar über SSH</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-09-28T00:00:00+02:00" pubdate data-updated="true">Sep 28<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Die Festplatte einer Workstation machte Zicken. <a href="http://de.wikipedia.org/wiki/Self-Monitoring,_Analysis_and_Reporting_Technology">S.M.A.R.T.</a> und dmesg bestätigten einen Hardwaredefekt des Mediums.</p>
+
+<pre><code># smartctl -a /dev/sdb
+smartctl version 5.37 [i686-pc-linux-gnu] Copyright (C) 2002-6 Bruce Allen
+Home page is http://smartmontools.sourceforge.net/
+=== START OF INFORMATION SECTION ===
+Model Family:     Maxtor MaXLine III family (SATA/300)
+Device Model:     Maxtor 7V300F0
+Serial Number:    V605EYSG
+Firmware Version: VA111630
+User Capacity:    300.090.728.448 bytes
+Device is:        In smartctl database [for details use: -P show]
+ATA Version is:   7
+ATA Standard is:  ATA/ATAPI-7 T13 1532D revision 0
+Local Time is:    Sun Sep 28 14:09:35 2008 CEST
+SMART support is: Available - device has SMART capability.
+SMART support is: Enabled
+=== START OF READ SMART DATA SECTION ===
+SMART overall-health self-assessment test result: FAILED!
+Drive failure expected in less than 24 hours. SAVE ALL DATA.
+See vendor-specific Attribute list for failed Attributes.
+[...]
+SMART Attributes Data Structure revision number: 32
+Vendor Specific SMART Attributes with Thresholds:
+ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_FAILED RAW_VALUE
+[...]
+5 Reallocated_Sector_Ct   0x0033   016   016   063    Pre-fail  Always   FAILING_NOW 3003
+[...]
+SMART Self-test log structure revision number 1
+Num  Test_Description    Status                  Remaining  LifeTime(hours)  LBA_of_first_error
+# 1  Extended offline    Completed: read failure       20%      7576         420064150
+[...]
+# dmesg
+[...]
+[25722.726055] ata3.01: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+[25722.726105] ata3.01: BMDMA stat 0x64
+[25722.726170] ata3.01: cmd 25/00:f8:50:ab:09/00:00:19:00:00/f0 tag 0 dma 126976 in
+[25722.726201]          res 51/40:f8:96:ab:09/40:00:19:00:00/f0 Emask 0x9 (media error)
+[25722.726247] ata3.01: status: { DRDY ERR }
+[25722.726270] ata3.01: error: { UNC }
+[25722.852221] ata3.00: configured for UDMA/133
+[25722.868931] ata3.01: configured for UDMA/133
+[25722.869026] ata3: EH complete
+[...]
+[25739.235989] sd 2:0:1:0: [sdb] Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE,SUGGEST_OK
+[25739.236049] sd 2:0:1:0: [sdb] Sense Key : Medium Error [current] [descriptor]
+[25739.236107] Descriptor sense data with sense descriptors (in hex):
+[25739.236141]         72 03 11 04 00 00 00 0c 00 0a 80 00 00 00 00 00
+[25739.236266]         19 09 ab 96
+[25739.236316] sd 2:0:1:0: [sdb] Add. Sense: Unrecovered read error - auto reallocate failed
+[25739.236381] end_request: I/O error, dev sdb, sector 420064150
+[25739.236423] Buffer I/O error on device sdb, logical block 52508018
+[25739.236472] Buffer I/O error on device sdb, logical block 52508019
+[25739.236515] Buffer I/O error on device sdb, logical block 52508020
+[25739.236553] Buffer I/O error on device sdb, logical block 52508021
+[25739.236595] Buffer I/O error on device sdb, logical block 52508022
+[25739.236637] Buffer I/O error on device sdb, logical block 52508023
+[25739.236683] Buffer I/O error on device sdb, logical block 52508024
+[25739.236721] Buffer I/O error on device sdb, logical block 52508025
+[25739.236760] Buffer I/O error on device sdb, logical block 52508026
+[25739.236805] Buffer I/O error on device sdb, logical block 52508027
+[25739.237034] ata3: EH complete
+[25739.322135] sd 2:0:1:0: [sdb] 586114704 512-byte hardware sectors (300091 MB)
+[25739.332778] sd 2:0:1:0: [sdb] Write Protect is off
+[25739.332823] sd 2:0:1:0: [sdb] Mode Sense: 00 3a 00 00
+[25740.201637] sd 2:0:1:0: [sdb] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+[25740.212284] sd 2:0:0:0: [sda] 312500000 512-byte hardware sectors (160000 MB)
+[25740.212482] sd 2:0:0:0: [sda] Write Protect is off
+[25740.212516] sd 2:0:0:0: [sda] Mode Sense: 00 3a 00 00
+[25740.212767] sd 2:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+</code></pre>
+
+<p>Es sollte eine komplette Sicherung des Datenträgers erstellt werden. Zunächst wurden alle Partitionen des Device ausgehängt, um jede weitere Veränderung der Daten möglichst zu vermeiden. Auf einen Dateisystemcheck wurde deshalb vorerst verzichtet. Danach wurde eine 1:1-Kopie der Festplatte als Image auf den Fileserver verschoben. Mit dd und ssh ist das einfach über eine Pipe zu realisieren. Da auf dem defekten Medium mit Lesefehlern zu rechnen ist, wird dd angewiesen, Fehler zu ignorieren.</p>
+
+<pre><code># dd if=/dev/sdb conv=noerror,sync | ssh user@hostname "dd of=/data/hostname-device-date.img"
+</code></pre>
+
+<p>Alternativ kann eine direkte Sicherung der Dateien bei gemounteten Dateisystem erstellt werden. In diesem Fall ist das jedoch nicht zu empfehlen.</p>
+
+<pre><code># tar czf - /media/sdb1 | ssh user@hostname "cat &gt; /data/hostname-device-date.tar.gz"
+</code></pre>
+
+<p>Als das so erstellte Image gesichert war, konnte die Wiederherstellung der Daten beginnen. Um einen Datenverlust zu vermeiden, sollte das Image nur read-only verwendet werden. Besser ist mit Kopien der Sicherung zu arbeiten.</p>
+
+<pre><code># losetup --read-only /dev/loop0 /data/hostname-device-date.img
+# fdisk -l /dev/loop0
+Disk /dev/loop0: 226.2 GB, 226256034816 bytes
+255 heads, 63 sectors/track, 27507 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk identifier: 0x9badd7b7
+Device Boot      Start         End      Blocks   Id  System
+/dev/loop0p1               1       36483   293049666    c  W95 FAT32 (LBA)
+</code></pre>
+
+<p>Um nun eine Partition mounten zu können, muss ermittelt werden, ab welchem Byte die Partition im Image beginnt. Dieses Offset ist das Produkt aus der Anzahl der Köpfe (heads), den Sektoren pro Track (sectors/track), der Größe eines Blocks in Byte und der Nummer des ersten Zylinders der zu mountenden Partition:</p>
+
+<pre><code>255 heads * 63 sectors/track * 512 bytes * 1 = 8225280
+</code></pre>
+
+<p>Das Ergebnis wird als Offset an losetup übergeben.</p>
+
+<pre><code># losetup -d /dev/loop0
+# losetup -o8225280 /dev/loop0 /data/hostname-device-date.img
+</code></pre>
+
+<p>Nun lässt sich mit dem Device /dev/loop0 wie mit der ursprünglichen Partition umgehen. Es kann nun beispielsweise ein Dateisystemcheck durchgeführt und danach die Partition gemountet werden.</p>
+
+<pre><code># fsck.vfat /dev/loop0
+# mount /dev/loop0 /mnt/mountpoint
+</code></pre>
+
+<p>Wurde die defekte Festplatte ersetzt, kann die Sicherung auch einfach zurückkopiert werden.</p>
+
+<pre><code># ssh user@hostname "dd if=/data/hostname-device-date.img" | dd of=/dev/sdb
+# ssh user@hostname "cat /data/hostname-device-date.tar.gz" | tar xzf -
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/09/vmware_vs_ntpd/">VMware vs. Ntpd</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-09-10T00:00:00+02:00" pubdate data-updated="true">Sep 10<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Die Kombination VMware Server und ntpd in der virtual machine ist nicht zu empfehlen. VMware fängt die timer interrupts ab und manipuliert sie zur Lastverteilung zwischen den virtuellen Maschinen. Der ntpd kommt dadurch gehörig aus dem Takt und VMware hat Last, wo es eigentlich keine gibt.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/9/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/7/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

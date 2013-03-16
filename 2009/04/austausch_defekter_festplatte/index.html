@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Austausch defekter Festplatte bei Hetzner - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Auf einen Hilfssystem, das wir von Hetzner hosten lassen, stellte ich gestern einen Hardwaredefekt bei einer der beiden Festplatten des RAID-1- &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2009/04/austausch_defekter_festplatte">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Austausch Defekter Festplatte Bei Hetzner</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-04-28T00:00:00+02:00" pubdate data-updated="true">Apr 28<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Auf einen Hilfssystem, das wir von Hetzner hosten lassen, stellte ich gestern einen Hardwaredefekt bei einer der beiden Festplatten des RAID-1-Verbunds fest. Das RAID war degraded und in der dmesg waren die typischen Ausgaben zu finden.</p>
+
+<pre><code>ata2: EH complete
+SCSI device sdb: 976773168 512-byte hdwr sectors (500108 MB)
+sdb: Write Protect is off
+sdb: Mode Sense: 00 3a 00 00
+SCSI device sdb: drive cache: write back
+ata2.00: exception Emask 0x0 SAct 0x1 SErr 0x0 action 0x0
+ata2.00: (irq_stat 0x40000008)
+ata2.00: tag 0 cmd 0x60 Emask 0x9 stat 0x41 err 0x40 (media error)
+sd 1:0:0:0: SCSI error: return code = 0x08000002
+sdb: Current: sense key: Medium Error
+Additional sense: Unrecovered read error - auto reallocate failed
+end_request: I/O error, dev sdb, sector 976767110
+ata2: EH complete
+SCSI device sdb: 976773168 512-byte hdwr sectors (500108 MB)
+sdb: Write Protect is off
+sdb: Mode Sense: 00 3a 00 00
+SCSI device sdb: drive cache: write back
+ata2.00: WARNING: zero len r/w req
+ata2.00: WARNING: zero len r/w req
+ata2.00: WARNING: zero len r/w req
+ata2.00: WARNING: zero len r/w req&gt; ata2.00: WARNING: zero len r/w req
+ata2.00: WARNING: zero len r/w req
+raid1: Disk failure on sdb2, disabling device.
+Operation continuing on 1 devices
+RAID1 conf printout:
+--- wd:1 rd:2
+disk 0, wo:0, o:1, dev:sda2
+disk 1, wo:1, o:0, dev:sdb2
+RAID1 conf printout:
+--- wd:1 rd:2
+disk 0, wo:0, o:1, dev:sda2
+</code></pre>
+
+<p>Kurz den Support bei Hetzner angeschrieben und den Sachverhalt geschildert, bekam ich nach zehn Minuten die erste Antwort und zwei weitere Mails (insgesamt etwa eine halbe Stunde) später hatte ich einen Termin am nächsten Morgen für den Austausch der Platte. Versprochene Downtime war etwa zehn Minuten.</p>
+
+<p>Den Termin und die Downtime hat Hetzner eingehalten. Die neue Platte mußte ich nur noch partitionieren und ins RAID einbinden. Fertig.</p>
+
+<pre><code>sfdisk -d /dev/sda | sfdisk /dev/sdb
+mdadm --add /dev/md0 /dev/sdb1
+mdadm --add /dev/md1 /dev/sdb2
+grub-install /dev/sdb
+</code></pre>
+
+<p>Ich bin sehr zufrieden mit Hetzner. Von manch anderem Massenhoster kenne ich deutlich unprofessionelleres Vorgehen bei Hardwaredefekten dieser Art.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-04-28T00:00:00+02:00" pubdate data-updated="true">Apr 28<span>th</span>, 2009</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2009/04/austausch_defekter_festplatte/" data-via="" data-counturl="http://sw0x2A.github.com/2009/04/austausch_defekter_festplatte/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2009/02/smarthost_signiert_mails_mit_d/" title="Previous Post: Smarthost signiert Mails mit DKIM">&laquo; Smarthost signiert Mails mit DKIM</a>
+      
+      
+        <a class="basic-alignment right" href="/2009/07/passwort_von_windows-benutzerk/" title="Next Post: Passwort von Windows-Benutzerkonto zurücksetzen">Passwort von Windows-Benutzerkonto zurücksetzen &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

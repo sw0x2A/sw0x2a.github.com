@@ -1,0 +1,368 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Debian Linux mit debootstrap auf Host Europe VPS installieren - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="[EDIT: December 8, 2007 9:45 PM: Das nachfolgend beschriebene Vorgehen führt zu Fehlern beim Restore eines über das Virtuozzo Control Panel &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2007/12/debian_linux_mit_debootstrap_a">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Debian Linux Mit Debootstrap Auf Host Europe VPS Installieren</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-01T00:00:00+01:00" pubdate data-updated="true">Dec 1<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p><strong>[EDIT: December 8, 2007 9:45 PM: Das nachfolgend beschriebene Vorgehen führt zu Fehlern beim Restore eines über das Virtuozzo Control Panel erstellten Backups. Es ist daher nicht zu empfehlen, wenn die Backup-Funktionalität des Control Panels genutzt werden soll. Weitere Informationen zur Beeinträchtigung finden Sie in diesem <a href="http://syslog.warten.de/2007/12/restore-failed-auf-vps-linux.html">Artikel</a>.]</strong></p>
+
+<p>Das Debian-Image der <a href="http://www.hosteurope.de/produkte/VPS-Linux">VPS Linux bei Host Europe</a> hat mehr Pakete vorinstalliert als für manche Zwecke notwendig sind. Diese könnten natürlich einfach entfernt werden. In diesem Fall soll jedoch ein Debian Linux mit debootstrap auf dem virtuellen Server komplett neu installiert werden. Das Vorgehen orientiert sich weitgehend an der <a href="http://www.debian.org/releases/stable/hppa/apds03.html.de">Installationsanleitung</a> der Debian-Entwickler. Durch die Virtualisierungstechnik sind jedoch einige Besonderheiten zu beachten.</p>
+
+<p>Zu Beginn ist der Server über das Virtuozzo Power Panel im Menüpunkt VPS Management > Maintenance in den Repair Mode zu versetzen. Das Virtuozzo Power Panel ist über https://VPS-IP:4643/ aufzurufen. Im Repair Mode ist das Dateisystem der VPS nach /repair gemountet.</p>
+
+<p>Das Dateisystem der VPS wird komplett gelöscht, danach debootstrap installiert und ausgeführt.</p>
+
+<pre><code># rm -rf /repair/*  
+# mkdir /tmp/work  
+# cd /tmp/work/  
+# wget http://ftp.hosteurope.de/mirror/ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap\_1.0.7\_all.deb  
+# ar -xf debootstrap\_1.0.7\_all.deb  
+# cd /  
+# zcat /tmp/work/data.tar.gz | tar xv  
+# /usr/sbin/debootstrap –arch i386 etch /repair http://ftp.hosteurope.de/mirror/ftp.debian.org/debian/ 
+</code></pre>
+
+<p>Nachdem das Basissystem installiert ist, müssen ein paar Anpassungen vorgenommen werden. In der Regel können die Konfigurationsdateien aus dem Repair Mode mit <code>cp -a /etc/filename /repair/etc/filename</code> übernommen werden. Es werden die Pseudo-Dateisysteme in fstab hinzugefügt, …</p>
+
+<pre><code># vi /repair/etc/fstab 
+
+proc  /proc       proc    defaults    0    0  
+none  /dev/pts    devpts  rw          0    0 
+</code></pre>
+
+<p>… ein Template für die Netzwerkkonfiguration hinterlegt, …</p>
+
+<pre><code># vi /repair/etc/network/interfaces.template 
+
+auto lo  
+iface lo inet loopback  
+       address 127.0.0.1  
+       netmask 255.0.0.0  
+       broadcast 127.255.255.255  
+       up ip route replace 127.0.0.0/8 dev lo 
+</code></pre>
+
+<p>… die sources.list erweitert, …</p>
+
+<pre><code># vi /repair/etc/apt/sources.list 
+
+#Host Europe server:  
+deb http://ftp.hosteurope.de/mirror/ftp.debian.org/debian etch main  
+deb http://ftp.hosteurope.de/mirror/ftp.debian.org/debian-security etch/updates main 
+deb http://security.debian.org etch/updates main  
+deb-src http://security.debian.org/ etch/updates main
+
+#deb http://ftp.de.debian.org/debian/ etch main contrib non-free  
+#deb-src http://ftp.de.debian.org/debian etch main contrib non-free  
+… die hosts-Datei angepasst und …
+
+# vi /repair/etc/hosts 
+
+127.0.0.1     localhost localhost.localdomain  
+10.20.30.40   example.com 
+</code></pre>
+
+<p>… in der inittab werden die Konsolen einkommentiert, da sie auf dem VPS nicht nutzbar sind.</p>
+
+<pre><code># vi /repair/etc/inittab   
+[...]  
+# Note that on most Debian systems tty7 is used by the X Window System,  
+# so if you want to add more getty’s go ahead but skip tty7 if you run X.  
+#  
+#1:2345:respawn:/sbin/getty 38400 tty1  
+#2:23:respawn:/sbin/getty 38400 tty2  
+#3:23:respawn:/sbin/getty 38400 tty3  
+#4:23:respawn:/sbin/getty 38400 tty4  
+#5:23:respawn:/sbin/getty 38400 tty5  
+#6:23:respawn:/sbin/getty 38400 tty6  
+[...] 
+</code></pre>
+
+<p>Es wird eine chroot-Umgebung aufgebaut, damit zusätzliche Pakete installiert und das neue System bearbeitet und konfiguriert werden können.</p>
+
+<pre><code># LANG=C chroot /repair /bin/bash 
+</code></pre>
+
+<p>Zuerst wird die Zeitzone eingestellt.</p>
+
+<pre><code># tzconfig 
+</code></pre>
+
+<p>Dann muss der sshd installiert werden. Außerdem werden locales und console-data installiert, um Sprach- und Lokalisierungsanpassungen vornehmen zu können. Um beispielsweise ein englischsprachiges System mit einer deutschen Tastaturbelegung zu nutzen, wird bei den locales “en_US.UTF-8″ und in console_data die Keymap “pc / qwertz / German / Standard / latin1″ ausgewählt.</p>
+
+<pre><code># aptitude update  
+# aptitude install openssh-server  
+# aptitude install locales  
+# dpkg-reconfigure locales  
+# aptitude install console-data  
+# dpkg-reconfigure console-data 
+</code></pre>
+
+<p>Da bei jedem Neustart des V-Servers der Hostname zurückgesetzt wird, muss er beim Booten neu geschrieben werden. Es wird hierfür die in der <a href="http://www.hosteurope.de/faq/index.php?cpid=11517">Host Europe FAQ</a> vorgeschlagene Lösung eingesetzt.</p>
+
+<pre><code># vi /etc/init.d/hostname_vps 
+
+#!/bin/bash  
+HOSTNAME=example.com  
+echo $HOSTNAME &gt; /etc/hostname  
+/bin/hostname $HOSTNAME  
+if [ -f /etc/my.resolv.conf ]; then cp /etc/my.resolv.conf /etc/resolv.conf ; fi  
+exit  
+</code></pre>
+
+<p>Das Init-Skript wird erstellt, mit Ausführrechten versehen und verlinkt, damit es bei jedem Bootvorgang ausgeführt wird.</p>
+
+<pre><code># chmod x /etc/init.d/hostname_vps  
+# update-rc.d hostname_vps defaults 09 
+</code></pre>
+
+<p>Zum Abschluß wird das root-Passwort gesetzt, die chroot-Umgebung verlassen und ausgeloggt.</p>
+
+<pre><code># /etc/init.d/ssh stop  
+# passwd  
+# exit  
+# logout 
+</code></pre>
+
+<p>Die Installation von Debian Linux ist nun vollständig abgeschlossen und der Server muss rebootet werden. Hierzu wird der Repair Mode im Virtuozzo Power Panel beendet. Nach ein paar Sekunden sollte man sich auf dem neugestarteten Server anmelden können.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-01T00:00:00+01:00" pubdate data-updated="true">Dec 1<span>st</span>, 2007</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2007/12/debian_linux_mit_debootstrap_a/" data-via="" data-counturl="http://sw0x2A.github.com/2007/12/debian_linux_mit_debootstrap_a/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2007/11/plesk_auf_debian_uber_paketver/" title="Previous Post: Plesk auf Debian über Paketverwaltung installieren">&laquo; Plesk auf Debian über Paketverwaltung installieren</a>
+      
+      
+        <a class="basic-alignment right" href="/2007/12/deutsche_ubersetzung_der_lpifr/" title="Next Post: Deutsche Übersetzung der LPI-Fragen fehlerhaft">Deutsche Übersetzung der LPI-Fragen fehlerhaft &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

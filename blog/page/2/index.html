@@ -1,0 +1,709 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="I have upgraded my MongoDB installation to version 2.0 today and converted existing indexes to {v:1} format. According to the release notes, “ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/blog/page/2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/09/significant-improvements-to-indexes-in-mongodb-v2-0/">Significant Improvements to Indexes in MongoDB v2.0</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-13T00:00:00+02:00" pubdate data-updated="true">Sep 13<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>I have upgraded my MongoDB installation to version 2.0 today and converted existing indexes to {v:1} format. According to the <a href="http://www.mongodb.org/display/DOCS/2.0">release notes</a>, <em>“Indexes are often 25% smaller and 25% faster (depends on the use case)”</em>.</p>
+
+<pre><code>&gt; db.hashes.totalIndexSize()
+5932986112
+&gt; db.hashes.runCommand( "compact" )
+{ "ok" : 1 }
+&gt; db.hashes.totalIndexSize()
+3527294016
+</code></pre>
+
+<p>In my case, a more than 10 GB database, the <code>totalIndexSize</code> of {v:1} format indexes is reduced by more than 40% to only 59.45% of the size of the old {v:0} format indexes. Well done, MongoDB developers!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/09/instant-query-log-for-mysql/">Instant Query Log for MySQL</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-06T00:00:00+02:00" pubdate data-updated="true">Sep 6<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>MySQL has <a href="http://dev.mysql.com/doc/refman/5.5/en/server-logs.html">build-in logging</a> for queries (general) and slow queries (slow). You can enable them at startup. It is not recommended to enable general logs on a high-traffic database server for performance reasons but sometimes you may want to be able to see what queries are executed there.</p>
+
+<p>Since <a href="http://www.maatkit.org/doc/mk-query-digest.html">mk-query-digest</a> is able to read <a href="http://www.tcpdump.org/">tcpdumps</a>, it is the perfect tool to create an instant query log. Just pipe all network traffic on MySQL port to mk-query-digest for analysis.</p>
+
+<pre><code>tcpdump -i eth2 port 3306 -s 65535  -x -n -q -tttt | 
+  mk-query-digest --type tcpdump
+</code></pre>
+
+<p>There are much more things you can do with mk-query-digest, so it is worth to write a dump of network traffic to a file and work with it.</p>
+
+<pre><code>tcpdump -i eth2 port 3306 -s 65535  -x -n -q -tttt &gt; tcpdump.out
+</code></pre>
+
+<p>You can convert it to slow query log format and parse it with your favorite analysis tool.</p>
+
+<pre><code>mk-query-digest --type tcpdump --print --noreport &lt; tcpdump.out &gt; slow.log
+</code></pre>
+
+<p>The report of an analysis of mk-query-digest fingerprints queries. To search for them in your logfile, you can use the <code>--filter</code> parameter.</p>
+
+<pre><code>mk-query-digest slow.log --no-report --print 
+--filter '$event-&gt;{fingerprint} &amp;&amp; make_checksum($event-&gt;{fingerprint}) eq "76A68B0365255C58"'
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/08/logrotate-with-mongodb/">Logrotate With MongoDB</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-22T00:00:00+02:00" pubdate data-updated="true">Aug 22<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>MongoDB packages are shipped with <a href="http://www.mongodb.org/display/DOCS/Logging">logging</a> enabled in configuration but without a script to rotate the logfile. There are two build-in ways to let MongoDB rotate its logfile. You can execute <code>db.runCommand("logRotate");</code> from the mongo shell or <code>kill -SIGUSR1 $(cat /var/lib/mongodb/mongod.lock)</code> from unix shell.</p>
+
+<p>The best way to automate this is to use <code>logrotate</code>. Copy the following code into <code>/etc/logrotate.d/mongodb</code> and make sure that pathes and filenames in the script correspond with those in your system.</p>
+
+<pre><code>/var/log/mongodb/mongodb.log {
+    daily
+    rotate 7
+    compress
+    missingok
+    notifempty
+    sharedscripts
+    postrotate
+        /bin/kill -SIGUSR1 `cat /var/lib/mongodb/mongod.lock` &amp;&amp; 
+        rm -f /var/log/mongodb/mongodb.log.????-??-??T??-??-??
+    endscript
+}
+</code></pre>
+
+<p>It rotates the logfile <code>/var/log/mongodb/mongodb.log</code> on a daily basis and keeps them for 7 days compressed. Since MongoDB’s build-in <code>logRotate</code> conflicts with <code>logrotate</code>, it also cleans up the empty, log-rotated files created by MongoDB.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/08/340/">340</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-22T00:00:00+02:00" pubdate data-updated="true">Aug 22<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><a href="http://www.davidpashley.com/articles/writing-robust-shell-scripts.html">Writing robust Bash shell scripts</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/08/338/">338</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-02T00:00:00+02:00" pubdate data-updated="true">Aug 2<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><a href="http://www252.pair.com/comdog/mastering_perl/">Mastering Perl</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/08/solarize-your-terminal/">Solarize Your Terminal!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-01T00:00:00+02:00" pubdate data-updated="true">Aug 1<span>st</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>I have <a href="http://www.xaprb.com/blog/2011/07/28/easy-on-the-eyes-the-solarized-color-theme/">read</a> about <a href="http://ethanschoonover.com/solarized">Solarized</a> recently. It is a sixteen color palette designed for use with terminal and gui applications. I am using both the dark and light mode in <a href="https://github.com/sigurdga/gnome-terminal-colors-solarized">Gnome Terminal</a>, <a href="https://github.com/altercation/vim-colors-solarized">vim</a> and <a href="https://github.com/fentie/netbeans-colors-solarized">Netbeans</a> since a few days and I really like to work with it and do not want to miss it.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/08/perl-inserting-a-lot-of-documents-in-mongodb/">Perl: Inserting a Lot of Documents in MongoDB</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-01T00:00:00+02:00" pubdate data-updated="true">Aug 1<span>st</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>In the last few day, I spend a lot of time to figure out and learn how <a href="http://www.mongodb.org/">MongoDB</a> works and what is the best solution to fill a collection with millions of records (documents). To be more precise, I want to store unique strings and some other data related to that strings. One should be able to search for values in all fields, therefore I set indexes for all of them and a unique one for the strings.</p>
+
+<p>Since I want to insert a lot of records, I thought it would be a good idea to use <code>batch_insert</code> (see <a href="http://api.mongodb.org/perl/current/MongoDB/Collection.html">API Documentation for Perl driver</a>), which would insert each document in an array into the database. It turned out very fast that I have to check for duplicate strings because <code>batch-insert</code> breaks immediately when it gets an error from the unique index and does not insert the remaining documents. I ended up with something like the following, which does what it should but I had a bad feeling and started to profile that code.</p>
+
+<pre><code>while() {
+    chomp(my $string = $_);
+    next if defined($mongo_coll-&gt;find_one({ plaintext =&gt; $string }));
+    push(@documents, { 
+        "plaintext" =&gt;  "$string",
+        "foo"       =&gt;  "bar",
+    });
+    if ( $counter   == $max_inserts ) {
+        mdb_batch_insert(@documents);
+        @hashes=(); $counter=1;
+    }
+}
+mdb_batch_insert(@documents);
+
+sub mdb_batch_insert {
+    my $documents_ref = shift;
+    $mongo_coll-&gt;batch_insert($documents_ref);
+    my $err = $mongo_db-&gt;last_error();
+    unless ( $err-&gt;{ok} eq 1 and not defined($err-&gt;{err}) ) {
+        $logger-&gt;error(Dumper($err));
+    }
+}
+</code></pre>
+
+<p>For profiling (using <a href="http://search.cpan.org/perldoc?Devel::SmallProf">Devel::SmallProf</a>) and benchmarking I inserted the same 100000 documents twice into an empty collection. Doing so, I have got results for inserts without collisions with unique index and no inserts or inserts with 100% collisions.</p>
+
+<p>The results pointed out that a lot of time was wasted with checking for duplicates and errors. I started to play around with other ways to insert data and was surprised to see that the easiest approach is also the fastest: Since MongoDB takes automatically care of duplicates, it is possible to just insert each document separately without checking for errors.</p>
+
+<pre><code>while () {
+    chomp( my $plaintext = $_ );
+    $mongo_coll-&gt;insert({
+        "plaintext" =&gt;  "$string",
+        "foo"       =&gt;  "bar",
+    });
+}
+</code></pre>
+
+<p>I use that code to insert the first 23 million documents. After approximately 10 million inserts, I could see that performance of MongoDB and my script went down. Another problem was that some documents (~5000) were not inserted due to errors I did not checked for. What have I learned? That I have to check for errors and even when it is not a measurable problem in an almost empty database, of course, <code>insert</code> is more expensive than <code>find_one</code>.</p>
+
+<pre><code>while () {
+    chomp( my $plaintext = $_ );
+    next if defined( $mongo_coll-&gt;find_one( { plaintext =&gt; $plaintext } ) );
+    eval {
+        $mongo_coll-&gt;insert(
+            {
+                        "plaintext" =&gt;  "$plaintext",
+                        "foo"       =&gt;  "bar",
+            },
+            { safe =&gt; 1 }
+        );
+    };
+    $logger-&gt;error($@) if $@;
+}
+</code></pre>
+
+<p>At the end, one could say that it would have been obvious that the final solution is the best. Yes, it is how I would have done it with MySQL. But I wanted to become familiar with it and was wondering whether MongoDB would act similar or not. Now I can be sure.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/07/328/">328</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-29T00:00:00+02:00" pubdate data-updated="true">Jul 29<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>I have just <a href="http://code.google.com/p/mysql-cacti-templates/source/detail?r=565">commited another graph template</a> to mysql-cacti-templates.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/07/backup-to-go/">Backup to Go</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-28T00:00:00+02:00" pubdate data-updated="true">Jul 28<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>We are using Bacula to store backups of all our servers on one big storage system. That made us sleep better for some days but then we thought it would be good to have another backup at a remote site (because a fire or another disaster could destroy servers and backup at once). Usually, one would just copy the backups over network to that remote site. Unfortunally, this was not an option for us because of some special conditions not worth to mention here. We decided to carry backup hard drives to that remote site instead.</p>
+
+<p>The backup system is a 2U server with 12 hot swappable hard drive bays. 10 of them are bundled as RAID-5 to store all full (weekly) and incremental (daily) backups. The other two hard drives are mirred (RAID-1) and have the latest full backups saved on it. Once a week, we replace one hard drive from RAID-1 and carry it to that remote site. That is it: A remote backup copy with almost no extra costs.</p>
+
+<p>Backups are done by Bacula automatically. All we have to do is to remove one hard drive from backup server and replace it. To make this easy, I wrote a small script that helps us doing it. It uses tw_cli, the monitoring and management software for 3ware RAID controllers. There are also Debian packages and <a href="http://jonas.genannt.name/">repositories</a> available.</p>
+
+<pre><code>#!/bin/bash
+
+TW_CLI=/usr/sbin/tw_cli
+DATE_CMD=/bin/date
+WEEK=$($DATE_CMD  %V | sed s/^0//)
+let "DRIVE=($WEEK%2) 18"
+CONTROLLER="/c0"
+SHOW_RAID_STATUS="$TW_CLI $CONTROLLER show"
+RAID_CHECK_CMD="$TW_CLI /c0 show allunitstatus"
+REMOVE_DRIVE="$TW_CLI $CONTROLLER/p$DRIVE remove quiet"
+
+$SHOW_RAID_STATUS
+
+if $RAID_CHECK_CMD | grep -q 'Not Optimal Units = [^0]'; then
+    echo "RAID status is not optimal. Aborting."; echo
+    exit 1
+fi
+
+echo "You are about to remove VPort p$DRIVE. This will degrade RAID status!"
+read -p "Are you sure? (yes/no)"
+if [ "$REPLY" == "yes" ]; then
+    $REMOVE_DRIVE
+fi
+</code></pre>
+
+<p>It checks RAID status (line 14) and if it is in an optimal state, it chooses a hard drive and removes it (line 22). Because we do not want to change the same hard drive all the time, we choice hard drive by whether calendar week is odd or even (line 6).</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/07/broken-cable-disabled-gigabit-ethernet/">Broken Cable Disabled Gigabit Ethernet</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-26T00:00:00+02:00" pubdate data-updated="true">Jul 26<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>I have just noticed that one of our servers were connected with 100baseTx instead of 1000baseT. Both end-points support 1000baseT but it was not advertised.</p>
+
+<pre><code># mii-tool -v eth0
+eth0: negotiated 100baseTx-FD, link ok
+  product info: vendor 00:50:43, model 11 rev 1
+  basic mode: autonegotiation enabled
+  basic status: autonegotiation complete, link ok
+  capabilities: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+  advertising: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+  link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+</code></pre>
+
+<p>First idea was to check cable. It was the same Cat 5e cable we always use. However, I replaced it with another one of the same type and suddenly Gigabit Ethernet was working again.</p>
+
+<pre><code># mii-tool eth0
+eth0: negotiated 1000baseT-FD flow-control, link ok
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

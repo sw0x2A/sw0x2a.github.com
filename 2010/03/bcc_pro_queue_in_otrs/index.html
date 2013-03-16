@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Bcc pro Queue in OTRS - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Die Antworten auf Tickets einer bestimmten Queue im OTRS sollen per Bcc an eine weitere Adresse gesendet werden. Das sieht OTRS bisher nicht vor; &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2010/03/bcc_pro_queue_in_otrs">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Bcc Pro Queue in OTRS</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-12T00:00:00+01:00" pubdate data-updated="true">Mar 12<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Die Antworten auf Tickets einer bestimmten Queue im <a href="http://otrs.org/">OTRS</a> sollen per Bcc an eine weitere Adresse gesendet werden. Das sieht OTRS bisher nicht vor; die einzige Option ist ein generelles Bcc für alle Queues.<br/>
+Um hier Abhilfe zu schaffen, habe ich <code>Kernel/Modules/AgentTicketCompose.pm</code> ein wenig erweitert. Etwa bei Zeile 400 findet sich folgende Methode, bei der die mit Bcc beginnende Zeile wie folgt geändert wird.</p>
+
+<p><code>-Bcc            =&gt; $GetParam{Bcc},
+ Bcc            =&gt; $Ticket{QueueID} == 83 ? ('bcc@example.com') : $GetParam{Bcc},</code></p>
+
+<p>Die QueueID (im Beispiel 83) und die Zieladresse müssen selbstverständlich angepaßt werden.</p>
+
+<pre><code># send email
+    my $ArticleID = $Self-&gt;{TicketObject}-&gt;ArticleSend(
+        ArticleType    =&gt; 'email-external',
+        SenderType     =&gt; 'agent',
+        TicketID       =&gt; $Self-&gt;{TicketID},
+        HistoryType    =&gt; 'SendAnswer',
+        HistoryComment =&gt; "%%$Recipients",
+        From           =&gt; $GetParam{From},
+        To             =&gt; $GetParam{To},
+        Cc             =&gt; $GetParam{Cc},
+        # Dirty hack to Bcc (forward) answers of tickets from queue id=83.
+        #Bcc           =&gt; $GetParam{Bcc},
+        Bcc            =&gt; $Ticket{QueueID} == 83 ? ('bcc@example.com') : $GetParam{Bcc},
+        Subject        =&gt; $GetParam{Subject},
+        UserID         =&gt; $Self-&gt;{UserID},
+        Body           =&gt; $GetParam{Body},
+        InReplyTo      =&gt; $GetParam{InReplyTo},
+        Charset        =&gt; $Self-&gt;{LayoutObject}-&gt;{UserCharset},
+        Type           =&gt; 'text/plain',
+        Attachment     =&gt; @AttachmentData,
+        %ArticleParam,
+    );
+</code></pre>
+
+<p>Mit ein bisschen mehr Aufwand ließe sich das auch auf mehrere Queues ausweiten sowie die Definition der QueueIDs und Bcc-Adressen in die Konfigurationsdatei auslagern. Das überlasse ich dem geneigten Leser als Hausaufgabe.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-12T00:00:00+01:00" pubdate data-updated="true">Mar 12<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2010/03/bcc_pro_queue_in_otrs/" data-via="" data-counturl="http://sw0x2A.github.com/2010/03/bcc_pro_queue_in_otrs/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2010/03/zugangsdaten_fur_den_router_siemens/" title="Previous Post: 109">&laquo; 109</a>
+      
+      
+        <a class="basic-alignment right" href="/2010/03/110/" title="Next Post: 110">110 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,703 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="#!/bin/bash
+pwd=`pwd`
+find ${pwd} -type f -name *.rar | while read "file"
+do directory=`dirname ${file}` filename=`basename ${file}` let number=${# &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/blog/page/7">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/11/binbash_pwdpwd_find_pwd_-type/">93</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-21T00:00:00+01:00" pubdate data-updated="true">Nov 21<span>st</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<pre><code>#!/bin/bash
+pwd=`pwd`
+find ${pwd} -type f -name *.rar | 
+while read "file"
+do
+    directory=`dirname ${file}`
+    filename=`basename ${file}`
+    let number=${#filename}-2
+    cd ${directory}
+    unrar x ${filename}
+    if [ $? -eq 0 ]; then
+            rm  ${filename:0:${number}}*
+    else
+            echo ERROR: unrar failed on $file
+    fi
+    cd ${pwd}
+done
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/11/sudo_apt-key_adv_-keyserver_keyserverubuntucom/">92</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-21T00:00:00+01:00" pubdate data-updated="true">Nov 21<span>st</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><code>sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 12345678</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/11/mandelbulb_the_unravelling_of_the_real_3d_mandelbrot_fractal/">91</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-16T00:00:00+01:00" pubdate data-updated="true">Nov 16<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><a href="http://www.skytopia.com/project/fractal/mandelbulb.html">Mandelbulb: The Unravelling of the Real 3D Mandelbrot Fractal</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/11/nach_prufung_der_vorhandenen_eintrage/">89</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-14T00:00:00+01:00" pubdate data-updated="true">Nov 14<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Nach Prüfung der vorhandenen Einträge hiermit alle meine Kommentare, die ohne Authentifizierung erfolgten, meinem User in Movable Type zugeordnet:</p>
+
+<pre><code>UPDATE
+    `mt_comment`
+SET 
+    `comment_commenter_id` = 1, 
+    `comment_email` = 'sw@example.com', 
+    `comment_created_by` = 1
+WHERE 
+    `comment_author` = 'sw'
+    AND isnull(`comment_commenter_id`)
+    AND isnull(`comment_created_by`);
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/11/hello_world-2/">88</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-14T00:00:00+01:00" pubdate data-updated="true">Nov 14<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><code>echo Hello, world!</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/10/papierkorb_fur_samba/">Papierkorb Für Samba</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-10-02T00:00:00+02:00" pubdate data-updated="true">Oct 2<span>nd</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Der Gedanke, dass Dateien, die auf dem Fileserver liegen, von den Benutzern versehentlich gelöscht werden könnten und diese dann nur aus den Backups wiederherzugestellen seien, ließ dem Vorgesetzten zwanzig graue Haare wachsen und mich nach einer Lösung suchen. Die besteht aus dem <a href="http://www.samba.org/samba/docs/man/Samba-HOWTO-Collection/VFS.html#id2651366">VFS-Modul recycle</a> für Samba, dass die Papierkorb-Funktion von Windows nachahmt. Wird es benutzt, werden UNLINK-Befehle abgefangen, und die Datei in den recycle-Ordner verschoben, anstatt gelöscht zu werden.</p>
+
+<p>Bei Verfügbarkeit des Moduls sollte im Bibliotheksverzeichnis von Samba unter vfs die Datei recycle.so zu finden sein, üblicherweise <code>/usr/lib/samba/vfs/recycle.so</code> auf Linux oder <code>/usr/local/lib/samba/vfs/recycle.so</code> auf BSD.</p>
+
+<p>Am Beispiel einer für alle Benutzer zugänglichen Freigabe sei die Konfiguration gezeigt. Mit der Definition von <code>vfs object = recycle</code> wird das Modul geladen und danach weitere Parameter übergeben. Eine Erklärung zu den Optionen ist der Dokumentation zu entnehmen.</p>
+
+<pre><code>[public]
+path = /var/fileserver/public
+writeable = Yes
+browseable = Yes
+create mask = 0666
+directory mask = 0777
+vfs object = recycle
+recycle:repository = .recycle
+recycle:keeptree = Yes
+recycle:touch = Yes
+recycle:versions = Yes
+recycle:maxsize = 0
+recycle:directory_mode = 0777
+</code></pre>
+
+<p>Das Verzeichnis <code>.recycle</code> wird automatisch in oberster Ebene der Freigabe angelegt und eine gelöschte Dateien und Verzeichnisse nun dort hin verschoben.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/07/passwort_von_windows-benutzerk/">Passwort Von Windows-Benutzerkonto Zurücksetzen</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-07-27T00:00:00+02:00" pubdate data-updated="true">Jul 27<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Wenn das Zugangspasswort für ein Benutzerkonto im Windows unbekannt ist und zurückgesetzt werden soll, kann auch der Linux-Admin schnell Abhilfe leisten. Hierzu bedarf es lediglich eines Bootmediums mit Linux und dem Tool <a href="http://freshmeat.net/projects/chntpw/">chntpw</a>. In meinem Fall ist das ein USB-Stick mit <a href="http://grml.org/">GRML</a>, das chntpw bereits mitbringt.</p>
+
+<p>Ist das System gestartet, wird die Windows-Partition gemountet und in das Verzeichnis <code>WINDOWSSystem32config</code> gewechselt. Dort liegt die Datei SAM, die die Accountdaten, also auch die Passwort-Hashes, beinhaltet.</p>
+
+<pre><code># mkdir /mnt/windows
+# ntfs-3g /dev/sda1 /mnt/windows
+# cd /mnt/windows/WINDOWS/system32/config
+</code></pre>
+
+<p>Mit dem folgenden Kommando kann man sich die einzelnen Konten anzeigen lassen…</p>
+
+<pre><code># chntpw -l SAM
+</code></pre>
+
+<p>…und dann zur Tat schreiten und das Passwort löschen oder neu setzen:</p>
+
+<pre><code># chntpw -u username SAM
+</code></pre>
+
+<p>Im letzten Kommando ist ‘username’ dabei selbstverständlich durch den Benutzernamen des Windows-Kontos zu ersetzen.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/04/austausch_defekter_festplatte/">Austausch Defekter Festplatte Bei Hetzner</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-04-28T00:00:00+02:00" pubdate data-updated="true">Apr 28<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Auf einen Hilfssystem, das wir von Hetzner hosten lassen, stellte ich gestern einen Hardwaredefekt bei einer der beiden Festplatten des RAID-1-Verbunds fest. Das RAID war degraded und in der dmesg waren die typischen Ausgaben zu finden.</p>
+
+<pre><code>ata2: EH complete
+SCSI device sdb: 976773168 512-byte hdwr sectors (500108 MB)
+sdb: Write Protect is off
+sdb: Mode Sense: 00 3a 00 00
+SCSI device sdb: drive cache: write back
+ata2.00: exception Emask 0x0 SAct 0x1 SErr 0x0 action 0x0
+ata2.00: (irq_stat 0x40000008)
+ata2.00: tag 0 cmd 0x60 Emask 0x9 stat 0x41 err 0x40 (media error)
+sd 1:0:0:0: SCSI error: return code = 0x08000002
+sdb: Current: sense key: Medium Error
+Additional sense: Unrecovered read error - auto reallocate failed
+end_request: I/O error, dev sdb, sector 976767110
+ata2: EH complete
+SCSI device sdb: 976773168 512-byte hdwr sectors (500108 MB)
+sdb: Write Protect is off
+sdb: Mode Sense: 00 3a 00 00
+SCSI device sdb: drive cache: write back
+ata2.00: WARNING: zero len r/w req
+ata2.00: WARNING: zero len r/w req
+ata2.00: WARNING: zero len r/w req
+ata2.00: WARNING: zero len r/w req&gt; ata2.00: WARNING: zero len r/w req
+ata2.00: WARNING: zero len r/w req
+raid1: Disk failure on sdb2, disabling device.
+Operation continuing on 1 devices
+RAID1 conf printout:
+--- wd:1 rd:2
+disk 0, wo:0, o:1, dev:sda2
+disk 1, wo:1, o:0, dev:sdb2
+RAID1 conf printout:
+--- wd:1 rd:2
+disk 0, wo:0, o:1, dev:sda2
+</code></pre>
+
+<p>Kurz den Support bei Hetzner angeschrieben und den Sachverhalt geschildert, bekam ich nach zehn Minuten die erste Antwort und zwei weitere Mails (insgesamt etwa eine halbe Stunde) später hatte ich einen Termin am nächsten Morgen für den Austausch der Platte. Versprochene Downtime war etwa zehn Minuten.</p>
+
+<p>Den Termin und die Downtime hat Hetzner eingehalten. Die neue Platte mußte ich nur noch partitionieren und ins RAID einbinden. Fertig.</p>
+
+<pre><code>sfdisk -d /dev/sda | sfdisk /dev/sdb
+mdadm --add /dev/md0 /dev/sdb1
+mdadm --add /dev/md1 /dev/sdb2
+grub-install /dev/sdb
+</code></pre>
+
+<p>Ich bin sehr zufrieden mit Hetzner. Von manch anderem Massenhoster kenne ich deutlich unprofessionelleres Vorgehen bei Hardwaredefekten dieser Art.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/02/smarthost_signiert_mails_mit_d/">Smarthost Signiert Mails Mit DKIM</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-02-23T00:00:00+01:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Die Produktionsserver relayen alle Mails an einen zentralen Mailserver, der dann den Versand übernimmt. Zusätzlich soll der Smarthost nun alle Mails mit DKIM signieren. Ich habe mich für den <a href="http://sourceforge.net/projects/dkim-milter/">dkim-milter</a> entschieden und die Umsetzung ging dank seiner Helferlein wie dkim-genkey recht schnell und einfach.</p>
+
+<p>Damit der dkim-filter für mehrere Domains signierend tätig werden kann, muss man die Schlüsselinformationen in einer Datei hinterlegen und deren Pfad mit KeyList übergeben. Die Paramater Domain, KeyFile und Selector können ausschliesslich für Ein-Domain-Lösungen verwendet werden.</p>
+
+<p>Die an KeyList übergebene Datei könnte beispielsweise wie folgt aussehen. Durch Doppelpunkte getrennt werden die für die Signierung zugelassenen E-Mail-Adressen, der Domainname (die Redundanz an dieser Stelle ist auffällig häßlich und historisch bedingt) sowie der Pfad zum keyfile angebenen. Die Angabe der Endungen .private und .pem ist optional.</p>
+
+<pre><code>relay:~# cat /etc/dkim-keys.conf
+*@example.de:example.de:/etc/dkim/example.de/2009
+*@example.com:example.com:/etc/dkim/example.com/2009
+*@example.es:example.es:/etc/dkim/example.es/2009
+*@example.fr:example.fr:/etc/dkim/example.fr/2009
+*@example.nl:example.nl:/etc/dkim/example.nl/2009
+*@example.pl:example.pl:/etc/dkim/example.pl/2009
+*@example.se:example.se:/etc/dkim/example.se/2009
+</code></pre>
+
+<p>Nach den notwendigen DNS-Änderungen (TXT für z.B. 2009._domainkey.example.com) funktionierte der lokale Versand wie gewünscht und mit gültiger Signatur. Allein die (wichtigen) externen Hosts wurden ignoriert. Im Logfile sieht das dann so aus:</p>
+
+<pre><code>(unknown-jobid) external host www.example.com attempted to send as example.de
+</code></pre>
+
+<p>Ein Blick in die man-Page konnte auch dieses Problem lösen: Die Grundeinstellung sieht nur eine Signierung von Mails von 127.0.0.1 vor. Mit dem Aufrufparameter <code>-i</code> kann man den Pfad einer Datei übergeben, die pro Zeile eine IP-Adresse weiterer zustellender Systeme enthält.</p>
+
+<pre><code>relay:~# cat /etc/default/dkim-filter
+# Command-line options specified here will override the contents of
+# /etc/dkim-filter.conf. See dkim-filter(8) for a complete list of options.
+DAEMON_OPTS="-i /etc/dkim-peers.conf"
+[...]
+relay:~# cat /etc/dkim-peers.conf
+127.0.0.1
+10.17.133.217
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/02/nfs_permission_denied_wegen_gr/">NFS: Permission Denied Wegen Group</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-02-13T00:00:00+01:00" pubdate data-updated="true">Feb 13<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>RPC, das von NFS für die Identifikation von Benutzern verwendet wird, kann nicht mehr als 16 Gruppen, deren Mitglied ein Benutzer ist, übermitteln. Hier hatten wir den Fall, dass eine Benutzerin plötzlich nicht mehr auf Verzeichnisse zugreifen konnte, für die sie aufgrund der Gruppenrechte Zugriff haben sollte (Permission denied). Selbstverständlich waren die GID auf NFS-Server und Client-System identisch. Sie war kürzlich einer 17. Gruppe zugeordnet worden und die für den Zugriff relevante Gruppe (sie hatte die höchste Group-ID) wurde nicht mehr an den NFS-Server übertragen.</p>
+
+<p>Das war extrem schwer zu debuggen. Die Ursache wurde erst nach Stunden gefunden. Der Sachverhalt wird <a href="http://nfsworld.blogspot.com/2005/03/whats-deal-on-16-group-id-limitation.html">hier</a> ausführlich erläutert. Die Lösung war einfach: Es wurde die Option –manage-gids beim Start von rpc.mountd hinzugefügt.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/8/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/6/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

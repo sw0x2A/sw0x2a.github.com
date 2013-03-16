@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Versionsverwaltung für Konfigurationsdateien in /etc mit Subversion - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Versionskontrolle wird hauptsächlich in der Softwareentwicklung eingesetzt. Aber auch ein Administrator kann sie für seine Zwecke nutzen. Die &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2007/12/versionsverwaltung_fur_konfigu">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Versionsverwaltung Für Konfigurationsdateien in /etc Mit Subversion</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-12T00:00:00+01:00" pubdate data-updated="true">Dec 12<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Versionskontrolle wird hauptsächlich in der Softwareentwicklung eingesetzt. Aber auch ein Administrator kann sie für seine Zwecke nutzen. Die Konfigurationsdateien im Verzeichnis <code>/etc</code> eines Linux-Systems eignen sich hierfür als gutes Beispiel: Sie werden häufiger geändert, möglicherweise von verschiedenen Administratoren und es ist immer hilfreich zu wissen, wer was wann geändert hat. Den Überblick zu haben, das ermöglicht die Versionsverwaltung. Ein Backup ersetzt sie nicht, da Metadaten (Dateieigentümer, Zugriffsrechte u.a.) nicht gesichert werden (Eine vielversprechende Lösung für ein Backup mit Versionskontrolle ist das noch in Entwicklung befindliche <a href="http://fsvs.tigris.org/">FSVS</a>).<br/>
+In der folgenden Anleitung wird als Version Control System <a href="http://subversion.tigris.org/">Subversion</a> eingesetzt. Es ist ausführlich dokumentiert im frei erhältlichen Buch <a href="http://svnbook.red-bean.com/">Version Control with Subversion</a>.</p>
+
+<p>Um die Administration zu erleichtern werden die Produktivdateien (/etc) gleichzeitig die working copy. Das Repository wird im Dateisystem abgelegt. Das macht Sinn, weil das System wie gewohnt konfiguriert wird und die Versionskontrolle nur die Funktion der Dokumenation übernehmen soll. In komplexen Systemen, wo Entwicklungsumgebungen existieren oder mehrere Systeme die identische Konfiguration erhalten sollen, ist ein solcher Trick weniger angebracht.</p>
+
+<p>Es geht los. Es wird ein Repository und eine Ordnerstruktur erstellt. Es folgt der erste Checkout und dann werden alle Dateien aus /etc dem Repository hinzugefügt. Wichtig ist, dass Änderungen am Repository zu bestätigten (commit) sind.</p>
+
+<pre><code># aptitude install subversion  
+# mkdir /var/lib/svn  
+# svnadmin create –fs-type fsfs /var/lib/svn/repository  
+# svn mkdir file:///var/lib/svn/repository/trunk -m “Make trunk”  
+# svn mkdir file:///var/lib/svn/repository/trunk/etc -m “Make a directory in the repository to correspond to /etc”  
+# cd /etc/  
+# svn co file:///var/lib/svn/repository/trunk/etc .  
+# svn add *  
+# svn commit -m “Initial version. Base Debian install ssh subversion.” 
+</code></pre>
+
+<p>Möglicherweise sollen nicht alle Dateien im Verzeichnis /etc unter die Aufsicht der Versionskontrolle gestellt werden: Dateien, die sehr häufig oder maschinell geändert werden; von Texteditoren angelegte Sicherungsdateien (mit Endungen <em>- oder </em>~); oder Dateien, die Passwörter in unverschlüsselter Form enthalten.</p>
+
+<pre><code># cd /etc  
+# svn propedit svn:ignore . 
+</code></pre>
+
+<p>Das Repository steht und es kann mit der täglichen Arbeit begonnen werden. Es folgen häufig im Umgang mit dem Repository verwendete Befehle:</p>
+
+<p>Neue Dateien werden mit dem folgenden Befehl hinzugefügt. Wenn eine Datei im Repository bereits existiert, wird eine Warnung ausgegeben. <em>filename</em> kann auch ein Verzeichnis sein. Die Änderungen werden erst nach der Bestätigung (commit) ins Repository übernommen.</p>
+
+<pre><code># svn add *filename*  
+# svn commit -m “A new file.” 
+</code></pre>
+
+<p>Neue Dateien in Unterverzeichnissen können nicht über eine Wildcard dem Repository hinzugefügt werden. Das folgende Kommando erledigt die Aufgabe.</p>
+
+<pre><code># svn status | grep ^? | awk ‘{ print $2 }’ | xargs svn add  
+# svn commit -m “Some new files.” 
+</code></pre>
+
+<p>Dateioperation wie Löschen (rm), Verschieben oder Umbenennen (mv) oder Kopieren (cp) sollten nicht mehr auf Dateisystemebene durchgeführt werden. Die Befehle werden durch die entsprechenden Alternativen von Subversion ersetzt. Der Vorteil ist, dass so die Geschichte einer Datei erhalten bleibt. Wieder werden die Aktionen erst nach einem commit ins Repository übernommen; im Dateisystem sofort.</p>
+
+<pre><code># svn rm *filename*  
+# svn mv *filename*  
+# svn cp *filename*  
+# svn commit -m “Some file actions.” 
+</code></pre>
+
+<p>Änderungen können rückgängig gemacht werden. Möchte man eine Datei auf den letzten ins Repository geschrieben Stand zurücksetzen oder nicht mit commit bestätigte Aktionen add, rm, mv oder cp ungeschehen machen, nutzt man dieses Kommando:</p>
+
+<pre><code># svn revert *filename* 
+</code></pre>
+
+<p>Eine Übersicht der geänderten Dateien seit dem letzen commit zeigt status:</p>
+
+<pre><code># svn status 
+</code></pre>
+
+<p>Die Änderungen im Detail im unified diff format werden mit dem folgenden Befehl angezeigt. Mit dem Parameter -r können verschiedene Revisionen miteinander verglichen werden.</p>
+
+<pre><code># svn diff [-r *revision1*[:*revision2*]] [*filename*] 
+</code></pre>
+
+<p>Eine Übersicht der verschiedenen Revisionen ist im Log zu finden …</p>
+
+<pre><code># svn log [-r *revision1*[:*revision2*]] [*filename*] 
+</code></pre>
+
+<p>… und die Ausgabe einer früheren Version einer Datei auf STDOUT ist mit folgendem Kommando zu bewirken:</p>
+
+<pre><code># svn cat [-r *revision*] *filename* 
+</code></pre>
+
+<p>Eine Liste der Dateien im Repository bringt …</p>
+
+<pre><code># svn ls [*filename*] 
+</code></pre>
+
+<p>… und eine aktuelle Version des Repository wird mit dem folgenden Befehl bezogen. Änderungen in der working copy bleiben erhalten, wenn die Dateien nicht im Repository geändert wurden (Konflikt). Wenn nur ein Administrator für die Verwaltug des Server zuständig ist, wird dieses Kommando kaum von Bedeutung sein.</p>
+
+<pre><code># svn update
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-12T00:00:00+01:00" pubdate data-updated="true">Dec 12<span>th</span>, 2007</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2007/12/versionsverwaltung_fur_konfigu/" data-via="" data-counturl="http://sw0x2A.github.com/2007/12/versionsverwaltung_fur_konfigu/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2007/12/restore_failed_auf_vps_linux/" title="Previous Post: Restore failed auf VPS Linux">&laquo; Restore failed auf VPS Linux</a>
+      
+      
+        <a class="basic-alignment right" href="/2008/01/pong/" title="Next Post: Pong">Pong &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

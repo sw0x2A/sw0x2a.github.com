@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Restore failed auf VPS Linux - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Vor Kurzem wurde hier beschrieben wie eine Installation von Debian über debootstrap auf einem Virtuozzo VPS Linux bei Host Europe durchgeführt &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2007/12/restore_failed_auf_vps_linux">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Restore Failed Auf VPS Linux</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-08T00:00:00+01:00" pubdate data-updated="true">Dec 8<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Vor Kurzem wurde hier beschrieben wie eine <a href="http://syslog.warten.de/2007/12/debian-linux-mit-debootstrap-a.html">Installation von Debian über debootstrap auf einem Virtuozzo VPS Linux bei Host Europe</a> durchgeführt werden kann. Leider führt diese Installation wie auch das von einer <a href="http://prehl.de/wp/howto/debian-auf-he-vps">vergleichbaren Anleitung</a> beschriebene Vorgehen zurzeit reproduzierbar zumindest bei Host Europe zu Fehlern beim Restore eines Backups über das Virtuozzo Control Panel. Obwohl das System vollständig funktions- und lauffähig ist und das Backup erfolgreich erstellt wurde, kann ein Restore nicht mehr durchgeführt werden. Im Control Panel wird folgende Fehlermeldung angezeigt:</p>
+
+<pre><code>Operation restore with the VPS(s) VEID12345 as remote from 172.17.0.25 is started.
+Dec 03, 2007 02:11:48 PM
+Operation restore with the VPS(s) VEID12345 as remote from 172.17.0.25 is finished with errors:
+#2503 Can't restore: SSH_OPTS=-oProtocol=1 -oBatchMode=yes -T -oStrictHostKeyChecking=no -oUserKnownHostsFile=/tmp/tmp.file.o6toXu
+Starting restore VE 12345(2007-12-03T140428 0100@lvps10-20-30-40.dedicated.hosteurope.de) on node lvps10-20-30-40.dedicated.hosteurope.de...
+SSH_OPTS=-oProtocol=1 -oBatchMode=yes -T -oStrictHostKeyChecking=no -oUserKnownHostsFile=/tmp/tmp.file.o6toXu
+Warning: Permanently added '87.230.92.25' (RSA1) to the list of known hosts.
+Doing exec - /usr/share/vzbackup-3.0.0-16.swsoft/vzrestore1 -t 2007-12-03T140428 0100@lvps10-20-30-40.dedicated.hosteurope.de 12345 -.
+Created /vz/private/12345-tmpC16592
+Restoring VE...
+Turn quota on -...
+Turn quota off
+No packages found matching apache2.
+No packages found matching apache2-doc.
+No packages found matching apache2-mpm-prefork.
+No packages found matching apache2-utils.
+No packages found matching apache2.2-common.
+No packages found matching bind9.
+No packages found matching binutils.
+No packages found matching ca-certificates.
+No packages found matching console-tools-dev.
+No packages found matching cracklib-runtime.
+No packages found matching cracklib2.
+No packages found matching defoma.
+No packages found matching exim4-base.
+No packages found matching exim4-config.
+No packages found matching exim4-daemon-light.
+No packages found matching expat.
+No packages found matching fetchmail.
+No packages found matching ffingerd.
+No packages found matching file.
+No packages found matching finger.
+No packages found matching fontconfig.
+No packages found matching fontconfig-config.
+No packages found matching ftp.
+No packages found matching gawk.
+No packages found matching gcc-3.3-base.
+No packages found matching gettext-base.
+No packages found matching host.
+No packages found matching iputils-arping.
+No packages found matching iputils-tracepath.
+No packages found matching krb5-config.
+No packages found matching libatm1.
+No packages found matching libauthen-pam-perl.
+No packages found matching libbind-dev.
+No packages found matching libbind9-0.
+No packages found matching libconvert-binhex-perl.
+No packages found matching libcupsys2.
+No packages found matching libcupsys2-gnutls10.
+No packages found matching libcurl3.
+No packages found matching libdb1-compat.
+No packages found matching libdb3.
+No packages found matching libdbi-perl.
+No packages found matching libdevel-symdump-perl.
+No packages found matching libdns22.
+No packages found matching libfontconfig1.
+No packages found matching libfreetype6.
+No packages found matching libgdbmg1.
+No packages found matching libglib2.0-0.
+No packages found matching libhesiod0.
+No packages found matching libhtml-parser-perl.
+No packages found matching libhtml-tagset-perl.
+No packages found matching libhtml-tree-perl.
+No packages found matching libice6.
+No packages found matching libidn11.
+No packages found matching libio-stringy-perl.
+No packages found matching libisc11.
+No packages found matching libisccc0.
+No packages found matching libisccfg1.
+No packages found matching libjpeg-progs.
+No packages found matching libjpeg62.
+No packages found matching liblcms1.
+No packages found matching libldap-2.3-0.
+No packages found matching liblockfile1.
+No packages found matching libltdl3.
+No packages found matching liblwres9.
+No packages found matching libmagic1.
+No packages found matching libmailtools-perl.
+No packages found matching libmd5-perl.
+No packages found matching libmime-perl.
+No packages found matching libmng1.
+No packages found matching libnet-daemon-perl.
+No packages found matching libnet-ssleay-perl.
+No packages found matching libnss-ldap.
+No packages found matching libpam-krb5.
+No packages found matching libpaper1.
+No packages found matching libpcap0.8.
+No packages found matching libpcre3.
+No packages found matching libplrpc-perl.
+No packages found matching libpng12-0.
+No packages found matching libpng3.
+No packages found matching libruby1.8.
+No packages found matching libsensors3.
+No packages found matching libslang1-utf8.
+No packages found matching libsm6.
+No packages found matching libsnmp-base.
+No packages found matching libsnmp9.
+No packages found matching libstdc  2.10-glibc2.2.
+No packages found matching libstdc  5.
+No packages found matching libsysfs2.
+No packages found matching libtiff4.
+No packages found matching libtimedate-perl.
+No packages found matching liburi-perl.
+No packages found matching libwww-perl.
+No packages found matching libx11-6.
+No packages found matching libx11-data.
+No packages found matching libxau6.
+No packages found matching libxaw7.
+No packages found matching libxdmcp6.
+No packages found matching libxext6.
+No packages found matching libxmu6.
+No packages found matching libxpm4.
+No packages found matching libxt6.
+No packages found matching lprng.
+No packages found matching lsb-release.
+No packages found matching lsof.
+No packages found matching lynx.
+No packages found matching m4.
+No packages found matching make.
+No packages found matching man2html.
+No packages found matching memtester.
+No packages found matching metamail.
+No packages found matching mime-support.
+No packages found matching mingetty.
+No packages found matching modconf.
+No packages found matching ncompress.
+No packages found matching nscd.
+No packages found matching odbcinst1debian1.
+No packages found matching portmap.
+No packages found matching procinfo.
+No packages found matching procmail.
+No packages found matching psutils.
+No packages found matching pwgen.
+No packages found matching python.
+No packages found matching python-minimal.
+No packages found matching python2.4.
+No packages found matching python2.4-minimal.
+No packages found matching rsync.
+No packages found matching ruby1.8.
+No packages found matching sasl2-bin.
+No packages found matching screen.
+No packages found matching sharutils.
+No packages found matching slocate.
+No packages found matching smbfs.
+No packages found matching snmp.
+No packages found matching ssl-cert.
+No packages found matching stunnel.
+No packages found matching syslinux.
+No packages found matching sysutils.
+No packages found matching talk.
+No packages found matching talkd.
+No packages found matching tcpdump.
+No packages found matching tcsh.
+No packages found matching telnet.
+No packages found matching tofrodos.
+No packages found matching tree.
+No packages found matching ttf-dejavu.
+No packages found matching ucf.
+No packages found matching units.
+No packages found matching unixodbc.
+No packages found matching unzip.
+No packages found matching wwwconfig-common.
+No packages found matching x11-common.
+No packages found matching xbitmaps.
+No packages found matching xcursor-themes.
+No packages found matching xlibs-data.
+ERROR: Cant download tzdata=2007b-1 package Failed to check template consistency Cleaning up...
+Failed to restore lvps10-20-30-40.dedicated.hosteurope.de VE 12345 tag 2007-12-03T140428 0100@lvps10-20-30-40.dedicated.hosteurope.de. .
+</code></pre>
+
+<p>Offenbar wird hier die Konsistenz des vorinstallierten Betriebssystems überprüft, das beim debootstrap überschrieben wurde, was den Check naheliegenderweise fehlschlagen lässt. Was genau geprüft wird und wie Konsistenz beim debootstraping sichergestellt werden kann, konnte leider kurzfristig nicht heraus gefunden werden. (Für Hinweise bin ich sehr dankbar.)</p>
+
+<p>Als Alternative, um die vielen unnötigerweise installierten Pakete des auf dem VPS vorinstallierten Systems zu entfernen, wurden auf dem “gedebootstrapten” System der Status der <a href="http://syslog.warten.de/files/debootstrap_packages%2Bssh%2Blocales%2Bconsole-data">Paketauswahl gesichert</a>.</p>
+
+<pre><code># dpkg --get-selections &gt; debootstrap_packages ssh locales console-data
+</code></pre>
+
+<p>Über das Virtuozzo Control Panel wurde ein Reinstall des VPS beauftragt. Auf dem Standardsystem, dass beispielsweise apache2, bind9, Druckerdienste und X11-Komponenten mitbringt, wurde dann die Paketauswahl resettet und die Konfiguration aus dem debootstrap-System wiederhergestellt.</p>
+
+<pre><code># dpkg --clear-selections
+# dpkg --set-selections &lt; debootstrap_packages ssh locales console-data
+</code></pre>
+
+<p>Die Änderung an der Paketauswahl konnte nun mit dselect oder aptitude durchgeführt werden. Die überflüssigen Pakete werden per remove gelöscht.</p>
+
+<pre><code>The following packages will be REMOVED:
+anacron apache2 apache2-doc apache2-mpm-prefork apache2-utils
+apache2.2-common bind9 binutils bzip2 ca-certificates console-common
+console-tools console-tools-dev cracklib-runtime cracklib2 debconf-utils
+defoma exim4 exim4-base exim4-config exim4-daemon-light expat fetchmail
+ffingerd file finger fontconfig fontconfig-config ftp gcc-3.3-base
+gettext-base groff host iproute iputils-arping iputils-tracepath krb5-config
+ldap-utils less libapr1 libaprutil1 libatm1 libauthen-pam-perl libbind-dev
+libbind9-0 libconvert-binhex-perl libcupsys2 libcupsys2-gnutls10 libcurl3
+libdb1-compat libdb3 libdbi-perl libdevel-symdump-perl libdns22 libexpat1
+libfontconfig1 libfreetype6 libgdbmg1 libglib1.2 libglib2.0-0 libgpmg1
+libhesiod0 libhtml-parser-perl libhtml-tagset-perl libhtml-tree-perl libice6
+libidn11 libio-stringy-perl libisc11 libisccc0 libisccfg1 libjpeg-progs
+libjpeg62 liblcms1 libldap-2.3-0 liblockfile1 libltdl3 liblwres9 libmagic1
+libmailtools-perl libmd5-perl libmime-perl libmng1 libnet-daemon-perl
+libnet-ssleay-perl libnss-ldap libpam-krb5 libpaper1 libpcap0.8 libpcre3
+libperl5.8 libplrpc-perl libpng12-0 libpng3 libpq4 libruby1.8
+libsasl2-modules libsensors3 libslang1-utf8 libsm6 libsnmp-base libsnmp9
+libsqlite3-0 libstdc  2.10-glibc2.2 libstdc  5 libsysfs2 libtiff4
+libtimedate-perl liburi-perl libwww-perl libx11-6 libx11-data libxau6
+libxaw7 libxdmcp6 libxext6 libxmu6 libxpm4 libxt6 lprng lsb-release lsof
+lynx m4 mailx make man2html memtester metamail mime-support mingetty modconf
+modutils ncompress ncurses-term nscd odbcinst1debian1 openssl perl
+perl-modules portmap procinfo procmail psmisc psutils pwgen python
+python-minimal python2.4 python2.4-minimal quota rsync ruby1.8 samba-common
+sasl2-bin screen sharutils slocate smbfs snmp ssl-cert stunnel sudo syslinux
+sysutils talk talkd tcpdump tcsh telnet tofrodos tree ttf-dejavu ucf units
+unixodbc unzip vim vim-runtime whois wwwconfig-common x11-common xbitmaps
+xcursor-themes xinetd xlibs-data
+</code></pre>
+
+<p>Um die Konfigurationsdateien dieser Pakete zu entfernen, musste ein purge wie beispielsweise mit dem folgenden Befehl ausgeführt werden.</p>
+
+<pre><code># dpkg --get-selections | grep deinstall | cut -f1 | xargs dpkg --purge
+</code></pre>
+
+<p>Das vorliegende Betriebssystem ist nun restorefähig und größtenteils mit einem über debootstrap installierten System vergleichbar. Die Einrichtung der benötigten Dienste kann nun beginnen.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-08T00:00:00+01:00" pubdate data-updated="true">Dec 8<span>th</span>, 2007</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2007/12/restore_failed_auf_vps_linux/" data-via="" data-counturl="http://sw0x2A.github.com/2007/12/restore_failed_auf_vps_linux/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2007/12/deutsche_ubersetzung_der_lpifr/" title="Previous Post: Deutsche Übersetzung der LPI-Fragen fehlerhaft">&laquo; Deutsche Übersetzung der LPI-Fragen fehlerhaft</a>
+      
+      
+        <a class="basic-alignment right" href="/2007/12/versionsverwaltung_fur_konfigu/" title="Next Post: Versionsverwaltung für Konfigurationsdateien in /etc mit Subversion">Versionsverwaltung für Konfigurationsdateien in /etc mit Subversion &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

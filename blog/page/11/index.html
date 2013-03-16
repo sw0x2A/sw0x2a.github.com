@@ -1,0 +1,989 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Das Konfigurationswerkzeug Plesk kann sehr einfach über die Paketverwaltung auf einem Debian Linux installieren werden. Im folgenden Beispiel wird &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/blog/page/11">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/11/plesk_auf_debian_uber_paketver/">Plesk Auf Debian über Paketverwaltung Installieren</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-11-03T00:00:00+01:00" pubdate data-updated="true">Nov 3<span>rd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Das Konfigurationswerkzeug <a href="http://www.swsoft.com/plesk">Plesk</a> kann sehr einfach über die Paketverwaltung auf einem Debian Linux installieren werden. Im folgenden Beispiel wird Plesk 8.x.x auf einem Debian Etch installiert. Es stehen außerdem Repositories für Sarge sowie Ubuntu Dapper und Edgy zur Verfügung.</p>
+
+<p>Zunächst muss das Plesk-Repository der Paketverwaltung bekannt gemacht werden. Es wird in der Datei /etc/apt/sources.list eingetragen.</p>
+
+<pre><code># vi /etc/apt/sources.list 
+
+deb http://autoinstall.plesk.com/debian/PSA8 etch all 
+</code></pre>
+
+<p>Nachdem die neue Paketquelle hinzugefügt wurde, muss die Liste der Pakete aktualisiert werden. Dann kann Plesk installiert werden.</p>
+
+<pre><code># aptitude update  
+# aptitude install psa 
+</code></pre>
+
+<p>Weitere Plesk-Komponenten können ebenfalls über die Paketverwaltung installiert werden.</p>
+
+<pre><code># aptitude install psa-backup-manager psa-firewall psa-spamassassin psa-locale-de-de psa-mod-fcgid-configurator psa-vpn psa-watchdog 
+</code></pre>
+
+<p>Eine Liste aller angebotenen Pakete kann man sich mit folgendem Befehl ausgeben lassen:</p>
+
+<pre><code>$ wget -qO – http://autoinstall.plesk.com/debian/PSA8/dists/etch/all/binary-i386/Packages.gz | zcat | grep ^Package: | awk ‘{print $2}’ | sort 
+</code></pre>
+
+<p>Nach der Installation kann man Plesk über https://example.com:8443/ aufrufen. Die Zugangsdaten nach der Installation sind “admin” (Benutzername) und “setup” (Passwort) und sollten umgehend geändert werden. Das aktuelle Passwort kann in der Datei /etc/psa/.psa.shadow ausgelesen werden.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/10/compiz_und_window-decorations/">Compiz Und Window-Decorations</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-10-20T00:00:00+02:00" pubdate data-updated="true">Oct 20<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Auf einem Ubuntu Linux mit Nvidia-Grafikkarte war es der in die Datei <code>/etc/X11/xorg.conf</code> (Section “Screen”) hinzugefügte Eintrag</p>
+
+<pre><code>Option “AddARGBGLXVisuals” “True” 
+</code></pre>
+
+<p>der Compiz dazu bewegte, den Desktop mit Window-Decorations zu zeichnen.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/09/gameserver-fur-enemy-territory-quake-wars-einrichten/">Gameserver Für Enemy Territory: Quake Wars Einrichten</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-19T00:00:00+02:00" pubdate data-updated="true">Sep 19<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Die <a href="http://community.enemyterritory.com/forums/showthread.php?p=63146#post63146">Ankündigung</a> eines nativen Linux-Clients für <a href="http://www.enemyterritory.com/">Enemy Territory: Quake Wars</a> (ETQW) hat mein Interesse an dem Spiel geweckt und die kürzlich erschienene Demo hat mir bisher viel Spaß gemacht. Es kam daher die Idee auf, einen eigenen Gameserver zu betreiben. Die Installation des Dienstes und sein Aufruf mit dem Start-Stop-Daemon über ein Init-Skript auf einem Server mit Debian GNU/Linux wird in diesem Artikel beschrieben.</p>
+
+<p>Zuerst ist das Installationspaket herunterzuladen. Das Paket kann <a href="http://zerowing.idsoftware.com:6969/">über BitTorrent geladen</a> werden. Außerdem stehen viele Downloadmirrors (HTTP) zur Verfügung. Wer das Paket mit wget downloaden will, wird bei den meisten Mirrors auf Schwierigkeiten stossen. Bei <a href="http://games.internode.on.net/filelist.php?app=263&amp;menu=10">Internode</a> konnte zum Zeitpunkt des Entstehens dieses Artikels ohne Einschränkungen mit wget geladen werden.</p>
+
+<p>Befindet sich das Installationspaket auf dem Server, können die MD5-Prüfsumme verifiziert, die Ausführrechte gesetzt und anschliessend die Installation gestartet werden. Es werden alle Voreinstellungen des Installers übernommen und die Programmdateien im Verzeichnis /usr/local/games/etqw.demo.server/ installiert.</p>
+
+<pre><code>$ md5sum ETQW-demo-server.3.x86.run  
+e1744f7827e1cab9a4cc05b06028e7ac ETQW-demo-server.3.x86.run  
+$ chmod a x ETQW-demo-server.3.x86.run  
+# ./ETQW-demo-server.3.x86.run 
+</code></pre>
+
+<p>Zur Konfiguration des Gameservers dient die Datei server.cfg im Verzeichnis base im Installationspfad. Für den unerfahrenen Administrator, der zum ersten Mail einen Gameserver einrichtet, mag der <a href="http://www.infinity-gamehosting.net/config/etqw">Config file creator</a> eine Hilfe sein.<br/>
+Im gleichen Verzeichnis befindet sich noch die Datei usergroups.dat, in der ein Passwort gesetzt werden kann, wenn eine Remote Administration des Gameservers gewünscht ist. Es sind die Kommentarzeichen (‘//’) zu entfernen und die Zeichenfolge “PASSWORD” durch das gewünschte Passwort zu ersetzen. Die zu ändernde Zeile sieht wie folgt aus:</p>
+
+<pre><code>group Admin {  
+//password PASSWORD 
+</code></pre>
+
+<p>An dieser Stelle sind Installation und Konfiguration des Gameservers abgeschlossen und der Dienst könnte gestartet werden. Aber wie? Der Hersteller sieht hierfür offenbar das Skript etqw-dedicated im Installationsverzeichnis vor. Der Nachteil ist, dass es mit den Rechten des aufrufenden Benutzers ausgeführt wird. Beendet der aufrufende Benutzer seine Terminalsitzung (beispielsweise SSH-Verbindung) wird außerdem der Serverdienst beendet. In den einschlägigen Foren sind Tipps zu finden, den Gameserver in einer screen-Session laufen zu lassen. Das ist ein Ausweg aus letztgenannter Einschränkung, aber weit weg von einer ordentlichen Lösung. Wie jeder andere Serverdienst soll auch der Gameserver über ein Init-Skript und den Start-Stop-Daemon mit eigenen Benutzerrechten gestartet werden. Eine entsprechende Lösung, die nicht auf screen und sudo-Spielereien setzt, konnte ich leider nicht finden und so entwickelte ich sie selbst.</p>
+
+<p>Zuerst wird ein neuer Systembenutzer benötigt, mit dessen Rechten der Gameserver gestartet werden soll. Der folgende Befehl legt den Systembenutzer und die Gruppe etqwded mit dem Homeverzeichnis /var/lib/etqw-dedicated an.</p>
+
+<pre><code># adduser –system –home /var/lib/etqw-dedicated –group etqwded 
+</code></pre>
+
+<p>Als nächstes wird das Init-Skript mit dem folgenden Inhalt in /etc/init.d/etqw-dedicated gespeichert. Die Optionen “ set fs_userpath $ETQW_HOME set fs_savepath $ETQW_HOME” werden hier dauerhaft gesetzt, um zu gewährleisten, dass die Einstellungen in /var/lib/etqw-dedicated statt in ~/.etqw gespeichert werden.</p>
+
+<pre><code>#! /bin/sh  
+### BEGIN INIT INFO  
+# Provides: etqwded.x86  
+# Required-Start: $local\_fs $remote\_fs  
+# Required-Stop: $local\_fs $remote\_fs  
+# Default-Start: 2 3 4 5  
+# Default-Stop: 0 1 6  
+# Short-Description: ETQW dedicated server  
+# Description: Enemy Territory: Quake Wars dedicated server  
+### END INIT INFO 
+# Debian init.d script for the Enemy Territory: Quake Wars dedicated server  
+# Copyright © 2007  
+# Stefan Warten   
+#  
+# This file is licensed under the terms of the GNU General Public License,  
+# Version 2 or any later version published by the Free Software Foundation.
+
+set -e  
+export LD\_LIBRARY\_PATH=“$LD\_LIBRARY\_PATH:.”
+
+ENABLED=
+
+. /lib/lsb/init-functions
+
+# Source defaults file. Edit that file to configure this script.  
+if [ -e /etc/default/etqw-dedicated ]; then  
+  . /etc/default/etqw-dedicated  
+fi
+
+# Quit quietly, if $ENABLED is 0.  
+test “$ENABLED” != “0″ || exit 
+
+if [ ! -x "$ETQW_DEDSERVER" ]; then  
+  log\_failure\_msg “ETQW dedicated server ‘$ETQW_DEDSERVER’ does not exist or is not “   
+    “executable.”  
+  exit 5  
+fi
+
+if [ ! -d "$ETQW_DIR" ]; then  
+  log\_failure\_msg “ETQW directory ‘$ETQW_DIR’ does not exist.”  
+  exit 6  
+fi
+
+if [ -z "$ETQW_USER" ]; then  
+  log\_failure\_msg “ETQW_USER variable is empty. Set it to a user to run “   
+    “the ETQW dedicated server.”  
+  exit 6  
+fi
+
+PIDFILE=/var/run/etqw-dedicated.pid  
+DESC=“ETQW dedicated server”  
+NAME=`basename $ETQW_DEDSERVER`  
+ETQW_OPTS=“ set net\_serverDedicated 1 set fs\_userpath $ETQW\_HOME set fs\_savepath $ETQW\_HOME $ETQW\_OPTS exec server.cfg”
+
+is_running()  
+{  
+  retval=1  
+  if [ -r $PIDFILE ]; then  
+    pid=`cat $PIDFILE`  
+    if [ -e /proc/$pid ]; then  
+      procname=`/bin/ps h -p $pid`  
+      [ -n "$procname" ] &amp;&amp; retval=  
+    fi  
+  fi  
+  return $retval  
+}
+
+start()  
+{  
+  log\_begin\_msg “Starting $DESC: $NAME”  
+  if is_running; then  
+    log\_progress\_msg “already running”  
+  else  
+    start-stop-daemon –start –quiet –background –pidfile $PIDFILE   
+      –make-pidfile –user $ETQW_USER –chuid $ETQW_USER –chdir $ETQW_DIR   
+      –exec $ETQW_DEDSERVER — $ETQW_OPTS  
+  fi  
+  log\_end\_msg   
+}
+
+stop()  
+{  
+  log\_begin\_msg “Stopping $DESC: $NAME”  
+  if ! is_running; then  
+    log\_progress\_msg “not running”  
+  else  
+    start-stop-daemon –stop –quiet –oknodo –pidfile $PIDFILE   
+      –user $ETQW_USER –exec $ETQW_DEDSERVER  
+  fi
+
+  rm -f $PIDFILE  
+  log\_end\_msg   
+}
+
+status()  
+{  
+  STATUS=“Status of $DESC:”  
+  if is_running; then  
+    log\_success\_msg “$STATUS running.”  
+  else  
+    log\_success\_msg “$STATUS stopped.”  
+  fi  
+}
+
+case “$1″ in  
+  start)  
+    start  
+    ;;
+
+  stop)  
+    stop  
+    ;;
+
+  restart|force-reload)  
+    stop  
+    sleep 1  
+    start  
+    ;;
+
+  status)  
+    status  
+    ;;
+
+  *)  
+    log\_success\_msg “Usage: $0 {start|stop|restart|force-reload|status}” &gt;&amp;2  
+    exit 1  
+    ;;  
+esac
+
+exit
+</code></pre>
+
+<p>Das Init-Skript bezieht, wie bei Debian üblich, manche seiner Variablen über eine Konfigurationsdatei. Es ist die Datei /etc/default/etqw-dedicated mit dem folgenden Inhalt anzulegen. Der geneigte Administrator kann hier eigene Einstellungen vornehmen.</p>
+
+<pre><code># This file is /etc/default/etqw-dedicated, it is a configuration file for the  
+# /etc/init.d/etqw-dedicated init script. 
+# Set this to 1 to enable and to 0 to disable the init script.  
+ENABLED=“1″
+
+# The ETQW dedicated server will be started with the permissions of this user.  
+ETQW_USER=“etqwded”
+
+# This is the home directory of the user runnning the ETQW dedicated server.  
+ETQW_HOME=“/var/lib/etqw-dedicated”
+
+# This is the binary directory of the ETQW dedicated server.  
+ETQW_DIR=“/usr/local/games/etqw.demo.server”
+
+# This is the location of the ETQW dedicated server binary, that the init script uses.   
+ETQW_DEDSERVER=“$ETQW_DIR/etqwded.x86″
+
+# Here you can specify additional options to pass to the ETQW dedicated server.  
+#ETQW\_OPTS=” set net\_ip 10.20.30.40 set net_port 27733″
+</code></pre>
+
+<p>Sind beide Dateien angelegt, müssen das Init-Skript noch ausführbar gemacht und die Links für Init gesetzt werden, damit der Dienst bei Änderungen des Runlevels automatisch gestartet oder beendet wird.</p>
+
+<pre><code># chmod a x /etc/init.d/etqw-dedicated  
+# update-rc.d etqw-dedicated defaults 
+</code></pre>
+
+<p>Der Gameserver kann nun mit dem folgenden Kommando gestartet werden. Er wird dann über den Start-Stop-Daemon als Prozess des Benutzers etqwded ausgeführt. Die zur Laufzeit erstellten Dateien werden in /var/lib/etqw-dedicated gespeichert.</p>
+
+<pre><code># /etc/init.d/etqw-dedicated start 
+</code></pre>
+
+<p>Um den Gameserver betreiben zu können, muss sichergestellt sein, dass eingehender Traffic auf den UDP-Ports 3074 und 27733 und ausgehender Traffic auf TCP-Port 3074 erlaubt ist. Es kann erforderlich sein, dass die Firewall (iptables) entsprechend angepasst werden muss.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/08/sslzertifikate_erstellen_und_m/">SSL-Zertifikate Erstellen Und Mit Apache Nutzen</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-08-20T00:00:00+02:00" pubdate data-updated="true">Aug 20<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>In der Kommunikation zwischen Client und Server werden Zertifikate benötigt, wenn sichergestellt werden soll, dass sich die Parteien vertrauen können. Ein Zertifikat muss von einer Zertifizierungsstelle (Certification Authority, CA) signiert werden; die CA bürgt für die Echtheit des Zertifikats.</p>
+
+<p>Es soll ein SSL-Zertifikat (X.509) erstellt werden. Unabhängig davon, ob das Zertifikat von einer externen CA oder selbst signiert werden soll, muss zuerst immer eine Bürgschaftsanfrage (certificate request, CSR) generiert werden.</p>
+
+<pre><code>$ openssl req -new -nodes -keyout private\_key.pem -out private\_key.pem -days 365  
+Generating a 1024 bit RSA private key  
+…………………….   
+……….   
+writing new private key to ‘private_key.pem’  
+—–  
+You are about to be asked to enter information that will be incorporated  
+into your certificate request.  
+What you are about to enter is what is called a Distinguished Name or a DN.  
+There are quite a few fields but you can leave some blank  
+For some fields there will be a default value,  
+If you enter ‘.’, the field will be left blank.  
+—–  
+Country Name (2 letter code) [AU]:DE  
+State or Province Name (full name) [Some-State]:Berlin  
+Locality Name (eg, city) []:Berlin  
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:  
+Organizational Unit Name (eg, section) []:  
+Common Name (eg, YOUR name) []:example.com  
+Email Address []:webmaster@example.com 
+Please enter the following ‘extra’ attributes  
+to be sent with your certificate request  
+A challenge password []:  
+An optional company name []:  
+</code></pre>
+
+<p>Der Befehl erstellt den privaten Schlüssel und das CSR in einer Datei. Auf die Angabe eines Passworts wurde aus praktischen Gründen verzichtet. Würde ein privater Schlüssel mit Passwort in einen Serverdienst eingebunden werden, müsste das Passwort bei jedem Start des Dienstes erneut eingegeben werden. Da der private Schlüssel somit ungeschützt ist, muss er unbedingt vor fremden Zugriffen geschützt werden.</p>
+
+<p>Nun kann das CSR an die CA übergeben und signiert werden. Eine gemeinschaftsbetriebene, nicht-kommerzielle Zertifizierungsstelle, die kostenfrei X.509-Zertifikate für verschiedene Einsatzgebiete ausstellt ist <a href="https://www.cacert.org/">CAcert</a>.</p>
+
+<pre><code>—–BEGIN CERTIFICATE REQUEST—–  
+ICHBINUNGÜLTIG9tMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCu/ppznA8u  
+DD0UzHX/YQj5doqi2vWvGNhg849RJpbJ/ vlW/ZhkBTJ6M8ry/dzg1lp XK08kkK  
+BgNVBAcTBkJlcmxpbjEhMB8GA1UEChMYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRk  
+MRQwEgYDVQQDEwtleGFtcGxlLmNvbTEkMCIGCSqGSIb3DQEJARYVd2VibWFzdGVy  
+pLZMP3XDjvFkZW8F22Aq3ySBaLGagKHxvwIDAQABoAAwDQYJKoZIhvcNAQEFBQAD  
+Eob45fj1XE9AOqTAT8noFcdK1uixXsgPYfqNiQrVXfAunoiLUhYYFYXRc1qAI3dA  
+MIIBzzCCATgCAQAwgY4xCzAJBgNVBAYTAkRFMQ8wDQYDVQQIEwZCZXJsaW4xDzAN  
+gYEAn/HkOtZyMCLZRkhG1Prph/1hbLilyARVul s8Z/J TnAWw6fxcyDpXGDTfNj  
+FDj7WXcxZ pfPF9lzfz8mI3NLNr8BSx/ejM7qHAjcie RUkUQo2KToSFv2D9w6cq  
+2eZW3F9helt3qae8hXBfbSTORYozLRF8c ZQHKkCJJjoZUs=  
+—–END CERTIFICATE REQUEST—– 
+</code></pre>
+
+<p>Nach einer Identitätsprüfung wird die Zertifizierungsstelle ein signiertes, öffentliches Zertifikat zurückgeben, das zusammen mit dem privaten Schlüssel benutzt werden kann. Das Zertifikat kann in die oben genannte Datei kopiert werden.</p>
+
+<p>Um das Zertifikat für eine sichere Verbindung mit HTTPS zu verwenden, muss es auf den Server kopiert und im Webserver eingebunden werden. Im Beispiel wird ein Apache2 auf einem Debian GNU/Linux verwendet.</p>
+
+<pre><code># cp private\_key\_and_certificate.pem /etc/apache2/ssl/example.com.pem  
+# chmod 600 /etc/apache2/ssl/example.com.pem 
+</code></pre>
+
+<p>Im Webserver wird das Zertifikat mit der Direktive SSLCertificateFile eingebunden.</p>
+
+<pre><code>NameVirtualHost *:443  
+
+ServerAdmin webmaster@example.com  
+ServerName example.com  
+SSLEngine On  
+SSLCertificateFile /etc/apache2/ssl/example.com.pem
+</code></pre>
+
+<p>Damit sind alle Vorbereitungen beendet und die sichere Verbindung kann genutzt werden.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/08/encrypted_esmtp_at_strato/">&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-08-15T00:00:00+02:00" pubdate data-updated="true">Aug 15<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<pre><code>Received: from \[1.2.3.4\] ([5.6.7.8])  
+    by post.webmailer.de (mrclete mo32) (RZmta 11.0)  
+    with RC4-MD5 encrypted ESMTP id V03a42j7FEM162 for ;  
+    Wed, 15 Aug 2007 16:54:05 0200 (MEST)
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/08/swap_erweitern_durch_dateien/">Swap Erweitern Durch Dateien</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-08-10T00:00:00+02:00" pubdate data-updated="true">Aug 10<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Wenn die als Swap zur Verfügung stehende Festplattenpartition zu klein ist, kann der Swap-Speicher durch Dateien im Linux-Filesystem erweitert werden. Dieser Weg sollte selbstverständlich nur eine Ausnahme darstellen, da ein Swap-Speicher in einer Datei noch langsamer als ohnehin schon ist.</p>
+
+<p>Um eine Swap-Datei hinzuzufügen ist wie folgt vorzugehen:</p>
+
+<p>Zuerst wird eine Datei der gewünschten zusätzlichen Swap-Größe erstellt (hier 1GB).</p>
+
+<pre><code># dd if=/dev/zero of=/swap-file bs=1024 count=1048576 
+</code></pre>
+
+<p>Nun wird ein Swap-Bereich in der Datei erstellt…</p>
+
+<pre><code># mkswap /swap-file 
+</code></pre>
+
+<p>… und aktiviert.</p>
+
+<pre><code># swapon /swap-file 
+</code></pre>
+
+<p>Damit das neue Swap-File beim Booten aktiviert wird, muss folgender Eintrag der Datei <code>/etc/fstab</code> hinzugefügt werden:</p>
+
+<pre><code>/swap-file swap swap defaults 0 0
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/08/installation_von_oracle_databa/">Installation Von Oracle Database XE Auf Ubuntu Linux</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-08-10T00:00:00+02:00" pubdate data-updated="true">Aug 10<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Die Installation von Oracle® Database Express Edition 10g Release 2 (10.2) for Linux erfolgt auf Ubuntu Linux (feisty) wie in der <a href="http://www.oracle.com/technology/software/products/database/xe/files/install.102/b25144/toc.htm">Anleitung des Herstellers</a> beschrieben.<br/>
+Nicht in der Anleitung erwähnt wird, dass es auch ein Debian repository für Oracle XE gibt, das sich mit folgendem Eintrag in der Datei /etc/apt/sources.list nutzen lässt.</p>
+
+<pre><code>deb http://oss.oracle.com/debian unstable main non-free
+</code></pre>
+
+<p>Der für Secure-APT benötigte <a href="http://oss.oracle.com/el4/RPM-GPG-KEY-oracle">Public Key (2E2BCDBCB38A8516)</a> wird geladen, geprüft und installiert.</p>
+
+<pre><code># wget -q http://oss.oracle.com/el4/RPM-GPG-KEY-oracle
+# gpg –import RPM-GPG-KEY-oracle
+gpg: key B38A8516: public key “Oracle OSS group (Open Source Software group) ” imported
+gpg: Total number processed: 1
+gpg:               imported: 1
+# gpg –fingerprint build@oss.oracle.com
+pub   1024D/B38A8516 2006-09-05 [expires: 2011-09-04]
+      Key fingerprint = 1122 A29A B257 825F 322C 234E 2E2B CDBC B38A 8516
+uid                  Oracle OSS group (Open Source Software group) 
+sub   2048g/0042D4F4 2006-09-05 [expires: 2011-09-04]
+# gpg –armor –export B38A8516 | apt-key add -
+OK
+</code></pre>
+
+<p>Nun kann das Paket installiert werden.</p>
+
+<pre><code># aptitude install oracle-xe-universal
+</code></pre>
+
+<p>Die Oracle Datenbank erwartet bei 512 Megabyte oder mehr RAM mindestens ein Gigabyte Swap space. Der erforderliche Speicher stand auf dem System nicht zur Verfügung und so wurde der <a href="http://syslog.warten.de/2007/08/swap_erweitern_durch_dateien.html">Swap durch eine Datei erweitert</a>. Offenbar findet die Überprüfung der Größe des Swap-Speichers nur bei der Installation und nicht beim Betrieb der Datenbank statt. Somit wird das Swap-File nur für die Installation benötigt.<br/>
+Ist die Installation abgeschlossen, muss die Datenbank mit folgendem Befehl konfiguriert werden.</p>
+
+<pre><code># /etc/init.d/oracle-xe configure
+</code></pre>
+
+<p>Weiterhin sind die Umgebungsvariablen für Oracle-Benutzer zu setzen. Bei dieser Installation soll allein der Benutzer oracle die Datenbank benutzen. Hierzu wird in das <code>.bash_profile</code> des Benutzers ein Skript eingebunden, dass alle benötigten enviroment variables setzt.</p>
+
+<pre><code># echo ". /usr/lib/oracle/xe/app/oracle/product/10.2.0/server/bin/oracle_env.sh" &gt;&gt; /usr/lib/oracle/xe/.bash_profile
+</code></pre>
+
+<p>Die Installation lief scheinbar erfolgreich durch und es wurde der fehlerfreie Start des Oracle Net Listener und der Oracle Database 10g Express Edition Instance gemeldet. Tatsächlich brachen alle Oracle-Prozesse sofort ab, weil der Net Listener keine Verbindung zum target host aufbauen konnte.<br/>
+Die Ursache war in der Datei <code>/etc/hosts</code> zu finden. Da der Ursprung des Fehlers in der Datei unklar ist, sei der Hinweis auf sie an dieser Stelle ausreichend.<br/>
+Ist die Oracle-Datenbank erfolgreich installiert und konfiguriert worden, kann es losgehen. Da der Benutzer oracle Mitglied der Gruppe dba ist, muss kein Passwort eingegeben werden.</p>
+
+<pre><code># su – oracle
+$ sqlplus sys as sysdba
+SQL*Plus: Release 10.2.0.1.0 – Production on Fri Aug 10 22:04:28 2007
+Copyright (c) 1982, 2005, Oracle. All rights reserved.
+Enter password:
+Connected to:
+Oracle Database 10g Express Edition Release 10.2.0.1.0 – Production
+SQL&gt; 
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/07/spamassassin_rules_emporium_sa/">SpamAssassin Rules Emporium (SARE) Benutzen</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-07-24T00:00:00+02:00" pubdate data-updated="true">Jul 24<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Durch ein Posting auf <a href="http://listi.jpberlin.de/pipermail/postfixbuch-users/2007-July/036052.html">[Postfixbuch-users]</a> an <a href="http://www.rulesemporium.com/">SARE</a> erinnert worden und es in SpamAssassin <a href="http://saupdates.openprotect.com/">integriert</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/07/schlussel_fur_repository_in_se/">Schlüssel Für Repository in Secure APT Importieren</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-07-09T00:00:00+02:00" pubdate data-updated="true">Jul 9<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Mit Debian 4.0 (Etch) hat Secure APT Einzug in die Paketverwaltung gefunden. Es soll sicherstellen, dass nur vom Herausgeber signierte Debian-Archive installiert werden. Die Repositories enthalten hierfür eine Datei “Release”, die neben Informationen über die Releases selbst auch Prüfsummen der Paketindizes beinhaltet. Die Datei “Release” wird anhand einer GnuPG-Signatur verifiziert.</p>
+
+<p>Für die Hauptrepositories sind die öffentlichen Schlüssel (public keys) bereits hinterlegt. Möchte man weitere Installationsquellen hinzufügen, beklagt die Paketverwaltung, dass der zuständige Schlüssel fehlt.</p>
+
+<pre><code>W: GPG error: http://dl.google.com stable Release: The following signatures couldn’t be verified because the public key is not available: NO_PUBKEY A040830F7FAC5991  
+W: You may want to run apt-get update to correct these problems 
+</code></pre>
+
+<p>Mit den folgenden drei Schritten lässt sich der fehlende Schlüssel importieren:</p>
+
+<ol>
+<li><p>Der gewünschte Schlüssel kann von Keyservern heruntergeladen werden.</p>
+
+<pre><code># gpg –keyserver subkeys.pgp.net –recv-key A040830F7FAC5991  
+gpg: requesting key 7FAC5991 from hkp server subkeys.pgp.net  
+gpg: key 7FAC5991: public key “Google, Inc. Linux Package Signing Key ” imported  
+gpg: no ultimately trusted keys found  
+gpg: Total number processed: 1  
+gpg: imported: 1 
+</code></pre></li>
+<li><p>Prüfen Sie den Fingerabdruck des neuen Schlüssels.</p>
+
+<pre><code># gpg –fingerprint A040830F7FAC5991  
+pub 1024D/7FAC5991 2007-03-08  
+    Key fingerprint = 4CCA 1EAF 950C EE4A B839 76DC A040 830F 7FAC 5991  
+uid Google, Inc. Linux Package Signing Key   
+sub 2048g/C07CB649 2007-03-08 
+</code></pre></li>
+<li><p>Können Sie davon ausgehen, dass es sich um den passenden Schlüssel für das hinzugefügte Repository handelt, exportieren Sie ihn aus Ihrem Schlüsselbund in ASCII-Armor-Form und übergeben ihn an <code>apt-key</code>.</p>
+
+<pre><code># gpg –armor –export 7FAC5991 | apt-key add -  
+OK
+</code></pre></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/06/magic_sysrq_keys_benutzen/">Magic SysRq Keys Benutzen</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-06-28T00:00:00+02:00" pubdate data-updated="true">Jun 28<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Wenn ein Linux-System nicht mehr reagiert, ist der Reset-Knopf nur die letzte, aber nicht die einzige Option. Sollte man noch Zugang zum betroffenen System haben, können über das im Linux-Kernel integrierte sysrq-Interface Befehle übergeben werden.</p>
+
+<p>Der Kernel muss mit Unterstützung für sysrq (CONFIG_MAGIC_SYSRQ) übersetzt worden sein. Im <code>/proc</code>-Dateisystem existiert dann der Eintrag sysrq-trigger.</p>
+
+<p>Wenn Sie Zugriff auf die Console des Systems haben, betätigen Sie die Tastenkombination [Alt]-[Druck] ([S-Abf]). Danach können Sie mit einer weiteren Taste den gewünschten Befehl ausführen.<br/>
+Es folgt eine der Kernel-Dokumentation entnommenen Liste der unterstützten Befehle.</p>
+
+<ul>
+<li>‘r’ – Turns off keyboard raw mode and sets it to XLATE.</li>
+<li>‘k’ – Secure Access Key (SAK) Kills all programs on the current virtual console. NOTE: See important comments below in SAK section.</li>
+<li>‘b’ – Will immediately reboot the system without syncing or unmounting your disks.</li>
+<li>‘c’ – Will perform a kexec reboot in order to take a crashdump.</li>
+<li>‘d’ – Shows all locks that are held.</li>
+<li>‘o’ – Will shut your system off (if configured and supported).</li>
+<li>‘s’ – Will attempt to sync all mounted filesystems.</li>
+<li>‘u’ – Will attempt to remount all mounted filesystems read-only.</li>
+<li>‘p’ – Will dump the current registers and flags to your console.</li>
+<li>‘t’ – Will dump a list of current tasks and their information to your console.</li>
+<li>‘m’ – Will dump current memory info to your console.</li>
+<li>‘n’ – Used to make RT tasks nice-able.</li>
+<li>‘v’ – Dumps Voyager SMP processor info to your console.</li>
+<li>‘w’ – Dumps tasks that are in uninterruptable (blocked) state.</li>
+<li>‘x’ – Used by xmon interface on ppc/powerpc platforms.</li>
+<li>’0′-’9′ – Sets the console log level, controlling which kernel messages will be printed to your console. (’0′, for example would make it so that only emergency messages like PANICs or OOPSes would make it to your console.)</li>
+<li>‘f’ – Will call oom_kill to kill a memory hog process.</li>
+<li>‘e’ – Send a SIGTERM to all processes, except for init.</li>
+<li>‘g’ – Used by kgdb on ppc platforms.</li>
+<li>‘i’ – Send a SIGKILL to all processes, except for init.</li>
+<li>‘h’ – Will display help (actually any other key than those listed above will display help. but ‘h’ is easy to remember :-)</li>
+</ul>
+
+
+<p>Beim Zugriff aus der Ferne senden Sie als Benutzer root die Befehle an /proc/sysrq-trigger. Mit <code>echo s &gt; /proc/sysrq-trigger</code> weisen Sie Linux an, seine Puffer auf die Festplatten zurückzuschreiben (“sync”). Wenig später können mit [e] die laufenden Prozesse beendet werden (“SIGTERM”); Prozesse, die diesem Befehl nicht Folge leisten werden mit [i] erledigt (“SIGKILL”). Danach können Sie mit <code>echo u &gt; /proc/sysrq-trigger</code> alle Dateisysteme read-only remounten und mit <code>echo b &gt; /proc/sysrq-trigger</code> einen Reset auslösen.</p>
+
+<p>Wer eine serielle RemoteConsole an einem entfernten Server nutzt, kann mitunter über spezielle Tastenkombinationen Befehle an sysrq zu übergeben. Bei der RemoteConsole von STRATO-Servern ist über die Tastenfolge [~]-[b]-[r]-[e]-[a]-[k] und einer weiteren Taste ein Befehl ausführen.</p>
+
+<p>Damit die sysctl-Schnittstelle nicht mißbraucht wird, gibt es einen Schutzmechanismus: Erst wenn in <code>/proc/sys/kernel/sysrq</code> ein Wert größer als 0 eingetragen ist, reagiert das System überhaupt auf den Tastendruck oder die Ausgaben nach <code>/proc/sysrq-trigger</code>. Gegebenenfalls müssen Sie die Funktion erst mit <code>echo 1 &gt; /proc/sys/kernel/sysrq</code> einschalten.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/12/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/10/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

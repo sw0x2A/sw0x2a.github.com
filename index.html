@@ -1,1 +1,1119 @@
-My Octopress Page is coming soon &hellip;
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="It is the fourth time that I post a Hello world in this blog. I did this whenever I changed the underlying blogging software. It started with Movable &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/16/hello-world/">Hello World</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-16T18:56:00+01:00" pubdate data-updated="true">Mar 16<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It is the fourth time that I post a Hello world in this blog. I did this whenever I changed the underlying blogging software. It started with Movable Type, a bit later I added a microblog in the same software. After years I merged both into Wordpress and with this post I am going to relaunch it using Octopress.</p>
+
+<pre><code>package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, world")
+}
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2012/06/simple-sftp-setup/">Simple SFTP Setup</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-18T00:00:00+02:00" pubdate data-updated="true">Jun 18<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>SFTP is a subsystem of SSH and quiet easy to set up. It has some limitations compared with FTP and it is not to be confused with FTPS (FTP over SSL/TLS). The requirement is just to provide a way to transfer files from and to a server with secure authentication and connection. We also want to the user access be limited to the homedir using SSH ChrootDirectory directive and enforce SFTP protocol (user should not be able to use SSH instead).</p>
+
+<p>All changes that need to be applied on a SSH enabled host are that you have to add /usr/lib/openssh/sftp-server to /etc/shells and replace the Subsystem sftp line in /etc/ssh/sshd_config as below:</p>
+
+<pre><code>#Subsystem sftp /usr/lib/openssh/sftp-server
+Subsystem sftp internal-sftp
+</code></pre>
+
+<p>Since we want to chroot the user to her homedir and do not want her to see names of other users, we have to create a little mess of subdirectories and chroot here. SSH requires chroot to be one level above homedir.</p>
+
+<p>We need two users per share. One should have read-write permissions (push), the other should have read-only access (pull). The addsftpuser script below creates the users and outputs a part of SSH config that defines some rules for the new users. Those lines should be added to /etc/ssh/sshd_config and SSH should be restarted to load the new config.</p>
+
+<pre><code>#!/bin/bash
+
+set -e
+
+if [ $# -ne 2 ]
+then
+  echo "Usage: $(basename $0) username environment"
+  exit 1
+fi
+
+USER=$1_push_$2
+USERRO=$1_pull_$2
+read -p "Password push-user: " PASS
+read -p "Password pull-user: " PASSRO
+
+groupadd ${USER}
+GROUP=$(getent group $USER | cut -d: -f3)
+
+mkdir -p /home/sftp/$USER
+useradd -d /home/sftp/$USER/$USER -m -s /usr/lib/openssh/sftp-server
+-g $GROUP -p $(openssl passwd -1 $PASS) ${USER}
+useradd -d /home/sftp/$USER/$USER    -s /usr/lib/openssh/sftp-server
+-g $GROUP -p $(openssl passwd -1 $PASSRO) ${USERRO}
+
+cat &lt;&lt;END
+
+To make the user able to connect via SFTP, you MUST add these lines to
+your /etc/ssh/sshd_config and restart sshd afterwards:
+
+Match User $USER
+    ChrootDirectory /home/sftp/$USER
+    AllowTCPForwarding no
+    X11Forwarding no
+    ForceCommand internal-sftp
+
+Match User ${USERRO}
+    ChrootDirectory /home/sftp/$USER
+    AllowTCPForwarding no
+    X11Forwarding no
+    ForceCommand internal-sftp
+
+END
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2012/05/425/">425</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-06T00:00:00+02:00" pubdate data-updated="true">May 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><a href="http://unix.stackexchange.com/questions/4105/how-do-i-count-all-the-files-recursively-through-directories">How do I count all the files recursively through directories</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2012/03/separate-webapps-from-tomcat/">Separate Webapps From Tomcat</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-31T00:00:00+02:00" pubdate data-updated="true">Mar 31<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Until last week I thought it would be necessary to configure Tomcat and its webapps as a big monolithic system. What a great mistake! I have learned that there is a much easier way to run webapps in Tomcat. Actually each webapps becomes its own application server, executed with a dedicated user. I will demonstrate this way by showing how to install Jenkins.</p>
+
+<p>First install <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java JDK</a> and <a href="http://tomcat.apache.org/">Tomcat</a> into /opt. In this case, I have just unpacked the tarballs there and created symlinks to have an easy way to upgrade to newer versions.</p>
+
+<pre><code>root@debian:/opt# ls -l
+total 8
+drwxr-xr-x 9 root root [...] apache-tomcat-6.0.35
+lrwxrwxrwx 1 root root [...] java7 -&gt; jdk1.7.0_03
+drwxr-xr-x 8 root root [...] jdk1.7.0_03
+lrwxrwxrwx 1 root root [...] tomcat6 -&gt; apache-tomcat-6.0.35
+</code></pre>
+
+<p>Add a new user for Jenkins and create the base skeleton of Tomcat directories in its homedir /home/jenkins. Copy the conf directory from your Tomcat installation. The other directories are empty. Download the <a href="http://mirrors.jenkins-ci.org/war/latest/jenkins.war">Jenkins WAR file</a> and save it in the webapps directory.</p>
+
+<pre><code>root@debian:/home/jenkins# ls -l
+total 28
+drwxr-xr-x 2 jenkins nogroup [...] conf
+drwxr-xr-x 6 jenkins nogroup [...] data
+drwxr-xr-x 2 jenkins nogroup [...] logs
+drwxr-xr-x 3 jenkins nogroup [...] temp
+drwxr-xr-x 3 jenkins nogroup [...] webapps
+drwxr-xr-x 3 jenkins nogroup [...] work
+</code></pre>
+
+<p>Create /home/jenkins/.profile to define the application server environment variables.</p>
+
+<pre><code># Applicationserver enviroment
+export JENKINS_HOME=/home/jenkins/data
+export JENKINS_BASEDIR=${HOME}
+export CATALINA_HOME=/opt/tomcat6
+export CATALINA_BASE=${HOME}
+export JAVA_HOME=/opt/java7
+export CATALINA_PID=${JENKINS_BASEDIR}/jenkins.pid
+export CATALINA_OPTS="-Xms2048m -Xmx2048m -Djava.awt.headless=true"
+export PATH=${CATALINA_HOME}/bin:${JAVA_HOME}/bin:${PATH}
+</code></pre>
+
+<p>Last step is to put an init script for Jenkins into /etc/init.d/jenkins.</p>
+
+<pre><code>#!/bin/bash
+#
+# Startup / shutdown script for the jenkins server.
+#
+### BEGIN INIT INFO
+# Provides:             jenkins
+# Required-Start:       $network $local_fs
+# Required-Stop:
+# Should-Start:         $named
+# Should-Stop:
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description:    Jenkins
+# Description:          Jenkins Continuous Integration server
+### END INIT INFO
+
+SCRIPT_USER=jenkins
+LOCKFILE=/var/lock/jenkins
+export TOMCAT_HOME=/opt/tomcat6
+[ -f $TOMCAT_HOME/bin/catalina.sh ] || exit 0
+case "$1" in
+  start)
+        # Start daemon.
+        echo -n "Starting Jenkins: "
+        su -l $SCRIPT_USER -c "$TOMCAT_HOME/bin/catalina.sh start"
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] &amp;&amp; touch $LOCKFILE
+        ;;
+  stop)
+        # Stop daemons.
+        echo -n "Shutting down Jenkins: "
+        su -l $SCRIPT_USER -c "$TOMCAT_HOME/bin/catalina.sh stop"
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] &amp;&amp; rm -f $LOCKFILE
+        ;;
+  restart)
+        $0 stop
+        $0 start
+        ;;
+  condrestart)
+       [ -e $LOCKFILE ] &amp;&amp; $0 restart
+       ;;
+  status)
+        status jenkins
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        exit 1
+esac
+exit 0
+</code></pre>
+
+<p>Now you can start Jenkins as a seperate service. Repeat the steps from above for each webapp that you need.</p>
+
+<p>This setup makes it possible to start or stop each webapp independent from the others. It also allows you to run webapps with different Java or Tomcat versions or easily change the underlying Java and Tomcat versions (just refer to them in .profile).</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2012/03/simple-and-secure-subversion-server/">Simple and Secure Subversion Server</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-10T00:00:00+01:00" pubdate data-updated="true">Mar 10<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>In most environments, people want to access their Subversion repositories over a HTTPS connection. This requires a webserver like Apache, which provides WebDAV and SVN modules. I just switched over to nginx and do not want to install Apache just for SVN only. So I started to search for an alternative method which should be easy and secure.</p>
+
+<p>I found <code>svn ssh</code>. I knew SVN over SSH already but I remembered that there were some problems with file permissions and I did not really liked the idea of having Unix accounts for each SVN user on the system. What I realized then was that there is a pretty nice workaround perfect solution.</p>
+
+<p>First of all, let us create a new SVN user. Only this user will access the repositories.</p>
+
+<pre><code>adduser --home /var/svn --shell /bin/bash --disabled-password svn
+</code></pre>
+
+<p>Next step is to create a new repository and import the basic directory structure.</p>
+
+<pre><code>for dir in trunk branches tags; do mkdir -p /tmp/project1/$dir; done
+mkdir /var/svn/repos
+svnadmin create /var/svn/repos/project1
+svn import /tmp/project1 file:///var/svn/repos/project1 -m "Initial import"
+</code></pre>
+
+<p>All the magic is done in the SVN user’s SSH <code>authorized_keys</code> file.</p>
+
+<pre><code>command="/usr/bin/svnserve -t -r /var/svn/repos --tunnel-user=user1",no-port-forwarding,no-pty,no-agent-forwarding,no-X11-forwarding ssh-rsa AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== user1@example.com
+command="/usr/bin/svnserve -t -r /var/svn/repos --tunnel-user=user2",no-port-forwarding,no-pty,no-agent-forwarding,no-X11-forwarding ssh-rsa AAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB== user2@example.com
+</code></pre>
+
+<p>You can limit user access per SSH public key. In this case we force the user to execute <code>svnserve</code>, we can limit to repository and we can set a username with <code>--tunnel-user</code> which is used for commits. Additionally, we can disallow all non-SVN stuff to prevent login to shell or port-forwarding etc.</p>
+
+<p>That’s it. Check out your repository and start working with it.</p>
+
+<pre><code>svn co svn ssh://svn@example.com/project1/trunk project1
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2012/03/dell-xps-8300-nic-hardware-problem/">DELL XPS 8300 NIC Hardware Problem</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-10T00:00:00+01:00" pubdate data-updated="true">Mar 10<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>It seems like there is a hardware problem at least on some motherboards of <a href="http://en.community.dell.com/support-forums/desktop/f/3514/p/19389902/19906490.aspx">DELL XPS 8300</a>. It appears to be an initialization issue of the network chipset (Broadcom NetLink BCM57788 Gigabit) when you turn on the computer at low temperatures. When OS starts, the NIC is not detected and therefore not usable. As soon as the PC warms up (usually after some minutes), you can restart and the problem is gone until next cold restart.</p>
+
+<p>Seriously, those PCs needs preheating like an old diesel engine. Since there is no choke, you can try with a hair dryer instead. Let’s see how DELL support handles this…</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/12/fetch-ip-addresses-of-pingdoms-probe-servers/">Fetch IP Addresses of Pingdom&#8217;s Probe Servers</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-11T00:00:00+01:00" pubdate data-updated="true">Dec 11<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<pre><code>wget --quiet -O- https://www.pingdom.com/rss/probe_servers.xml | perl -nle 'print $1 if /IP: (([01]?dd?|2[0-4]d|25[0-5]).([01]?dd?|2[0-4]d|25[0-5]).([01]?dd?|2[0-4]d|25[0-5]).([01]?dd?|2[0-4]d|25[0-5]));/'
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/12/install-mgse-on-other-distributions-than-linux-mint/">Install MGSE on Other Distributions Than Linux Mint</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-02T00:00:00+01:00" pubdate data-updated="true">Dec 2<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>The friendly guys from <a href="http://linuxmint.com/">Linux Mint</a> wrote some Gnome Shell extentions which make Gnome 3 feel more like Gnome 2. The good thing is that you can benefit from that even if you are using a different distribution. First of all, we will install the <a href="https://github.com/linuxmint/MGSE">Linux Mint Shell Extensions for Gnome 3 (MGSE)</a>.</p>
+
+<pre><code>$ git clone https://github.com/linuxmint/MGSE.git
+$ cd MGSE/
+$ ./test
+</code></pre>
+
+<p>To make the Gnome Shell load the new extentions, reload Gnome Shell by hitting <code>ALT-F2</code> and executing <code>r</code>.</p>
+
+<p>Use <code>gnome-tweak-tool</code> to activate the extentions you want.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/11/solutions-for-tour-of-go-exercises/">Solutions for Tour of Go Exercises</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-21T00:00:00+01:00" pubdate data-updated="true">Nov 21<span>st</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>I am learning <a href="http://golang.org/">Go</a> and the <a href="http://tour.golang.org/">Tour of Go</a>, an interactive tutorial, is a good resource to start with. At the end of each section is a series of exercises for the reader to complete.</p>
+
+<p>Unfortunately, there are no example solutions for those exercises, so its hard to get a hint if you are stuck. Therefore I post my solutions here. I do not think they are the best way to solve the problems in Go (as I said, I am learning too) but code is compiling and it is doing what it should. You are welcome to comment with your solutions and code improvements.</p>
+
+<ul>
+<li><p><a href="http://tour.golang.org/#44">Exercise: Loops and Functions</a></p>
+
+<pre><code>package main
+
+import (
+    "fmt"
+    "math"
+)
+
+func Sqrt(x float64) float64 {
+    var z, d float64 = x, 1
+    for d &gt; 1e-15 {
+        z0 := z
+        z = z-(z*z-x)/(2*z)
+        d = z-z0
+        if d &lt; 0 {
+            d = -d
+        }
+    }
+    return z
+}
+
+func main() {
+    fmt.Println(Sqrt(2))
+    fmt.Println(math.Sqrt(2))
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#45">Exercise: Maps</a></p>
+
+<pre><code>package main
+
+import (
+    "strings"
+    "tour/wc"
+)
+
+func WordCount(s string) map[string]int {
+    m:=make(map[string]int)
+    for _, w:=range strings.Fields(s) {
+        m[w]++
+    }
+    return m
+}
+
+func main() {
+    wc.Test(WordCount)
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#46">Exercise: Slices</a></p>
+
+<pre><code>package main
+
+import "tour/pic"
+
+func Pic(dx, dy int) [][]uint8 {
+    mat := make([][]uint8, dx) 
+    for i := range mat { 
+        mat[i] = make([]uint8, dy)
+    for j := range mat[i] {
+        mat[i][j]=uint8(i^j)
+    }
+    }
+    return mat
+}
+
+func main() {
+    pic.Show(Pic)
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#47">Exercise: Fibonacci closure</a></p>
+
+<pre><code>package main
+
+import "fmt"
+
+// fibonacci is a function that returns
+// a function that returns an int.
+func fibonacci() func() int {
+    var a, b, count int = 0, 1, 0
+    return func() int {
+        switch count {
+        case 0:  count++
+             return a 
+        case 1:  count++
+             return b
+        }
+        sum:=a b
+        a=b
+        b=sum
+        return sum
+    }
+}
+
+func main() {
+    f := fibonacci()
+    for i := 0; i &lt; 10; i   {
+        fmt.Println(f())
+    }
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#48">Advanced Exercise: Complex cube roots</a></p>
+
+<pre><code>package main
+
+import (
+    "fmt"
+    "math"
+    "cmath"
+)
+
+func Cbrt(x complex128) complex128 {
+    var z complex128 = x
+    for i:=0; i 1e-15 {
+        z0 := z
+        z = z-(z*z-f)/(2*z)
+        d = z-z0
+        if d &lt; 0 {
+            d = -d
+        }
+    }
+    return z, nil
+}
+
+func main() {
+    if value, err := Sqrt(-2.0); err != nil {
+        fmt.Println(err)
+    } else {
+        fmt.Println(value)
+    }
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#59">Exercise: Images</a></p>
+
+<pre><code>package main
+
+import (
+    "image"
+    "tour/pic"
+)
+
+type Image struct {}
+
+func (m *Image) ColorModel() image.ColorModel {
+    return image.RGBAColorModel
+}
+
+func (m *Image) Bounds() image.Rectangle {
+    return image.Rect(0,0,256,256)
+}
+
+func (m *Image) At(x, y int) image.Color {
+    v:=uint8(x^y)
+    return image.RGBAColor{v, v, 255, 255}
+}
+
+func main() {
+    m := &amp;Image{}
+    pic.ShowImage(m)
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#60">Exercise: Rot13 Reader</a></p>
+
+<pre><code>package main
+
+import (
+    "io"
+    "os"
+    "strings"
+)
+
+type rot13Reader struct {
+    r io.Reader
+}
+
+func rot13(b byte) byte { 
+    switch { 
+        case 'A' &lt;= b &amp;&amp; b &lt;= 'M': 
+                b = (b - 'A')+'N' 
+        case 'N' &lt;= b &amp;&amp; b &lt;= 'Z': 
+                b = (b - 'N')+'A' 
+        case 'a' &lt;= b &amp;&amp; b &lt;= 'm': 
+                b = (b - 'a')+'n' 
+        case 'n' &lt;= b &amp;&amp; b &lt;= 'z': 
+                b = (b - 'n')+'a' 
+    } 
+    return b 
+}
+
+func (b *rot13Reader) Read(p []byte) (n int, err os.Error) {
+    n, err = b.r.Read(p)
+    for i:=range(p[:n]) {
+        p[i]=rot13(p[i])
+    }
+    return
+}
+
+func main() {
+    s := strings.NewReader(
+        "Lbh penpxrq gur pbqr!")
+    r := rot13Reader{s}
+    io.Copy(os.Stdout, &amp;r)
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#69">Exercise: Equivalent Binary Trees</a></p>
+
+<pre><code>package main
+
+import (
+    "fmt"
+    "tour/tree"
+)
+
+// Walk walks the tree t sending all values
+// from the tree to the channel ch.
+func Walk(t *tree.Tree, ch chan int) {
+    if t.Left != nil {
+        Walk(t.Left, ch)
+    }
+    ch&lt;-t.Value
+    if t.Right != nil {
+        Walk(t.Right, ch)
+    }
+}
+
+// Same determines whether the trees
+// t1 and t2 contain the same values.
+func Same(t1, t2 *tree.Tree) bool {
+    ch1:=make(chan int)
+    ch2:=make(chan int)
+    go Walk(t1, ch1)
+    go Walk(t2, ch2)
+    for i:=0; i&lt;10; i++ {
+        if &lt;-ch1 != &lt;-ch2 {
+            return false
+        }
+    }
+    return true
+}   
+
+func main() {
+    ch := make(chan int)
+    go Walk(tree.New(1), ch)
+
+    for i:=0; i&lt;10; i++ {
+        fmt.Println(&lt;-ch)
+    }
+
+    fmt.Println("Equivalent Binary Trees?",
+        Same(tree.New(1), tree.New(1)))
+
+    fmt.Println("Equivalent Binary Trees?",
+        Same(tree.New(1), tree.New(2)))
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#70">Exercise: Web Crawler</a></p>
+
+<pre><code>package main
+
+import (
+    "os"
+    "fmt"
+)
+
+type Fetcher interface {
+    // Fetch returns the body of URL and
+    // a slice of URLs found on that page.
+    Fetch(url string) (body string, urls []string, err os.Error)
+}
+
+// Crawl uses fetcher to recursively crawl
+// pages starting with url, to a maximum of depth.
+func Crawl(url string, depth int, fetcher Fetcher) {
+    type target struct{
+        urls  []string
+        depth int
+    }
+    more := make(chan target)
+
+    fetchPage := func(url string, depth int) {
+        body, urls, err := fetcher.Fetch(url)
+        if err != nil {
+            fmt.Println(err)
+        } else {
+            fmt.Printf("found: %s %q\n", url, body)
+        }
+        more &lt;- target{urls, depth+1}
+    }
+
+    go fetchPage(url, 0)
+
+    visited := map[string]bool{url:true}
+    for counter := 1; counter &gt; 0; {
+        next := &lt;-more
+        counter--
+        if next.depth &gt; depth {
+            continue
+        }
+        for _, url := range next.urls {
+            if _, seen := visited[url]; seen {
+                continue
+            }
+            visited[url] = true
+            counter++
+            go fetchPage(url, next.depth)
+        }
+    }
+}
+
+func main() {
+    Crawl("http://golang.org/", 4, fetcher)
+}
+
+
+// fakeFetcher is Fetcher that returns canned results.
+type fakeFetcher map[string]*fakeResult
+
+type fakeResult struct {
+    body string
+    urls     []string
+}
+
+func (f *fakeFetcher) Fetch(url string) (string, []string, os.Error) {
+    if res, ok := (*f)[url]; ok {
+        return res.body, res.urls, nil
+    }
+    return "", nil, fmt.Errorf("not found: %s", url)
+}
+
+// fetcher is a populated fakeFetcher.
+var fetcher = &amp;fakeFetcher{
+    "http://golang.org/": &amp;fakeResult{
+        "The Go Programming Language",
+        []string{
+            "http://golang.org/pkg/",
+            "http://golang.org/cmd/",
+        },
+    },
+    "http://golang.org/pkg/": &amp;fakeResult{
+        "Packages",
+        []string{
+            "http://golang.org/",
+            "http://golang.org/cmd/",
+            "http://golang.org/pkg/fmt/",
+            "http://golang.org/pkg/os/",
+        },
+    },
+    "http://golang.org/pkg/fmt/": &amp;fakeResult{
+        "Package fmt",
+        []string{
+            "http://golang.org/",
+            "http://golang.org/pkg/",
+        },
+    },
+    "http://golang.org/pkg/os/": &amp;fakeResult{
+        "Package os",
+        []string{
+            "http://golang.org/",
+            "http://golang.org/pkg/",
+        },
+    },
+}
+</code></pre></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/09/363/">363</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-15T00:00:00+02:00" pubdate data-updated="true">Sep 15<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>I cannot open some SSL-encrypted websites (https) in Firefox right now. I have found out that this is caused by the Online Certificate Status Protocol (OCSP) which confirms the current validity of certificates. All those websites are using certificates issued by <a href="http://cacert.org">cacert.org</a> and their OCSP server (ocsp.cacert.org) is currently quiet busy (“Too many users” or timeouts).</p>
+
+<p>Quick workaround is to temporarily disable OCSP in Firefox (or other affected web browsers). You can uncheck this feature in Preferences → Advanced → Encryption → Validation in Firefox.</p>
+
+<p><strong>Update:</strong> Server seems to be working again.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

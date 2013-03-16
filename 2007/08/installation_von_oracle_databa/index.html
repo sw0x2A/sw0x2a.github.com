@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Installation von Oracle Database XE auf Ubuntu Linux - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Die Installation von Oracle® Database Express Edition 10g Release 2 (10.2) for Linux erfolgt auf Ubuntu Linux (feisty) wie in der Anleitung des &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2007/08/installation_von_oracle_databa">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Installation Von Oracle Database XE Auf Ubuntu Linux</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-08-10T00:00:00+02:00" pubdate data-updated="true">Aug 10<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Die Installation von Oracle® Database Express Edition 10g Release 2 (10.2) for Linux erfolgt auf Ubuntu Linux (feisty) wie in der <a href="http://www.oracle.com/technology/software/products/database/xe/files/install.102/b25144/toc.htm">Anleitung des Herstellers</a> beschrieben.<br/>
+Nicht in der Anleitung erwähnt wird, dass es auch ein Debian repository für Oracle XE gibt, das sich mit folgendem Eintrag in der Datei /etc/apt/sources.list nutzen lässt.</p>
+
+<pre><code>deb http://oss.oracle.com/debian unstable main non-free
+</code></pre>
+
+<p>Der für Secure-APT benötigte <a href="http://oss.oracle.com/el4/RPM-GPG-KEY-oracle">Public Key (2E2BCDBCB38A8516)</a> wird geladen, geprüft und installiert.</p>
+
+<pre><code># wget -q http://oss.oracle.com/el4/RPM-GPG-KEY-oracle
+# gpg –import RPM-GPG-KEY-oracle
+gpg: key B38A8516: public key “Oracle OSS group (Open Source Software group) ” imported
+gpg: Total number processed: 1
+gpg:               imported: 1
+# gpg –fingerprint build@oss.oracle.com
+pub   1024D/B38A8516 2006-09-05 [expires: 2011-09-04]
+      Key fingerprint = 1122 A29A B257 825F 322C 234E 2E2B CDBC B38A 8516
+uid                  Oracle OSS group (Open Source Software group) 
+sub   2048g/0042D4F4 2006-09-05 [expires: 2011-09-04]
+# gpg –armor –export B38A8516 | apt-key add -
+OK
+</code></pre>
+
+<p>Nun kann das Paket installiert werden.</p>
+
+<pre><code># aptitude install oracle-xe-universal
+</code></pre>
+
+<p>Die Oracle Datenbank erwartet bei 512 Megabyte oder mehr RAM mindestens ein Gigabyte Swap space. Der erforderliche Speicher stand auf dem System nicht zur Verfügung und so wurde der <a href="http://syslog.warten.de/2007/08/swap_erweitern_durch_dateien.html">Swap durch eine Datei erweitert</a>. Offenbar findet die Überprüfung der Größe des Swap-Speichers nur bei der Installation und nicht beim Betrieb der Datenbank statt. Somit wird das Swap-File nur für die Installation benötigt.<br/>
+Ist die Installation abgeschlossen, muss die Datenbank mit folgendem Befehl konfiguriert werden.</p>
+
+<pre><code># /etc/init.d/oracle-xe configure
+</code></pre>
+
+<p>Weiterhin sind die Umgebungsvariablen für Oracle-Benutzer zu setzen. Bei dieser Installation soll allein der Benutzer oracle die Datenbank benutzen. Hierzu wird in das <code>.bash_profile</code> des Benutzers ein Skript eingebunden, dass alle benötigten enviroment variables setzt.</p>
+
+<pre><code># echo ". /usr/lib/oracle/xe/app/oracle/product/10.2.0/server/bin/oracle_env.sh" &gt;&gt; /usr/lib/oracle/xe/.bash_profile
+</code></pre>
+
+<p>Die Installation lief scheinbar erfolgreich durch und es wurde der fehlerfreie Start des Oracle Net Listener und der Oracle Database 10g Express Edition Instance gemeldet. Tatsächlich brachen alle Oracle-Prozesse sofort ab, weil der Net Listener keine Verbindung zum target host aufbauen konnte.<br/>
+Die Ursache war in der Datei <code>/etc/hosts</code> zu finden. Da der Ursprung des Fehlers in der Datei unklar ist, sei der Hinweis auf sie an dieser Stelle ausreichend.<br/>
+Ist die Oracle-Datenbank erfolgreich installiert und konfiguriert worden, kann es losgehen. Da der Benutzer oracle Mitglied der Gruppe dba ist, muss kein Passwort eingegeben werden.</p>
+
+<pre><code># su – oracle
+$ sqlplus sys as sysdba
+SQL*Plus: Release 10.2.0.1.0 – Production on Fri Aug 10 22:04:28 2007
+Copyright (c) 1982, 2005, Oracle. All rights reserved.
+Enter password:
+Connected to:
+Oracle Database 10g Express Edition Release 10.2.0.1.0 – Production
+SQL&gt; 
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-08-10T00:00:00+02:00" pubdate data-updated="true">Aug 10<span>th</span>, 2007</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2007/08/installation_von_oracle_databa/" data-via="" data-counturl="http://sw0x2A.github.com/2007/08/installation_von_oracle_databa/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2007/07/spamassassin_rules_emporium_sa/" title="Previous Post: SpamAssassin Rules Emporium (SARE) benutzen">&laquo; SpamAssassin Rules Emporium (SARE) benutzen</a>
+      
+      
+        <a class="basic-alignment right" href="/2007/08/swap_erweitern_durch_dateien/" title="Next Post: Swap erweitern durch Dateien">Swap erweitern durch Dateien &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,616 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="I saved my OpenVPN certificates in ~/.openvpn, imported the configuration in NetworkManager and expected it to working properly. But in Fedora &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/blog/page/3">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/06/selinux-prevents-openvpn-from-reading-certs-in-home/">SELinux Prevents OpenVPN From Reading Certs in Home</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-06-26T00:00:00+02:00" pubdate data-updated="true">Jun 26<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>I saved my OpenVPN certificates in <code>~/.openvpn</code>, imported the configuration in NetworkManager and expected it to working properly. But in Fedora SELinux prevents OpenVPN from reading the certificates and private keys from that directory. The policy expects the files in directories labeled as <code>home_cert_t</code>, which are by default <code>~/.cert/</code> or <code>~/.pki/</code>. Ok, I copied the files accordingly and executed <code>restorecon</code> to make it work:</p>
+
+<pre><code>restorecon -R -v ~/.pki ~/.cert
+</code></pre>
+
+<p>Another way would be to label <code>~/.openvpn</code> as <code>home_cert_t</code>:</p>
+
+<pre><code>semanage fcontext -a -t home_cert_t "/home/user/.openvpn(/.*)?'
+restorecon -R -v /home/user/.openvpn
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/06/save-file-in-vim-without-needed-permissions/">Save File in Vim Without Needed Permissions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-06-23T00:00:00+02:00" pubdate data-updated="true">Jun 23<span>rd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>It is annoying when you realize that all you have done to the file that you are currently editing in vim cannot be saved because you need root permissions. Thanks to the masters of <a href="http://www.commandlinefu.com/commands/view/1204/save-a-file-you-edited-in-vim-without-the-needed-permissions">commandlinefu</a> I know how to do it anyway.</p>
+
+<pre><code>:w !sudo tee %
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/06/hide-svn-files-in-apache/">Hide .svn Files in Apache</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-06-23T00:00:00+02:00" pubdate data-updated="true">Jun 23<span>rd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Subversion stores some metadata of working copies in hidden directories. If your deployment process uses a working copy in the document root of your Apache vhost, those files are available to the public. The best way to hide those files is to respond with HTTP error 404 (file not found).</p>
+
+<pre><code>RedirectMatch 404 /\.svn(/|$)
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/05/21/">21</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-19T00:00:00+02:00" pubdate data-updated="true">May 19<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>I have just <a href="http://code.google.com/p/mysql-cacti-templates/source/detail?r=563">commited some graph templates</a> to mysql-cacti-templates.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/04/hello-world/">Hello, World</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-04-26T00:00:00+02:00" pubdate data-updated="true">Apr 26<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<pre><code>main( ) {
+    printf("hello, world");
+}
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/09/zugangsdaten_aus_konfiguration/">Zugangsdaten Aus Konfiguration Von Siemens-Router Auslesen</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-06T00:00:00+02:00" pubdate data-updated="true">Sep 6<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Hier war noch ein alter Siemens ADSL-Router (SL2-141-I) in Betrieb, der ersetzt werden sollte. Die Zugangsdaten für den DSL-Provider und DynDNS waren auf ihm konfiguriert, aber sonst unbekannt. An diese Daten zu kommen versuchte ich und zwar mit Erfolg.</p>
+
+<p>Über das Webinterface konnte man ein Backup der Konfiguration anlegen. In der resultierenden XML-Datei standen auch die gesuchten Zugangsdaten, jedoch nicht im Klartext. Die Passwörter sahen aus, als wenn sie ins hexadezimale Format umgewandelt wurden. Dieses in ASCII zurückzuverwandeln sollte kein Problem sein. Das Ergebnis war jedoch nur Sonderzeichensalat. Also schaute ich mir die Daten genauer an und entdeckte eine Regelmäßigkeit. Es dauerte nicht lange und es war gelöst: Der dezimale ASCII-Wert jedes Zeichens wurde von 255 abgezogen und hexadezimal gespeichert. Mit diesem Wissen war es nun leicht die gesuchten Zugangsdaten zu ermitteln.</p>
+
+<p>Die Funktion decrypt im folgenden Perl-Skript nimmt das hexadezimale Passwort entgegen und gibt es im Klartext wieder zurück. Zur Vollständigkeit gibt es auch eine Funktion zum “Verschlüsseln” (encrypt), die aber angesichts es trivialen Algorithmus besser nicht eingesetzt werden sollte.</p>
+
+<pre><code>#!/usr/bin/perl
+
+use strict;
+
+sub encrypt {
+    my $string = shift;
+    my $result;
+    for ( unpack "C*", $string ) {
+        $result .= sprintf uc "%x", 255 - $_;
+    }
+    return $result;
+}
+
+sub decrypt {
+    my $hex_string = shift;
+    my $result;
+    for ( $hex_string =~ m/../g ) {
+        $result .= chr( 255 - hex $_ );
+    }
+    return $result;
+}
+
+print decrypt( encrypt('mysecretpassword') ) . "n";
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/06/phpmyadmin_setzt_time_zone_fur_session/">phpMyAdmin Setzt Time_zone Für Session</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-30T00:00:00+02:00" pubdate data-updated="true">Jun 30<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Simpler Patch, damit phpMyAdmin für jede Verbindung zu Datenbankservern die Zeitzone setzt. Das war hier erforderlich, weil eine Änderung der default time_zone bei AWS RDB nicht möglich ist.</p>
+
+<pre><code>--- libraries/dbi/mysqli.dbi.lib.php        2010-06-26 12:53:06.000000000  0200
+    libraries/dbi/mysqli.dbi.lib.php-new    2010-06-30 16:23:54.000000000  0200
+@@ -137,6  137,10 @@
+         PMA_DBI_postConnect($link, $is_controluser);
+     }
+
+     // Dirty hack to set session time_zone because we cannot
+     // change default time_zone in AWS RDB.
+     mysqli_query($link, "SET time_zone = 'Europe/Berlin';");
+
+     return $link;
+ }
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/06/ec2_abuse_mail_auf_port_25/">EC2 Abuse: Mail Auf Port 25</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-18T00:00:00+02:00" pubdate data-updated="true">Jun 18<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Von unseren Instanzen in EC2 werden viele Mails über einen Smarthost verschickt. Amazon limitiert die Anzahl der Mails von Instanzen auf Port 25 jedoch (aus verständlichen Gründen (Stichwort: Spam)) und empfiehlt den Einsatz von Elastic IPs und die <a href="http://aws.amazon.com/contact-us/ec2-email-limit-request/">Anmeldung als Mailversender</a> bei ihnen. Für uns kommt das nicht in Frage, da wir ja unseren Smarthost nutzen. Also habe ich schnell Submission (Port 587/tcp) auf dem Smarthost aufgemacht und die EC2-Instanzen liefern nun dahin aus, was Amazon nicht mehr zu beanstanden hat.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/06/internes_portforwarding_von_80_auf_8080/">Internes Portforwarding Von 80 Auf 8080</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-16T00:00:00+02:00" pubdate data-updated="true">Jun 16<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><code>
+iptables -t nat -I PREROUTING --src 0/0 --dst 127.0.0.1 -p tcp --dport 80 -j REDIRECT --to-ports 8080
+</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/06/crontab/">Crontab</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-09T00:00:00+02:00" pubdate data-updated="true">Jun 9<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Möchte man alle fünf Minuten einen Befehl ausführen lassen, bemüht man hierfür üblicherweise cron und schreibt ihm ein <em>/5 in die crontab. Der Befehl wird dann in den Minuten 0, 5, 10, 15 … 55 ausgeführt. Möchte man den Aufruf aber beispielsweise in den Minuten 2, 7, 12, 17 … 57 ausführen, wird cron einem ein 2/5 als Syntaxfehler um die Ohren schlagen. </em>/5 kann auch als 0-59/5 notiert werden. 2-59/5 erfüllt den Zweck, beginnend ab Minute 2, alle 5 Minuten den Befehl auszuführen.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/4/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/2/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

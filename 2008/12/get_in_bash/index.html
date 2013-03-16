@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>GET / im Terminal - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Da staunte ich eben nicht schlecht als meine telnet-Session abbrach und das Kommando GET / im Terminal ausgeführt wurde. Als Ausgabe wurde ein HTML- &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2008/12/get_in_bash">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">GET / Im Terminal</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-10T00:00:00+01:00" pubdate data-updated="true">Dec 10<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Da staunte ich eben nicht schlecht als meine telnet-Session abbrach und das Kommando <code>GET /</code> im Terminal ausgeführt wurde. Als Ausgabe wurde ein HTML-formatiertes <code>ls -1a /</code> zurückgegeben.</p>
+
+<pre><code>$ telnet example.com 80
+Trying 208.77.188.166...
+GET /
+telnet: Unable to connect to remote host: Connection timed out
+$ GET /
+&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;TITLE&gt;Directory /&lt;/TITLE&gt;
+&lt;BASE HREF="file:/"&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;H1&gt;Directory listing of /&lt;/H1&gt;
+&lt;UL&gt;
+&lt;LI&gt;&lt;A HREF="./"&gt;./&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="../"&gt;../&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF=".rnd"&gt;.rnd&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="aquota.group"&gt;aquota.group&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="aquota.user"&gt;aquota.user&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="bin/"&gt;bin/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="boot/"&gt;boot/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="dev/"&gt;dev/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="etc/"&gt;etc/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="home/"&gt;home/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="initrd/"&gt;initrd/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="lib/"&gt;lib/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="media/"&gt;media/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="mnt/"&gt;mnt/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="opt/"&gt;opt/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="proc/"&gt;proc/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="root/"&gt;root/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="sbin/"&gt;sbin/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="srv/"&gt;srv/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="sys/"&gt;sys/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="tmp/"&gt;tmp/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="usr/"&gt;usr/&lt;/A&gt;
+&lt;LI&gt;&lt;A HREF="var/"&gt;var/&lt;/A&gt;
+&lt;/UL&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;
+</code></pre>
+
+<p>Des Rätsels Lösung war schnell gefunden und ernüchternd. GET ist ein symbolischer Link auf <a href="http://search.cpan.org/~gaas/libwww-perl-5.805/bin/lwp-request">lwp-request</a>, das benutzt werden kann, um Anfragen an WWW-Server und das lokale Dateisystem zu senden.</p>
+
+<pre><code>$ ls -l `which GET`
+lrwxrwxrwx 1 root root 11 2008-11-02 21:09 /usr/bin/GET -&gt; lwp-request
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-10T00:00:00+01:00" pubdate data-updated="true">Dec 10<span>th</span>, 2008</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2008/12/get_in_bash/" data-via="" data-counturl="http://sw0x2A.github.com/2008/12/get_in_bash/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2008/11/mysql_ein_benutzer_fur_datenba/" title="Previous Post: MySQL: Ein Benutzer für Datenbanknamensschema">&laquo; MySQL: Ein Benutzer für Datenbanknamensschema</a>
+      
+      
+        <a class="basic-alignment right" href="/2008/12/bug_network-manager_speichert/" title="Next Post: Bug: Network-Manager speichert PPP-Einstellungen nicht">Bug: Network-Manager speichert PPP-Einstellungen nicht &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

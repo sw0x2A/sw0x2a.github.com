@@ -1,0 +1,852 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Durch einen Blog-Artikel kam ich einem ungewöhnlichen Verhalten einiger Perl-Skripte auf unseren Servern auf die Spur. Das Perl-Paket von RHEL5 hat &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/blog/page/9">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/09/bug_im_perlrpm_von_rhel5/">Bug Im Perl-RPM Von RHEL5</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-09-10T00:00:00+02:00" pubdate data-updated="true">Sep 10<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Durch einen <a href="http://blog.vipul.net/2008/08/24/redhat-perl-what-a-tragedy/">Blog-Artikel</a> kam ich einem ungewöhnlichen Verhalten einiger Perl-Skripte auf unseren Servern auf die Spur. Das Perl-Paket von RHEL5 hat einen <a href="https://bugzilla.redhat.com/show_bug.cgi?id=379791">Bug</a>, der zur Folge hat, dass Prozesse, die bless und overload benutzen, ausgebremst werden. Red Hat bietet derzeit kein offizielles Bugfix an. Über unseren Hoster stellte Red Hat uns dennoch ein Bugfix zur Verfügung, das das Performance-Problem löst.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/09/perl_daten_nach_haufigkeit_sor/">Perl: Daten Nach Häufigkeit Sortieren</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-09-06T00:00:00+02:00" pubdate data-updated="true">Sep 6<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Die Aufgabe war, eine Liste von IP-Adressen einzulesen und nach Häufigkeit (numerisch) absteigend zu sortieren. Wie man hash values sortiert, wollte mir im entscheidenen Augenblick nicht einfallen und so hat die Lösung eine Viertelstunde auf sich warten lassen. Soll nicht wieder vorkommen.</p>
+
+<pre><code>#!/usr/bin/perl
+my %counter;
+while () {
+    chomp( my $ip_address = $_ );
+    $counter{$ip_address}  = 1;
+}
+for my $ip_address ( sort { $counter{$b}  $counter{$a} } keys %counter ) {
+    print "$ip_address: $counter{$ip_address}n";
+}
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/08/pimp_my_prompt/">Pimp My Prompt</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-08-23T00:00:00+02:00" pubdate data-updated="true">Aug 23<span>rd</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Bei der Arbeit auf einem managed server fand ich eine vergessene screen-Session des Hosters. Ich habe bisher nie die command prompts meiner Systeme angepasst, weil die diesbezüglichen Voreinstellungen der verschiedenen Linux-Distributionen meinen Anforderungen genügten. Nun, als ich diese screen-Session durchsah, bemerkte ich, was den Eingabeaufforderungen meiner Systeme fehlte, ohne dass ich es mir bewußt war: die Uhrzeit!</p>
+
+<pre><code>database ~ # export PS1='[h A w]# '; alias ls='ls --color=no -F'; export LANG=en_US
+[database 10:18 ~]# mysql -u admin -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or g.
+Your MySQL connection id is 2063
+Server version: 5.0.45-community-log MySQL Community Edition (GPL)
+Type 'help;' or 'h' for help. Type 'c' to clear the buffer.
+mysql&gt; R [u@h|R:m|d]&gt;_
+PROMPT set to '[u@h|R:m|d]&gt;_'
+[admin@localhost|10:18|(none)]&gt;
+</code></pre>
+
+<p>Um die Eingabeaufforderung beim Login automatisch anzupassen, kann man die Änderung in <code>~/.bashrc</code> respektive <code>~.my.cnf</code> vornehmen.</p>
+
+<pre><code>$ cat ~/.bashrc | grep PS1
+export PS1='[h A w]$ '
+$ cat ~/.my.cnf
+[mysql]
+prompt='[u@h|R:m|d]&gt;_'
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/08/domainweiterleitung_nach_sprac/">Domain-Weiterleitung Nach Spracheinstellung Im Webbrowser</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-08-23T00:00:00+02:00" pubdate data-updated="true">Aug 23<span>rd</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Es soll beim Aufruf von http://example.com/ basierend auf den Webbrowser-Einstellungen die Homepage des jeweiligen Landes aufgerufen werden. Der Browser übermittelt die bevorzugte Anzeigesprache im HTTP request im header field <code>Accept-Language</code>. Das <a href="http://httpd.apache.org/docs/2.2/mod/mod_rewrite.html">Modul rewrite</a> des Apache kann den HTTP header auswerten, also kann die Anforderung direkt in der Konfiguration des Webservers umgesetzt werden.</p>
+
+<pre><code>RewriteEngine on
+RewriteCond %{HTTP:Accept-Language} ^de.* [NC]
+RewriteRule (.*) http://de.example.com/$1 [L,R=permanent]
+</code></pre>
+
+<p>Sendet der Browser beim Aufruf des vhosts den Wunsch mit, Seiten in deutscher Sprache (de) zu erhalten, wird er in obigem Beispiel mittels HTTP response 301 (permanent redirect) auf http://de.example.com/ weitergeleitet. Ein eventuell angegebener Pfad in der URL bleibt erhalten.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/08/aufbau_eines_fileservers_mit_r/">Aufbau Eines Fileservers Mit RAID-5 (Mdadm)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-08-17T00:00:00+02:00" pubdate data-updated="true">Aug 17<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Der Aufbau des Fileserver geschah mit der Zielsetzung, Daten ausfallsicher verfügbar zu machen und zu lagern. Beim Ausfall einer Festplatte sollte es nicht zu einem Datenverlust kommen und das System sollte weiterhin einsatzfähig sein. Eine leichte Erweiterbarkeit war gewünscht. Zudem sollte der Preis pro nutzbarem GB günstig sein.</p>
+
+<p>Zum Einsatz kommen vier 1000 GB Festplatten, auf denen je identische Partitionen für <code>/boot</code>, <code>/</code>, <code>/data</code> und <code>swap</code> angelegt wurden.</p>
+
+<pre><code># fdisk -l
+Disk /dev/sda: 1000 GB, 1000202273280 bytes
+255 heads, 63 sectors/track, 121601 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Device Boot      Start         End      Blocks   Id  System
+/dev/sda1               1          32      257008   83  Linux
+/dev/sda2              33      121601   976494960    f  Extended LBA
+/dev/sda5              33          64      249007   82  Linux swap
+/dev/sda6              65        1088     8217247   83  Linux
+/dev/sda7            1089      121601   968012640   83  Linux
+Disk /dev/sdb: 1000 GB, 1000202273280 bytes
+255 heads, 63 sectors/track, 121601 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1               1          32      257008   83  Linux
+/dev/sdb2              33      121601   976494960    f  Extended LBA
+/dev/sdb5              33          64      249007   82  Linux swap
+/dev/sdb6              65        1088     8217247   83  Linux
+/dev/sdb7            1089      121601   968012640   83  Linux
+Disk /dev/sdc: 1000 GB, 1000202273280 bytes
+255 heads, 63 sectors/track, 121601 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Device Boot      Start         End      Blocks   Id  System
+/dev/sdc1               1          32      257008   83  Linux
+/dev/sdc2              33      121601   976494960    f  Extended LBA
+/dev/sdc5              33          64      249007   82  Linux swap
+/dev/sdc6              65        1088     8217247   83  Linux
+/dev/sdc7            1089      121601   968012640   83  Linux
+Disk /dev/sdd: 1000 GB, 1000202273280 bytes
+255 heads, 63 sectors/track, 121601 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Device Boot      Start         End      Blocks   Id  System
+/dev/sdd1               1          32      257008   83  Linux
+/dev/sdd2              33      121601   976494960    f  Extended LBA
+/dev/sdd5              33          64      249007   82  Linux swap
+/dev/sdd6              65        1088     8217247   83  Linux
+/dev/sdd7            1089      121601   968012640   83  Linux
+</code></pre>
+
+<p>Die identischen Partitionen der verschiedenen Festplatten wurden dann mittels Software-<a href="http://de.wikipedia.org/wiki/RAID">RAID</a> verknüpft. Wegen der oben beschriebenen Zielsetzung wurde ein RAID-5 zur Datenhaltung ausgewählt. Es bietet die geforderte Redundanz, die den Ausfall einer Festplatte unbeschadet übersteht sowie eine gute Ausnutzung der Speicherkapazität und Leistung. Allein aus technischen Gründen musste für die Boot-Partition auf ein anderes RAID-Level zurückgegriffen werden: Weil kein Bootloader auf ein Software-RAID-5-Device zugreifen kann, wurde ein RAID-1 ausgewählt. Hier werden die Daten in lesbarer Form auf alle Partitionen gespiegelt.</p>
+
+<pre><code># mdadm --create --verbose /dev/md0 --level=1 --raid-device=4 /dev/sda1 /dev/sdb1 /dev/sdc1 /dev/sdd1
+# mdadm --create --verbose /dev/md1 --level=5 --raid-device=4 /dev/sda5 /dev/sdb5 /dev/sdc5 /dev/sdd5
+# mdadm --create --verbose /dev/md2 --level=5 --raid-device=4 /dev/sda6 /dev/sdb6 /dev/sdc6 /dev/sdd6
+# mdadm --create --verbose /dev/md3 --level=5 --raid-device=4 /dev/sda7 /dev/sdb7 /dev/sdc7 /dev/sdd7
+</code></pre>
+
+<p>Die Herstellung des RAIDs läuft im Hintergrund und dauert eine Weile. Nutzbar ist es schon.</p>
+
+<pre><code># cat /proc/mdstat
+Personalities : [linear] [raid0] [raid1] [raid10] [multipath] [raid6] [raid5] [raid4]
+md3 : active raid5 sdd7[4] sdc7[2] sdb7[1] sda7[0]
+2904061824 blocks level 5, 64k chunk, algorithm 2 [4/3] [UUU_]
+[=&gt;...................]  recovery =  5.7% (55536696/968020608) finish=202.3min speed=75137K/sec
+md2 : active raid5 sdd6[3] sdc6[2] sdb6[1] sda6[0]
+24675456 blocks level 5, 64k chunk, algorithm 2 [4/4] [UUUU]
+md1 : active raid5 sdd5[3] sdc5[2] sdb5[1] sda5[0]
+770688 blocks level 5, 64k chunk, algorithm 2 [4/4] [UUUU]
+md0 : active raid1 sdd1[3] sdc1[2] sdb1[1] sda1[0]
+256896 blocks [4/4] [UUUU]
+unused devices: 
+</code></pre>
+
+<p>Danach kann mit der Installation des Betriebssystems begonnen werden. Auf Details soll hier nicht näher eingegangen werden; es wird auf die <a href="http://www.debian.org/releases/testing/amd64/apds03.html.de">Dokumenationen</a> verwiesen.</p>
+
+<pre><code># mke2fs -j /dev/md0
+# mkswap /dev/md1
+# mke2fs -j /dev/md2
+# mke2fs -j /dev/md3
+# sync
+# swapon /dev/md1
+# mkdir /mnt/debinst
+# mount /dev/md2 /mnt/debinst
+# mkdir /mnt/debinst/boot
+# mkdir /mnt/debinst/proc
+# mkdir /mnt/debinst/dev
+# mount /dev/md0 /mnt/debinst/boot
+# mount --bind /dev /mnt/debinst/dev
+# mount --bind /proc /mnt/debinst/proc
+# debootstrap --arch amd64 lenny /mnt/debinst http://ftp.de.debian.org/debian
+</code></pre>
+
+<p>Zum Abschluss wurde der Bootloader in den MBR aller Festplatten installiert, damit beim Ausfall der ersten Festplatte gegebenenfalls von einer anderen gebootet werden kann.</p>
+
+<pre><code># /usr/sbin/grub-install /dev/sda
+# /usr/sbin/grub-install /dev/sdb
+# /usr/sbin/grub-install /dev/sdc
+# /usr/sbin/grub-install /dev/sdd
+Searching for GRUB installation directory ... found: /boot/grub
+Installation finished. No error reported.
+This is the contents of the device map /boot/grub/device.map.
+Check if this is correct or not. If any of the lines is incorrect,
+fix it and re-run the script `grub-install'.
+(hd0)   /dev/sda
+(hd1)   /dev/sdb
+(hd2)   /dev/sdc
+(hd3)   /dev/sdd
+# update-grub
+Searching for GRUB installation directory ... found: /boot/grub
+Searching for default file ... found: /boot/grub/default
+Testing for an existing GRUB menu.lst file ...
+Generating /boot/grub/menu.lst
+Searching for splash image ... none found, skipping ...
+Found kernel: /vmlinuz-2.6.25-2-amd64
+Updating /boot/grub/menu.lst ... done
+</code></pre>
+
+<p>Sollte der verfügbare Speicher knapp werden, kann das hier vorgestellt System leicht erweitert werden. Durch den Einbau einer oder mehrerer Festplatten gleicher Kapazität und bei identischer Partitionierung können die einzelnen RAIDs jeweils wie folgt vergrößert werden. Der obligatorische Hinweis zur Datensicherung vor solchen Änderungen sei hiermit erfolgt.</p>
+
+<pre><code>mdadm --add /dev/md3 /dev/sde7
+mdadm --grow /dev/md3 --raid-devices=5
+fsck.ext3 /dev/md3
+resize2fs /dev/md3
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/07/bernsteins_daemontools_install/">Bernsteins Daemontools Installieren</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-09T00:00:00+02:00" pubdate data-updated="true">Jul 9<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Die <a href="http://cr.yp.to/daemontools.html">daemontools</a> (in Version 0.76) lassen sich auf Systemen mit der glibc 2.3.x oder später nicht mehr ohne Änderung compilieren. Das musste ich heute auf einem CentOS 5.2 feststellen. Der Installationsversuch wurde mit den folgenden Zeilen erfolglos beendet.</p>
+
+<pre><code>/usr/bin/ld: errno: TLS definition in /lib64/libc.so.6 section .tbss mismatches non-TLS reference in envdir.o
+/lib64/libc.so.6: could not read symbols: Bad value
+collect2: ld returned 1 exit status
+make: *** [envdir] Error 1
+Copying commands into ./command...
+cp: cannot stat `compile/svscan': No such file or directory
+</code></pre>
+
+<p>Ursache für die Fehlermeldung ist die zur aktuellen glibc <a href="http://www.thedjbway.org/errno.html">inkompatible Deklaration von <code>errno</code></a> in den daemontools. Glücklicherweise lässt sich diese Einschränkung leicht durch einen <a href="ftp://moni.csi.hu/pub/glibc-2.3.1/daemontools-0.76.errno.patch">Patch</a> lösen.</p>
+
+<p>Der Weg zur erfolgreichen Installation sieht dann Schritt für Schritt etwa wie folgt aus:</p>
+
+<pre><code>cd /tmp
+wget http://cr.yp.to/daemontools/daemontools-0.76.tar.gz
+wget ftp://moni.csi.hu/pub/glibc-2.3.1/daemontools-0.76.errno.patch
+mkdir -p /package
+chmod 1755 /package
+cd /package/
+tar xzpf /tmp/daemontools-0.76.tar
+cd admin/daemontools-0.76
+patch -p1 &lt; /tmp/daemontools-0.76.errno.patch
+package/install
+</code></pre>
+
+<p>Wer nicht patchen möchte, kann den Compiler (hier gcc) explizit anweisen, /usr/include/errno.h zu inkludieren.</p>
+
+<pre><code># vi src/conf-cc
+gcc -include /usr/include/errno.h -O2 -Wimplicit -Wunused -Wcomment -Wchar-subscripts -Wuninitialized -Wshadow -Wcast-qual -Wcast-align -Wwrite-strings
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/05/geocaching_mit_garmin_etrex_h/">Geocaching Mit Garmin eTrex H Und Linux</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-05-21T00:00:00+02:00" pubdate data-updated="true">May 21<span>st</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Mein Bruder hat mich besucht und bei mehreren Spaziergängen fürs <a href="http://de.wikipedia.org/wiki/Geocaching">Geocaching</a> begeistern können. Zum Abschied hat er mir sein <a href="http://garmin.de/outdoor/produktbeschreibung/etrex_h/">Garmin eTrex H</a> geschenkt. Dazu auch ein in Deutschland <a href="http://garmin.de/diverses/show-zubehoer.php?znr[1]=200801">unverschämt teures USB-to-Serial-Adapterkabel</a> zum Anschluss des GPS-Empfänger an den PC. Doch wie greift man mit Linux auf den eTrex H zu? Das soll nun geklärt werden.</p>
+
+<p>Wird der GPS-Empfänger mit dem Adapterkabel am PC angeschlossen, werden die folgenden Kernelmeldungen ausgegeben.</p>
+
+<pre><code>[  221.546821] usb 4-1: new full speed USB device using uhci_hcd and address 2
+[  221.701877] usb 4-1: configuration #1 chosen from 1 choice
+[  222.199965] usbcore: registered new interface driver usbserial
+[  222.201199] /build/buildd/linux-2.6.24/drivers/usb/serial/usb-serial.c: USB Serial support registered for generic
+[  222.203032] usbcore: registered new interface driver usbserial_generic
+[  222.203042] /build/buildd/linux-2.6.24/drivers/usb/serial/usb-serial.c: USB Serial Driver core
+[  222.213108] /build/buildd/linux-2.6.24/drivers/usb/serial/usb-serial.c: USB Serial support registered for pl2303
+[  222.214970] pl2303 4-1:1.0: pl2303 converter detected
+[  222.216137] usb 4-1: pl2303 converter now attached to ttyUSB0
+[  222.217288] usbcore: registered new interface driver pl2303
+[  222.217299] /build/buildd/linux-2.6.24/drivers/usb/serial/pl2303.c: Prolific PL2303 USB to serial adaptor driver
+</code></pre>
+
+<p>Es werden die Kernelmodule usb-serial und pl2303 nachgeladen. Erfolgt dies nicht automatisch kann mit <code>modprobe pl2303</code> manuell nachgeholfen werden. Sollten diese Module nicht zur Verfügung stehen (und nicht fest einkompiliert sein), müssen distributionsabhängig entweder die Module nachinstalliert oder der Kernel mit den aktivierten Modulen neu kompiliert werden. Das Garmin-Gerät sollte nun über <code>/dev/ttyUSB0</code> erreichbar sein.</p>
+
+<p>Um Waypoints, Routen und Tracks übertragen zu können, gibt es für Linux <a href="http://www.gpsbabel.org/">GPSBabel</a>. Die Software kann die vielen gebräuchlichen <a href="http://www.gpsbabel.org/capabilities.html">Formate umwandeln</a> und dabei vom PC auf den GPS-Empfänger (oder umgekehrt) übertragen.</p>
+
+<p>Die Koordinaten eines Geocaches von <a href="http://www.geocaching.com/">Geocaching.com</a> als Waypoint an den Garmin eTrex H zu senden ist einfach. Es wird das “LOC Waypoint File” (geocaching.loc) heruntergeladen und mit dem folgenden Kommando übertragen:</p>
+
+<pre><code>$ gpsbabel -i geo -f geocaching.loc -o garmin -F /dev/ttyUSB0
+</code></pre>
+
+<p>Placemarks aus GoogleEarth lassen sich ebenfalls umwandeln. Sollen Plätze aus GoogleEarth auf den Garmin übernommen werden, sind diese zuerst in der Keyhole Markup Language (Datei mit Endung KML) zu speichern. Liegen die Daten als KMZ-Datei vor, können diese mit <code>unzip</code> entpackt werden. Zum Vorschein kommt eine KML-Datei.</p>
+
+<pre><code>$ unzip GoogleEarth.kmz
+Archive:  GoogleEarth.kmz
+inflating: doc.kml
+$ gpsbabel -i kml -f doc.kml -o garmin -F /dev/ttyUSB0
+</code></pre>
+
+<p>Sollen alle im Garmin gespeicherten Waypoints (Parameter <code>-w</code>; default), Routen (<code>-r</code>) und Tracks (<code>-t</code>) in GoogleEarth übernommen werden, müssen sie ins KML-Format umgewandelt werden. Das geht ganz einfach mit dem folgenden Kommando:</p>
+
+<pre><code>$ gpsbabel -w -r -t -i garmin -f /dev/ttyUSB0 -o kml -F garmin.kml
+</code></pre>
+
+<p>Danach kann man die Daten in GoogleEarth laden und visualisieren lassen.<br/>
+Eine ausführliche Anleitung, wie man die Daten des Garmin mit Perl auswertet, ist im <a href="http://www.linux-magazin.de/heft_abo/ausgaben/2006/07/hinterm_horizont">Perl-Snapshot</a> des Linux Magazins zu finden.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/05/updates_im_griff_mit_cronapt/">Updates Im Griff Mit Cron-apt</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-05-17T00:00:00+02:00" pubdate data-updated="true">May 17<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Mit <a href="http://packages.debian.org/cron-apt">cron-apt</a> lassen sich Systeme, die die Paketverwaltung von Debian nutzen, leicht automatisch aktuell halten. In der Standardkonfiguration aktualisiert cron-apt die in der Datei <code>/etc/apt/sources.list</code> eingetragenen Repositories und verschickt bei verfügbaren Updates eine E-Mail an den Administrator. Aufgerufen wird es dabei — wie der Name vermuten lässt — als Cron-Job. Die Benachrichtigung sieht wie im folgenden Beispiel aus:</p>
+
+<pre><code>CRON-APT RUN [/etc/cron-apt/config]: Tue May 13 14:00:01 CEST 2008
+CRON-APT SLEEP: 2558, Tue May 13 14:42:40 CEST 2008
+CRON-APT ACTION: 3-download
+CRON-APT LINE: /usr/bin/aptitude dist-upgrade -d -y -o APT::Get::Show-Upgraded=true
+Reading package lists...
+Building dependency tree...
+Reading extended state information...
+Initializing package states...
+Building tag database...
+The following packages will be upgraded:
+libssl0.9.8 openssl
+2 packages upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Need to get 3718kB of archives. After unpacking 0B will be used.
+Writing extended state information...
+Get:1 http://security.debian.org etch/updates/main libssl0.9.8 0.9.8c-4etch3 [2717kB]
+Get:2 http://security.debian.org etch/updates/main openssl 0.9.8c-4etch3 [1001kB]
+Fetched 3718kB in 4s (908kB/s)
+</code></pre>
+
+<p>Wer es sich traut, kann die verfügbaren Updates automatisch einpflegen lassen. Hierzu muss allein eine neue Action erstellt werden. (Alternativ kann der Parameter <code>-d</code> aus der zweiten Zeile in der Datei <code>/etc/cron-apt/action.d/3-download</code> entfernt werden. Der Parameter sorgt dafür, dass die Updates lediglich heruntergeladen und nicht installiert werden.) Die neue Action kann zum Beispiel so aussehen:</p>
+
+<pre><code># cat /etc/cron-apt/action.d/9-safe-upgrade
+upgrade -y -o Aptitude::CmdLine::Show-Versions=true -o APT::Get::Show-Upgraded=true
+</code></pre>
+
+<p>Es sei davor gewarnt, Updates automatisch installieren zu lassen. Durch diesen Eingriff kann ein System unerwünschte oder unerwartete Veränderungen erfahren. Im Beispiel oben (dem <a href="http://www.heise.de/newsticker/meldung/107808">Debian-OpenSSL-Fiasko</a>) hätte sich ein Benutzer mit verwundbarem SSH-Key möglicherweise nicht mehr auf dem System anmelden können.</p>
+
+<p>Sollen nur bestimmte Updates berücksichtigt werden, kann man die Auswahl auf ausgewählte Repositories beschränken. So werden nur Security-Updates automatisch eingespielt, wenn cron-apt eine Datei nur mit dem entsprechenden Repository übergeben wird. Eine paketbasierende Auswahl ist nicht möglich.</p>
+
+<pre><code># cat /etc/cron-apt/config
+[...]
+OPTIONS="-o quiet=1 -o Dir::Etc::SourceList=/etc/apt/security.sources.list"
+[...]
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/05/jeds-other-poem/">&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-05-12T00:00:00+02:00" pubdate data-updated="true">May 12<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><a href="http://www.stewdio.org/jed/">Jed’s Other Poem</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/05/mit_fail2ban_dovecot_sichern/">Mit Fail2Ban Dovecot Absichern</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-05-04T00:00:00+02:00" pubdate data-updated="true">May 4<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><strong>[EDIT: October 9, 2008 10:34 PM: Achtung: Das hier beschriebene Verfahren ist praktisch wirkungslos, wenn nicht die in den Kommentaren genannten Änderungen angewandt werden.]</strong></p>
+
+<p>Mit <a href="http://www.fail2ban.org/">Fail2Ban</a> lässt sich ein System recht flexibel gegen Einbruchsversuche absichern. Es kann durch reguläre Ausdrücke in den Logdateien fehlerhafte Authentifizierungsversuche (Passworteingaben) erkennen. Werden zu viele falsche Authentifizierungsversuche festgestellt, wird der zugreifende Host für eine bestimmte Zeit durch eine Firewallregel geblockt.</p>
+
+<p>In der Standardkonfiguration von Fail2Ban ist leider kein Filter für den IMAP-Server Dovecot beigefügt, weshalb ich einen erstellt habe. Die folgenden Zeilen sind als Filter in <code>/etc/fail2ban/filter.d/dovecot.conf</code> zu speichern.</p>
+
+<pre><code>[Definition]
+# Option:  failregex
+# Notes.:  regex to match the password failures messages in the logfile. The
+#          host must be matched by a group named "host". The tag "" can
+#          be used for standard IP/hostname matching.
+# Values:  TEXT
+#
+failregex = (?:imap|pop3)-login: Disconnected: user=, method=(?:LOGIN|PLAIN|(?:CRAM|DIGEST)-MD5), rip=, lip
+# Option:  ignoreregex
+# Notes.:  regex to ignore. If this regex matches, the line is ignored.
+# Values:  TEXT
+#
+ignoreregex =
+</code></pre>
+
+<p>Danach ist ein Jail für Dovecot zu erstellen. Hierzu fügt man die folgenden Zeilen der Datei <code>/etc/fail2ban/jail.local</code> an:</p>
+
+<pre><code>[dovecot]
+enabled  = true
+port     = imap,imaps,pop3,pop3s
+filter   = dovecot
+logpath  = /var/log/mail.log
+</code></pre>
+
+<p>Damit der Filter von Fail2Ban genutzt werden kann, muss die Konfiguration neu geladen werden.</p>
+
+<pre><code># fail2ban-client reload
+</code></pre>
+
+<p>Mit dem folgenden Befehl kann geprüft werden, ob der neue Filter Matches in den Logs findet:</p>
+
+<pre><code># fail2ban-regex /var/log/mail.log /etc/fail2ban/filter.d/dovecot.conf
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/10/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/8/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Nolisting reduziert Spam-Last - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Nolisting ist eine dem Greylisting ähnliche Maßnahme zur Spam-Bekämpfung. Ihr Vorteil ist, dass sie keiner Softwareinstallation oder &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2008/04/nolisting_reduziert_spamlast">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Nolisting Reduziert Spam-Last</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-04-05T00:00:00+02:00" pubdate data-updated="true">Apr 5<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p><a href="http://nolisting.org/">Nolisting</a> ist eine dem <a href="http://projects.puremagic.com/greylisting/">Greylisting</a> ähnliche Maßnahme zur <a href="http://de.wikipedia.org/wiki/Spam">Spam</a>-Bekämpfung. Ihr Vorteil ist, dass sie keiner Softwareinstallation oder Konfigurationsänderung auf dem Mailserver bedarf. Da die meisten Spammer noch immer nach dem Fire-and-Forget-Prinzip vorgehen, also eine Mail einzuliefern versuchen und im Fehlerfall die Zustellung nicht wiederholen, können sie durch absichtlich herbeigeführte, temporäre Fehler ausgetrickst werden. Beim Nolisting ist dieser Fehler, dass der am höchsten priorisierte Mailserver (MX) grundsätzlich nicht auf SMTP antwortet, während der tatsächliche Mailserver auf Platz 2 bereit steht. Nach <a href="http://www.ietf.org/rfc/rfc2821.txt">RFC 2821</a> (Simple Mail Transfer Protocol) muss ein Client jeden MX der Reihe nach durchprobieren, wenn der jeweils vorherige Host nicht erreichbar war. Demnach — so die Annahme — sollten Spammer nach dem ersten Versuch auf dem inaktiven MX keinen weiteren Einlieferungsversuch unternehmen, RFC-konforme Mailserver aber den richten Mailserver finden und die Zahl der Verbindungen und somit die Last auf diesem sinken. In einem Test konnte ich mich davon überzeugen, wie sehr diese Annahme zutreffend ist.</p>
+
+<p>Auf einem von mir betrieben Mailserver, der bereits einige Spamschutz-Maßnahmen (darunter sehr erfolgreich Greylisting) implementiert hat, wurde Nolisting zusätzlich eingesetzt. Zu erwarten war ein Rückgang der Verbindungsversuche ingesamt, der Rejects und der durchs Greylisting abgewehrten Clients.</p>
+
+<p>In der folgenden Statistik wurden die angenommenen und abgelehnten E-Mails sowie die durchs Greylisting geblockten Verbindungen normalisiert erfasst. Der Durchschnittswert entspricht 100%. Die tatsächlichen Werte wurden relativ zu diesem angegeben.</p>
+
+<p><a href="/assets/2008/04/nolisting.png"><img src="/assets/2008/04/nolisting.png" alt="" /></a></p>
+
+<p>Es ist deutlich zu sehen, dass mit Beginn des Nolistings sowohl rejected als auch greylisted connections auf etwa 25% absinken und die Zahl der angenommenen E-Mails (mehr oder weniger) konstant bleibt. Daraus folgt, dass lediglich jede vierte Spam-Mail den Server überhaupt erreicht und der Server dadurch entsprechend entlastet wird. Eine Entlastung des Servers wird vom Monitoring bestätigt.</p>
+
+<p>Das Ergebnis ist leider nicht allgemein verbindlich. Das Mailaufkommen auf dem Testsystem ist insgesamt gering und starken Schwankungen unterlegen. Zudem sorgten die Osterfeiertage für ein geändertes Nutzungsverhalten und möglicherweise wurde das gute Ergebnis durch ein generell geringeres Spam-Aufkommen (http://www.heise.de/newsticker/meldung/105737) während des Test-Zeitraums begünstigt.</p>
+
+<p>Trotz dieser Meßungenauigkeit kann Nolisting zweifellos als erfolgreiche und praktisch kostenlose Maßnahme gegen Spam empfohlen werden. Es bleibt, wie beim Greylisting auch, abzuwarten, ob oder wann die Spammer Mailqueues einsetzen werden, die dieses Verfahren dann übergehen können.</p>
+
+<p>Was ist mit false positives (Servern, die gewünschte E-Mails einliefern sollen, aber am Durchprobieren der Mailserver scheitern)? Während des Tests wurde mir kein false positive bekannt. Leider lässt sich auf der Empfängerseite kaum klären, ob ein solcher Fall eingetreten ist, weil keine Verbindung zum Mailserver hergestellt wird. (Allein eine Firewall-Regel o.ä. auf dem toten MX könnte hier Informationen sammeln.) Letztlich können nur Server betroffen sein, die den RFC nicht korrekt umgesetzt haben und die Verantwortung für die Zustellung einer E-Mail liegt beim Sender, also ist das ein <a href="http://de.wikipedia.org/wiki/Problem_anderer_Leute">PAL</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-04-05T00:00:00+02:00" pubdate data-updated="true">Apr 5<span>th</span>, 2008</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2008/04/nolisting_reduziert_spamlast/" data-via="" data-counturl="http://sw0x2A.github.com/2008/04/nolisting_reduziert_spamlast/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2008/03/cgiskripte_zum_prufen_der_grun/" title="Previous Post: CGI-Skripte zum Prüfen der Grundfunktionalität">&laquo; CGI-Skripte zum Prüfen der Grundfunktionalität</a>
+      
+      
+        <a class="basic-alignment right" href="/2008/05/perl_510_auf_ubuntu_zusatzlich/" title="Next Post: Perl 5.10 auf Ubuntu (zusätzlich) installieren">Perl 5.10 auf Ubuntu (zusätzlich) installieren &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

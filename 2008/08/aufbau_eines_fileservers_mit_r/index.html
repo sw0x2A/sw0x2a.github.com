@@ -1,0 +1,365 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Aufbau eines Fileservers mit RAID-5 (mdadm) - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Der Aufbau des Fileserver geschah mit der Zielsetzung, Daten ausfallsicher verfügbar zu machen und zu lagern. Beim Ausfall einer Festplatte sollte &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2008/08/aufbau_eines_fileservers_mit_r">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Aufbau Eines Fileservers Mit RAID-5 (Mdadm)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-08-17T00:00:00+02:00" pubdate data-updated="true">Aug 17<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Der Aufbau des Fileserver geschah mit der Zielsetzung, Daten ausfallsicher verfügbar zu machen und zu lagern. Beim Ausfall einer Festplatte sollte es nicht zu einem Datenverlust kommen und das System sollte weiterhin einsatzfähig sein. Eine leichte Erweiterbarkeit war gewünscht. Zudem sollte der Preis pro nutzbarem GB günstig sein.</p>
+
+<p>Zum Einsatz kommen vier 1000 GB Festplatten, auf denen je identische Partitionen für <code>/boot</code>, <code>/</code>, <code>/data</code> und <code>swap</code> angelegt wurden.</p>
+
+<pre><code># fdisk -l
+Disk /dev/sda: 1000 GB, 1000202273280 bytes
+255 heads, 63 sectors/track, 121601 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Device Boot      Start         End      Blocks   Id  System
+/dev/sda1               1          32      257008   83  Linux
+/dev/sda2              33      121601   976494960    f  Extended LBA
+/dev/sda5              33          64      249007   82  Linux swap
+/dev/sda6              65        1088     8217247   83  Linux
+/dev/sda7            1089      121601   968012640   83  Linux
+Disk /dev/sdb: 1000 GB, 1000202273280 bytes
+255 heads, 63 sectors/track, 121601 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1               1          32      257008   83  Linux
+/dev/sdb2              33      121601   976494960    f  Extended LBA
+/dev/sdb5              33          64      249007   82  Linux swap
+/dev/sdb6              65        1088     8217247   83  Linux
+/dev/sdb7            1089      121601   968012640   83  Linux
+Disk /dev/sdc: 1000 GB, 1000202273280 bytes
+255 heads, 63 sectors/track, 121601 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Device Boot      Start         End      Blocks   Id  System
+/dev/sdc1               1          32      257008   83  Linux
+/dev/sdc2              33      121601   976494960    f  Extended LBA
+/dev/sdc5              33          64      249007   82  Linux swap
+/dev/sdc6              65        1088     8217247   83  Linux
+/dev/sdc7            1089      121601   968012640   83  Linux
+Disk /dev/sdd: 1000 GB, 1000202273280 bytes
+255 heads, 63 sectors/track, 121601 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Device Boot      Start         End      Blocks   Id  System
+/dev/sdd1               1          32      257008   83  Linux
+/dev/sdd2              33      121601   976494960    f  Extended LBA
+/dev/sdd5              33          64      249007   82  Linux swap
+/dev/sdd6              65        1088     8217247   83  Linux
+/dev/sdd7            1089      121601   968012640   83  Linux
+</code></pre>
+
+<p>Die identischen Partitionen der verschiedenen Festplatten wurden dann mittels Software-<a href="http://de.wikipedia.org/wiki/RAID">RAID</a> verknüpft. Wegen der oben beschriebenen Zielsetzung wurde ein RAID-5 zur Datenhaltung ausgewählt. Es bietet die geforderte Redundanz, die den Ausfall einer Festplatte unbeschadet übersteht sowie eine gute Ausnutzung der Speicherkapazität und Leistung. Allein aus technischen Gründen musste für die Boot-Partition auf ein anderes RAID-Level zurückgegriffen werden: Weil kein Bootloader auf ein Software-RAID-5-Device zugreifen kann, wurde ein RAID-1 ausgewählt. Hier werden die Daten in lesbarer Form auf alle Partitionen gespiegelt.</p>
+
+<pre><code># mdadm --create --verbose /dev/md0 --level=1 --raid-device=4 /dev/sda1 /dev/sdb1 /dev/sdc1 /dev/sdd1
+# mdadm --create --verbose /dev/md1 --level=5 --raid-device=4 /dev/sda5 /dev/sdb5 /dev/sdc5 /dev/sdd5
+# mdadm --create --verbose /dev/md2 --level=5 --raid-device=4 /dev/sda6 /dev/sdb6 /dev/sdc6 /dev/sdd6
+# mdadm --create --verbose /dev/md3 --level=5 --raid-device=4 /dev/sda7 /dev/sdb7 /dev/sdc7 /dev/sdd7
+</code></pre>
+
+<p>Die Herstellung des RAIDs läuft im Hintergrund und dauert eine Weile. Nutzbar ist es schon.</p>
+
+<pre><code># cat /proc/mdstat
+Personalities : [linear] [raid0] [raid1] [raid10] [multipath] [raid6] [raid5] [raid4]
+md3 : active raid5 sdd7[4] sdc7[2] sdb7[1] sda7[0]
+2904061824 blocks level 5, 64k chunk, algorithm 2 [4/3] [UUU_]
+[=&gt;...................]  recovery =  5.7% (55536696/968020608) finish=202.3min speed=75137K/sec
+md2 : active raid5 sdd6[3] sdc6[2] sdb6[1] sda6[0]
+24675456 blocks level 5, 64k chunk, algorithm 2 [4/4] [UUUU]
+md1 : active raid5 sdd5[3] sdc5[2] sdb5[1] sda5[0]
+770688 blocks level 5, 64k chunk, algorithm 2 [4/4] [UUUU]
+md0 : active raid1 sdd1[3] sdc1[2] sdb1[1] sda1[0]
+256896 blocks [4/4] [UUUU]
+unused devices: 
+</code></pre>
+
+<p>Danach kann mit der Installation des Betriebssystems begonnen werden. Auf Details soll hier nicht näher eingegangen werden; es wird auf die <a href="http://www.debian.org/releases/testing/amd64/apds03.html.de">Dokumenationen</a> verwiesen.</p>
+
+<pre><code># mke2fs -j /dev/md0
+# mkswap /dev/md1
+# mke2fs -j /dev/md2
+# mke2fs -j /dev/md3
+# sync
+# swapon /dev/md1
+# mkdir /mnt/debinst
+# mount /dev/md2 /mnt/debinst
+# mkdir /mnt/debinst/boot
+# mkdir /mnt/debinst/proc
+# mkdir /mnt/debinst/dev
+# mount /dev/md0 /mnt/debinst/boot
+# mount --bind /dev /mnt/debinst/dev
+# mount --bind /proc /mnt/debinst/proc
+# debootstrap --arch amd64 lenny /mnt/debinst http://ftp.de.debian.org/debian
+</code></pre>
+
+<p>Zum Abschluss wurde der Bootloader in den MBR aller Festplatten installiert, damit beim Ausfall der ersten Festplatte gegebenenfalls von einer anderen gebootet werden kann.</p>
+
+<pre><code># /usr/sbin/grub-install /dev/sda
+# /usr/sbin/grub-install /dev/sdb
+# /usr/sbin/grub-install /dev/sdc
+# /usr/sbin/grub-install /dev/sdd
+Searching for GRUB installation directory ... found: /boot/grub
+Installation finished. No error reported.
+This is the contents of the device map /boot/grub/device.map.
+Check if this is correct or not. If any of the lines is incorrect,
+fix it and re-run the script `grub-install'.
+(hd0)   /dev/sda
+(hd1)   /dev/sdb
+(hd2)   /dev/sdc
+(hd3)   /dev/sdd
+# update-grub
+Searching for GRUB installation directory ... found: /boot/grub
+Searching for default file ... found: /boot/grub/default
+Testing for an existing GRUB menu.lst file ...
+Generating /boot/grub/menu.lst
+Searching for splash image ... none found, skipping ...
+Found kernel: /vmlinuz-2.6.25-2-amd64
+Updating /boot/grub/menu.lst ... done
+</code></pre>
+
+<p>Sollte der verfügbare Speicher knapp werden, kann das hier vorgestellt System leicht erweitert werden. Durch den Einbau einer oder mehrerer Festplatten gleicher Kapazität und bei identischer Partitionierung können die einzelnen RAIDs jeweils wie folgt vergrößert werden. Der obligatorische Hinweis zur Datensicherung vor solchen Änderungen sei hiermit erfolgt.</p>
+
+<pre><code>mdadm --add /dev/md3 /dev/sde7
+mdadm --grow /dev/md3 --raid-devices=5
+fsck.ext3 /dev/md3
+resize2fs /dev/md3
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-08-17T00:00:00+02:00" pubdate data-updated="true">Aug 17<span>th</span>, 2008</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2008/08/aufbau_eines_fileservers_mit_r/" data-via="" data-counturl="http://sw0x2A.github.com/2008/08/aufbau_eines_fileservers_mit_r/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2008/07/bernsteins_daemontools_install/" title="Previous Post: Bernsteins daemontools installieren">&laquo; Bernsteins daemontools installieren</a>
+      
+      
+        <a class="basic-alignment right" href="/2008/08/domainweiterleitung_nach_sprac/" title="Next Post: Domain-Weiterleitung nach Spracheinstellung im Webbrowser">Domain-Weiterleitung nach Spracheinstellung im Webbrowser &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Updates im Griff mit cron-apt - syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Mit cron-apt lassen sich Systeme, die die Paketverwaltung von Debian nutzen, leicht automatisch aktuell halten. In der Standardkonfiguration &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/2008/05/updates_im_griff_mit_cronapt">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Updates Im Griff Mit Cron-apt</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-05-17T00:00:00+02:00" pubdate data-updated="true">May 17<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1></h1>
+
+<p>Mit <a href="http://packages.debian.org/cron-apt">cron-apt</a> lassen sich Systeme, die die Paketverwaltung von Debian nutzen, leicht automatisch aktuell halten. In der Standardkonfiguration aktualisiert cron-apt die in der Datei <code>/etc/apt/sources.list</code> eingetragenen Repositories und verschickt bei verfügbaren Updates eine E-Mail an den Administrator. Aufgerufen wird es dabei — wie der Name vermuten lässt — als Cron-Job. Die Benachrichtigung sieht wie im folgenden Beispiel aus:</p>
+
+<pre><code>CRON-APT RUN [/etc/cron-apt/config]: Tue May 13 14:00:01 CEST 2008
+CRON-APT SLEEP: 2558, Tue May 13 14:42:40 CEST 2008
+CRON-APT ACTION: 3-download
+CRON-APT LINE: /usr/bin/aptitude dist-upgrade -d -y -o APT::Get::Show-Upgraded=true
+Reading package lists...
+Building dependency tree...
+Reading extended state information...
+Initializing package states...
+Building tag database...
+The following packages will be upgraded:
+libssl0.9.8 openssl
+2 packages upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Need to get 3718kB of archives. After unpacking 0B will be used.
+Writing extended state information...
+Get:1 http://security.debian.org etch/updates/main libssl0.9.8 0.9.8c-4etch3 [2717kB]
+Get:2 http://security.debian.org etch/updates/main openssl 0.9.8c-4etch3 [1001kB]
+Fetched 3718kB in 4s (908kB/s)
+</code></pre>
+
+<p>Wer es sich traut, kann die verfügbaren Updates automatisch einpflegen lassen. Hierzu muss allein eine neue Action erstellt werden. (Alternativ kann der Parameter <code>-d</code> aus der zweiten Zeile in der Datei <code>/etc/cron-apt/action.d/3-download</code> entfernt werden. Der Parameter sorgt dafür, dass die Updates lediglich heruntergeladen und nicht installiert werden.) Die neue Action kann zum Beispiel so aussehen:</p>
+
+<pre><code># cat /etc/cron-apt/action.d/9-safe-upgrade
+upgrade -y -o Aptitude::CmdLine::Show-Versions=true -o APT::Get::Show-Upgraded=true
+</code></pre>
+
+<p>Es sei davor gewarnt, Updates automatisch installieren zu lassen. Durch diesen Eingriff kann ein System unerwünschte oder unerwartete Veränderungen erfahren. Im Beispiel oben (dem <a href="http://www.heise.de/newsticker/meldung/107808">Debian-OpenSSL-Fiasko</a>) hätte sich ein Benutzer mit verwundbarem SSH-Key möglicherweise nicht mehr auf dem System anmelden können.</p>
+
+<p>Sollen nur bestimmte Updates berücksichtigt werden, kann man die Auswahl auf ausgewählte Repositories beschränken. So werden nur Security-Updates automatisch eingespielt, wenn cron-apt eine Datei nur mit dem entsprechenden Repository übergeben wird. Eine paketbasierende Auswahl ist nicht möglich.</p>
+
+<pre><code># cat /etc/cron-apt/config
+[...]
+OPTIONS="-o quiet=1 -o Dir::Etc::SourceList=/etc/apt/security.sources.list"
+[...]
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">sw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-05-17T00:00:00+02:00" pubdate data-updated="true">May 17<span>th</span>, 2008</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uncategorized/'>Uncategorized</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sw0x2A.github.com/2008/05/updates_im_griff_mit_cronapt/" data-via="" data-counturl="http://sw0x2A.github.com/2008/05/updates_im_griff_mit_cronapt/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2008/05/jeds-other-poem/" title="Previous Post: &#8230;">&laquo; &#8230;</a>
+      
+      
+        <a class="basic-alignment right" href="/2008/05/geocaching_mit_garmin_etrex_h/" title="Next Post: Geocaching mit Garmin eTrex H und Linux">Geocaching mit Garmin eTrex H und Linux &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
