@@ -1,519 +1,517 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://sw0x2A.github.com/2007/03/fastcgi_has_failed_to_remain_r/</loc>
+        <loc>http://syslog.warten.de/2007/03/fastcgi_has_failed_to_remain_r/</loc>
         <lastmod>2013-03-16T18:24:10+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/03/gentoo_linux_auf_strato_powers/</loc>
+        <loc>http://syslog.warten.de/2007/03/gentoo_linux_auf_strato_powers/</loc>
         <lastmod>2013-03-16T18:24:49+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/03/hello_world/</loc>
+        <loc>http://syslog.warten.de/2007/03/hello_world/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/04/eine_email_mit_telnet_und_smtp/</loc>
+        <loc>http://syslog.warten.de/2007/04/eine_email_mit_telnet_und_smtp/</loc>
         <lastmod>2013-03-16T18:21:19+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/04/aufnehmen_einer_terminalsessio/</loc>
+        <loc>http://syslog.warten.de/2007/04/aufnehmen_einer_terminalsessio/</loc>
         <lastmod>2013-03-16T18:21:06+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/05/ftplicity_timeout_der_ftpverbi/</loc>
+        <loc>http://syslog.warten.de/2007/05/ftplicity_timeout_der_ftpverbi/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/05/debianpakete_aus_source_packag/</loc>
+        <loc>http://syslog.warten.de/2007/05/debianpakete_aus_source_packag/</loc>
         <lastmod>2013-03-16T18:20:50+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/05/movable_type_auf_strato_webhos/</loc>
+        <loc>http://syslog.warten.de/2007/05/movable_type_auf_strato_webhos/</loc>
         <lastmod>2013-03-16T18:20:23+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/06/eigene_perlmodule_auf_strato_w/</loc>
+        <loc>http://syslog.warten.de/2007/06/eigene_perlmodule_auf_strato_w/</loc>
         <lastmod>2013-03-16T18:19:51+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/06/fehlersuche_bei_cgiskripten_pe/</loc>
+        <loc>http://syslog.warten.de/2007/06/fehlersuche_bei_cgiskripten_pe/</loc>
         <lastmod>2013-03-16T18:19:18+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/06/magic_sysrq_keys_benutzen/</loc>
+        <loc>http://syslog.warten.de/2007/06/magic_sysrq_keys_benutzen/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/07/schlussel_fur_repository_in_se/</loc>
+        <loc>http://syslog.warten.de/2007/07/schlussel_fur_repository_in_se/</loc>
         <lastmod>2013-03-16T18:16:21+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/07/spamassassin_rules_emporium_sa/</loc>
+        <loc>http://syslog.warten.de/2007/07/spamassassin_rules_emporium_sa/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/08/installation_von_oracle_databa/</loc>
+        <loc>http://syslog.warten.de/2007/08/installation_von_oracle_databa/</loc>
         <lastmod>2013-03-16T18:13:23+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/08/swap_erweitern_durch_dateien/</loc>
+        <loc>http://syslog.warten.de/2007/08/swap_erweitern_durch_dateien/</loc>
         <lastmod>2013-03-16T18:12:17+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/08/encrypted_esmtp_at_strato/</loc>
+        <loc>http://syslog.warten.de/2007/08/encrypted_esmtp_at_strato/</loc>
         <lastmod>2013-03-16T18:12:02+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/08/sslzertifikate_erstellen_und_m/</loc>
+        <loc>http://syslog.warten.de/2007/08/sslzertifikate_erstellen_und_m/</loc>
         <lastmod>2013-03-16T18:11:14+01:00</lastmod>
     </url>
     <url>
         <loc>
-            http://sw0x2A.github.com/2007/09/gameserver-fur-enemy-territory-quake-wars-einrichten/
+            http://syslog.warten.de/2007/09/gameserver-fur-enemy-territory-quake-wars-einrichten/
         </loc>
         <lastmod>2013-03-16T18:09:59+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/10/compiz_und_window-decorations/</loc>
+        <loc>http://syslog.warten.de/2007/10/compiz_und_window-decorations/</loc>
         <lastmod>2013-03-16T18:08:48+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/11/plesk_auf_debian_uber_paketver/</loc>
+        <loc>http://syslog.warten.de/2007/11/plesk_auf_debian_uber_paketver/</loc>
         <lastmod>2013-03-16T18:08:41+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/12/debian_linux_mit_debootstrap_a/</loc>
+        <loc>http://syslog.warten.de/2007/12/debian_linux_mit_debootstrap_a/</loc>
         <lastmod>2013-03-16T18:07:59+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/12/deutsche_ubersetzung_der_lpifr/</loc>
+        <loc>http://syslog.warten.de/2007/12/deutsche_ubersetzung_der_lpifr/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/12/restore_failed_auf_vps_linux/</loc>
+        <loc>http://syslog.warten.de/2007/12/restore_failed_auf_vps_linux/</loc>
         <lastmod>2013-03-16T18:05:09+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2007/12/versionsverwaltung_fur_konfigu/</loc>
+        <loc>http://syslog.warten.de/2007/12/versionsverwaltung_fur_konfigu/</loc>
         <lastmod>2013-03-16T18:03:54+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/01/pong/</loc>
+        <loc>http://syslog.warten.de/2008/01/pong/</loc>
         <lastmod>2013-03-16T18:02:34+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/02/dovecot_lda_mit_sieve_einrichten/</loc>
+        <loc>http://syslog.warten.de/2008/02/dovecot_lda_mit_sieve_einrichten/</loc>
         <lastmod>2013-03-16T18:01:59+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/03/munin-plugin_vzfree/</loc>
+        <loc>http://syslog.warten.de/2008/03/munin-plugin_vzfree/</loc>
         <lastmod>2013-03-16T18:00:51+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/03/cgiskripte_zum_prufen_der_grun/</loc>
+        <loc>http://syslog.warten.de/2008/03/cgiskripte_zum_prufen_der_grun/</loc>
         <lastmod>2013-03-16T17:59:30+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/04/nolisting_reduziert_spamlast/</loc>
+        <loc>http://syslog.warten.de/2008/04/nolisting_reduziert_spamlast/</loc>
         <lastmod>2013-03-16T17:59:38+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/05/perl_510_auf_ubuntu_zusatzlich/</loc>
+        <loc>http://syslog.warten.de/2008/05/perl_510_auf_ubuntu_zusatzlich/</loc>
         <lastmod>2013-03-16T17:54:26+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/05/mit_fail2ban_dovecot_sichern/</loc>
+        <loc>http://syslog.warten.de/2008/05/mit_fail2ban_dovecot_sichern/</loc>
         <lastmod>2013-03-16T17:53:32+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/05/jeds-other-poem/</loc>
+        <loc>http://syslog.warten.de/2008/05/jeds-other-poem/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/05/updates_im_griff_mit_cronapt/</loc>
+        <loc>http://syslog.warten.de/2008/05/updates_im_griff_mit_cronapt/</loc>
         <lastmod>2013-03-16T17:52:10+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/05/geocaching_mit_garmin_etrex_h/</loc>
+        <loc>http://syslog.warten.de/2008/05/geocaching_mit_garmin_etrex_h/</loc>
         <lastmod>2013-03-16T17:51:16+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/07/bernsteins_daemontools_install/</loc>
+        <loc>http://syslog.warten.de/2008/07/bernsteins_daemontools_install/</loc>
         <lastmod>2013-03-16T17:50:24+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/08/aufbau_eines_fileservers_mit_r/</loc>
+        <loc>http://syslog.warten.de/2008/08/aufbau_eines_fileservers_mit_r/</loc>
         <lastmod>2013-03-16T17:49:06+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/08/domainweiterleitung_nach_sprac/</loc>
+        <loc>http://syslog.warten.de/2008/08/domainweiterleitung_nach_sprac/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/08/pimp_my_prompt/</loc>
+        <loc>http://syslog.warten.de/2008/08/pimp_my_prompt/</loc>
         <lastmod>2013-03-16T17:47:43+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/09/perl_daten_nach_haufigkeit_sor/</loc>
+        <loc>http://syslog.warten.de/2008/09/perl_daten_nach_haufigkeit_sor/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/09/bug_im_perlrpm_von_rhel5/</loc>
+        <loc>http://syslog.warten.de/2008/09/bug_im_perlrpm_von_rhel5/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/09/vmware_vs_ntpd/</loc>
+        <loc>http://syslog.warten.de/2008/09/vmware_vs_ntpd/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/09/backuprestore_mit_dd_oder_tar/</loc>
+        <loc>http://syslog.warten.de/2008/09/backuprestore_mit_dd_oder_tar/</loc>
         <lastmod>2013-03-16T17:46:37+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/09/dateinamen_nach_utf8_konvertie/</loc>
+        <loc>http://syslog.warten.de/2008/09/dateinamen_nach_utf8_konvertie/</loc>
         <lastmod>2013-03-16T17:46:56+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/10/perl_text_am_anfang_einer_date/</loc>
+        <loc>http://syslog.warten.de/2008/10/perl_text_am_anfang_einer_date/</loc>
         <lastmod>2013-03-16T17:45:01+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/10/redirect_aller_webseiten_auf_e/</loc>
+        <loc>http://syslog.warten.de/2008/10/redirect_aller_webseiten_auf_e/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/11/automysqlbackup_bug_in_weekly/</loc>
+        <loc>http://syslog.warten.de/2008/11/automysqlbackup_bug_in_weekly/</loc>
         <lastmod>2013-03-16T17:44:44+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/11/mysql_ein_benutzer_fur_datenba/</loc>
+        <loc>http://syslog.warten.de/2008/11/mysql_ein_benutzer_fur_datenba/</loc>
         <lastmod>2013-03-16T17:44:14+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/12/get_in_bash/</loc>
+        <loc>http://syslog.warten.de/2008/12/get_in_bash/</loc>
         <lastmod>2013-03-16T17:43:42+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/12/bug_network-manager_speichert/</loc>
+        <loc>http://syslog.warten.de/2008/12/bug_network-manager_speichert/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2008/12/sudo_mit_ssh_auf_remote_hosts/</loc>
+        <loc>http://syslog.warten.de/2008/12/sudo_mit_ssh_auf_remote_hosts/</loc>
         <lastmod>2013-03-16T17:40:08+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/02/nfs_permission_denied_wegen_gr/</loc>
+        <loc>http://syslog.warten.de/2009/02/nfs_permission_denied_wegen_gr/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/02/smarthost_signiert_mails_mit_d/</loc>
+        <loc>http://syslog.warten.de/2009/02/smarthost_signiert_mails_mit_d/</loc>
         <lastmod>2013-03-16T17:39:25+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/04/austausch_defekter_festplatte/</loc>
+        <loc>http://syslog.warten.de/2009/04/austausch_defekter_festplatte/</loc>
         <lastmod>2013-03-16T17:38:29+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/07/passwort_von_windows-benutzerk/</loc>
+        <loc>http://syslog.warten.de/2009/07/passwort_von_windows-benutzerk/</loc>
         <lastmod>2013-03-16T17:37:52+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/10/papierkorb_fur_samba/</loc>
+        <loc>http://syslog.warten.de/2009/10/papierkorb_fur_samba/</loc>
         <lastmod>2013-03-16T17:37:05+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/11/hello_world-2/</loc>
+        <loc>http://syslog.warten.de/2009/11/hello_world-2/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/11/nach_prufung_der_vorhandenen_eintrage/</loc>
-        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://sw0x2A.github.com/2009/11/mandelbulb_the_unravelling_of_the_real_3d_mandelbrot_fractal/
-        </loc>
+        <loc>http://syslog.warten.de/2009/11/nach_prufung_der_vorhandenen_eintrage/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
         <loc>
-            http://sw0x2A.github.com/2009/11/sudo_apt-key_adv_-keyserver_keyserverubuntucom/
+            http://syslog.warten.de/2009/11/mandelbulb_the_unravelling_of_the_real_3d_mandelbrot_fractal/
         </loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/11/binbash_pwdpwd_find_pwd_-type/</loc>
+        <loc>http://syslog.warten.de/2009/11/sudo_apt-key_adv_-keyserver_keyserverubuntucom/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/11/binbash_for_dir_in_data/</loc>
+        <loc>http://syslog.warten.de/2009/11/binbash_pwdpwd_find_pwd_-type/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/11/perl_-ne_print_lc_foo/</loc>
+        <loc>http://syslog.warten.de/2009/11/binbash_for_dir_in_data/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/11/aktuellere_versionen_von_snmpd_werten/</loc>
+        <loc>http://syslog.warten.de/2009/11/perl_-ne_print_lc_foo/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/11/select_column_countcolumn_from_table/</loc>
+        <loc>http://syslog.warten.de/2009/11/aktuellere_versionen_von_snmpd_werten/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/12/installation_von_jdk6_und_tomc/</loc>
+        <loc>http://syslog.warten.de/2009/11/select_column_countcolumn_from_table/</loc>
+        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://syslog.warten.de/2009/12/installation_von_jdk6_und_tomc/</loc>
         <lastmod>2013-03-16T17:29:04+01:00</lastmod>
     </url>
     <url>
         <loc>
-            http://sw0x2A.github.com/2009/12/daemontools1_rpm-paketieren_und_installieren_auf/
+            http://syslog.warten.de/2009/12/daemontools1_rpm-paketieren_und_installieren_auf/
         </loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/12/echo_32768_procsysfsinotifymax_user_watches/</loc>
+        <loc>http://syslog.warten.de/2009/12/echo_32768_procsysfsinotifymax_user_watches/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2009/12/browser_pong/</loc>
+        <loc>http://syslog.warten.de/2009/12/browser_pong/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/01/nmap_-pr_-on_arpdiscoverylog_19216837024/</loc>
+        <loc>http://syslog.warten.de/2010/01/nmap_-pr_-on_arpdiscoverylog_19216837024/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/01/uri_encode_a_string_in_perl/</loc>
+        <loc>http://syslog.warten.de/2010/01/uri_encode_a_string_in_perl/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/01/openx_mit_apc_beschleunigen/</loc>
+        <loc>http://syslog.warten.de/2010/01/openx_mit_apc_beschleunigen/</loc>
         <lastmod>2013-03-16T18:26:38+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/01/mysql_tuning_primer/</loc>
+        <loc>http://syslog.warten.de/2010/01/mysql_tuning_primer/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/01/asciimeohttpwwwasciimeocom/</loc>
+        <loc>http://syslog.warten.de/2010/01/asciimeohttpwwwasciimeocom/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/01/der_von_t-home_ausgelieferte_speedport/</loc>
+        <loc>http://syslog.warten.de/2010/01/der_von_t-home_ausgelieferte_speedport/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/02/the_weird_sense_of_duty/</loc>
+        <loc>http://syslog.warten.de/2010/02/the_weird_sense_of_duty/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/02/die_vorratsdatenspeicherung_um/</loc>
+        <loc>http://syslog.warten.de/2010/02/die_vorratsdatenspeicherung_um/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
         <loc>
-            http://sw0x2A.github.com/2010/02/wochenendehttpstackoverflowcomquestions84556whats-your-favorite-programmer-cartoon196006/ /
+            http://syslog.warten.de/2010/02/wochenendehttpstackoverflowcomquestions84556whats-your-favorite-programmer-cartoon196006/ /
         </loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/03/konsistenz_einer_mysql-replika/</loc>
+        <loc>http://syslog.warten.de/2010/03/konsistenz_einer_mysql-replika/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/03/zugangsdaten_fur_den_router_siemens/</loc>
+        <loc>http://syslog.warten.de/2010/03/zugangsdaten_fur_den_router_siemens/</loc>
         <lastmod>2013-03-16T16:27:31+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/03/bcc_pro_queue_in_otrs/</loc>
+        <loc>http://syslog.warten.de/2010/03/bcc_pro_queue_in_otrs/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/03/110/</loc>
+        <loc>http://syslog.warten.de/2010/03/110/</loc>
         <lastmod>2013-03-16T16:26:06+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/03/110/</loc>
+        <loc>http://syslog.warten.de/2010/03/110/</loc>
         <lastmod>2013-03-16T16:26:20+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/03/bash_friert_ein_bei_ctrl-s/</loc>
+        <loc>http://syslog.warten.de/2010/03/bash_friert_ein_bei_ctrl-s/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/03/112/</loc>
+        <loc>http://syslog.warten.de/2010/03/112/</loc>
         <lastmod>2013-03-16T16:24:43+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/05/113/</loc>
+        <loc>http://syslog.warten.de/2010/05/113/</loc>
         <lastmod>2013-03-16T16:25:34+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/05/chsmbpasswd/</loc>
+        <loc>http://syslog.warten.de/2010/05/chsmbpasswd/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/05/ec2_elastic_ip_fur_private_adressen/</loc>
+        <loc>http://syslog.warten.de/2010/05/ec2_elastic_ip_fur_private_adressen/</loc>
         <lastmod>2013-03-16T16:21:08+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/05/ec2_flash_kann_x-domain-policy_nicht_laden/</loc>
+        <loc>http://syslog.warten.de/2010/05/ec2_flash_kann_x-domain-policy_nicht_laden/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/06/mysqldump_mit_where_clause/</loc>
+        <loc>http://syslog.warten.de/2010/06/mysqldump_mit_where_clause/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/06/bash_function_alias_mit_variablen/</loc>
+        <loc>http://syslog.warten.de/2010/06/bash_function_alias_mit_variablen/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/06/crontab/</loc>
+        <loc>http://syslog.warten.de/2010/06/crontab/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/06/internes_portforwarding_von_80_auf_8080/</loc>
+        <loc>http://syslog.warten.de/2010/06/internes_portforwarding_von_80_auf_8080/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/06/ec2_abuse_mail_auf_port_25/</loc>
+        <loc>http://syslog.warten.de/2010/06/ec2_abuse_mail_auf_port_25/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/06/phpmyadmin_setzt_time_zone_fur_session/</loc>
+        <loc>http://syslog.warten.de/2010/06/phpmyadmin_setzt_time_zone_fur_session/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2010/09/zugangsdaten_aus_konfiguration/</loc>
+        <loc>http://syslog.warten.de/2010/09/zugangsdaten_aus_konfiguration/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2011/04/hello-world/</loc>
+        <loc>http://syslog.warten.de/2011/04/hello-world/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2011/05/21/</loc>
+        <loc>http://syslog.warten.de/2011/05/21/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2011/06/hide-svn-files-in-apache/</loc>
+        <loc>http://syslog.warten.de/2011/06/hide-svn-files-in-apache/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2011/06/save-file-in-vim-without-needed-permissions/</loc>
-        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://sw0x2A.github.com/2011/06/selinux-prevents-openvpn-from-reading-certs-in-home/
-        </loc>
-        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
-    </url>
-    <url>
-        <loc>http://sw0x2A.github.com/2011/07/broken-cable-disabled-gigabit-ethernet/</loc>
-        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
-    </url>
-    <url>
-        <loc>http://sw0x2A.github.com/2011/07/backup-to-go/</loc>
-        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
-    </url>
-    <url>
-        <loc>http://sw0x2A.github.com/2011/07/328/</loc>
-        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
-    </url>
-    <url>
-        <loc>http://sw0x2A.github.com/2011/08/perl-inserting-a-lot-of-documents-in-mongodb/</loc>
-        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
-    </url>
-    <url>
-        <loc>http://sw0x2A.github.com/2011/08/solarize-your-terminal/</loc>
-        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
-    </url>
-    <url>
-        <loc>http://sw0x2A.github.com/2011/08/338/</loc>
-        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
-    </url>
-    <url>
-        <loc>http://sw0x2A.github.com/2011/08/340/</loc>
-        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
-    </url>
-    <url>
-        <loc>http://sw0x2A.github.com/2011/08/logrotate-with-mongodb/</loc>
-        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
-    </url>
-    <url>
-        <loc>http://sw0x2A.github.com/2011/09/instant-query-log-for-mysql/</loc>
+        <loc>http://syslog.warten.de/2011/06/save-file-in-vim-without-needed-permissions/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
         <loc>
-            http://sw0x2A.github.com/2011/09/significant-improvements-to-indexes-in-mongodb-v2-0/
+            http://syslog.warten.de/2011/06/selinux-prevents-openvpn-from-reading-certs-in-home/
         </loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2011/09/363/</loc>
+        <loc>http://syslog.warten.de/2011/07/broken-cable-disabled-gigabit-ethernet/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2011/11/solutions-for-tour-of-go-exercises/</loc>
+        <loc>http://syslog.warten.de/2011/07/backup-to-go/</loc>
+        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://syslog.warten.de/2011/07/328/</loc>
+        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://syslog.warten.de/2011/08/perl-inserting-a-lot-of-documents-in-mongodb/</loc>
+        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://syslog.warten.de/2011/08/solarize-your-terminal/</loc>
+        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://syslog.warten.de/2011/08/338/</loc>
+        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://syslog.warten.de/2011/08/340/</loc>
+        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://syslog.warten.de/2011/08/logrotate-with-mongodb/</loc>
+        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://syslog.warten.de/2011/09/instant-query-log-for-mysql/</loc>
+        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://syslog.warten.de/2011/09/significant-improvements-to-indexes-in-mongodb-v2-0/
+        </loc>
+        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://syslog.warten.de/2011/09/363/</loc>
+        <lastmod>2013-03-16T15:23:07+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://syslog.warten.de/2011/11/solutions-for-tour-of-go-exercises/</loc>
         <lastmod>2013-03-16T16:03:43+01:00</lastmod>
     </url>
     <url>
         <loc>
-            http://sw0x2A.github.com/2011/12/install-mgse-on-other-distributions-than-linux-mint/
+            http://syslog.warten.de/2011/12/install-mgse-on-other-distributions-than-linux-mint/
         </loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2011/12/fetch-ip-addresses-of-pingdoms-probe-servers/</loc>
+        <loc>http://syslog.warten.de/2011/12/fetch-ip-addresses-of-pingdoms-probe-servers/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2012/03/dell-xps-8300-nic-hardware-problem/</loc>
+        <loc>http://syslog.warten.de/2012/03/dell-xps-8300-nic-hardware-problem/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2012/03/simple-and-secure-subversion-server/</loc>
+        <loc>http://syslog.warten.de/2012/03/simple-and-secure-subversion-server/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2012/03/separate-webapps-from-tomcat/</loc>
+        <loc>http://syslog.warten.de/2012/03/separate-webapps-from-tomcat/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2012/05/425/</loc>
+        <loc>http://syslog.warten.de/2012/05/425/</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/2012/06/simple-sftp-setup/</loc>
+        <loc>http://syslog.warten.de/2012/06/simple-sftp-setup/</loc>
         <lastmod>2013-03-16T15:46:12+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/blog/2013/03/16/hello-world/</loc>
+        <loc>http://syslog.warten.de/blog/2013/03/16/hello-world/</loc>
         <lastmod>2013-03-16T19:41:03+01:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/blog/2013/05/26/backup-synology-nas-using-rsync/</loc>
+        <loc>http://syslog.warten.de/blog/2013/05/26/backup-synology-nas-using-rsync/</loc>
         <lastmod>2013-05-26T10:32:14+02:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/blog/2013/05/26/build-spotify-rpm-on-fedora/</loc>
+        <loc>http://syslog.warten.de/blog/2013/05/26/build-spotify-rpm-on-fedora/</loc>
         <lastmod>2013-05-26T10:47:00+02:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/blog/archives/</loc>
+        <loc>http://syslog.warten.de/blog/archives/</loc>
         <lastmod>2013-05-26T10:47:00+02:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/</loc>
+        <loc>http://syslog.warten.de/</loc>
         <lastmod>2013-05-26T10:47:00+02:00</lastmod>
     </url>
     <url>
-        <loc>http://sw0x2A.github.com/robots.txt</loc>
+        <loc>http://syslog.warten.de/robots.txt</loc>
         <lastmod>2013-03-16T15:23:07+01:00</lastmod>
     </url>
 </urlset>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[syslog.warten.de]]></title>
-  <link href="http://sw0x2A.github.com/atom.xml" rel="self"/>
-  <link href="http://sw0x2A.github.com/"/>
-  <updated>2013-05-26T10:47:52+02:00</updated>
-  <id>http://sw0x2A.github.com/</id>
+  <link href="http://syslog.warten.de/atom.xml" rel="self"/>
+  <link href="http://syslog.warten.de/"/>
+  <updated>2013-05-26T11:09:09+02:00</updated>
+  <id>http://syslog.warten.de/</id>
   <author>
     <name><![CDATA[SW]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Build Spotify RPM on Fedora]]></title>
-    <link href="http://sw0x2A.github.com/blog/2013/05/26/build-spotify-rpm-on-fedora/"/>
+    <link href="http://syslog.warten.de/blog/2013/05/26/build-spotify-rpm-on-fedora/"/>
     <updated>2013-05-26T10:32:00+02:00</updated>
-    <id>http://sw0x2A.github.com/blog/2013/05/26/build-spotify-rpm-on-fedora</id>
+    <id>http://syslog.warten.de/blog/2013/05/26/build-spotify-rpm-on-fedora</id>
     <content type="html"><![CDATA[<p><a href="http://leamas.fedorapeople.org/spotify/">Fedora people</a> provide everything to build a RPM package of the latest Spotify client.</p>
 
 <pre><code>sudo yum install rpm-build rpmdevtools yum-utils
@@ -36,9 +36,9 @@ rpm -Uvh $HOME/rpmbuild/RPMS/x86_64/spotify-client-0.9.0.133.gd18ed58.259-2.fc18
   
   <entry>
     <title type="html"><![CDATA[Backup Synology NAS using rsync]]></title>
-    <link href="http://sw0x2A.github.com/blog/2013/05/26/backup-synology-nas-using-rsync/"/>
+    <link href="http://syslog.warten.de/blog/2013/05/26/backup-synology-nas-using-rsync/"/>
     <updated>2013-05-26T10:29:00+02:00</updated>
-    <id>http://sw0x2A.github.com/blog/2013/05/26/backup-synology-nas-using-rsync</id>
+    <id>http://syslog.warten.de/blog/2013/05/26/backup-synology-nas-using-rsync</id>
     <content type="html"><![CDATA[<p>Synology NAS devices offer a <a href="http://forum.synology.com/wiki/index.php/Backup_the_Synology_server_to_a_remote_Synology_server_or_RSync_Server">built-in service</a> to backup all configuration, applications and shared folders to a remote rsync server. Below is a short howto describing the steps required to setup the remote rsync services on a CentOS 6 server.</p>
 
 <p>Install rsync and xinetd.</p>
@@ -96,9 +96,9 @@ chcon -t public_content_rw_t /data/synology
   
   <entry>
     <title type="html"><![CDATA[Hello world]]></title>
-    <link href="http://sw0x2A.github.com/blog/2013/03/16/hello-world/"/>
+    <link href="http://syslog.warten.de/blog/2013/03/16/hello-world/"/>
     <updated>2013-03-16T18:56:00+01:00</updated>
-    <id>http://sw0x2A.github.com/blog/2013/03/16/hello-world</id>
+    <id>http://syslog.warten.de/blog/2013/03/16/hello-world</id>
     <content type="html"><![CDATA[<p>It is the fourth time that I post a Hello world in this blog. I did this whenever I changed the underlying blogging software. It started with Movable Type, a bit later I added a microblog in the same software. After years I merged both into Wordpress and with this post I am going to relaunch it using Octopress.</p>
 
 <pre><code>package main
@@ -114,9 +114,9 @@ func main() {
   
   <entry>
     <title type="html"><![CDATA[Simple SFTP setup]]></title>
-    <link href="http://sw0x2A.github.com/2012/06/simple-sftp-setup/"/>
+    <link href="http://syslog.warten.de/2012/06/simple-sftp-setup/"/>
     <updated>2012-06-18T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2012/06/simple-sftp-setup</id>
+    <id>http://syslog.warten.de/2012/06/simple-sftp-setup</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>SFTP is a subsystem of SSH and quiet easy to set up. It has some limitations compared with FTP and it is not to be confused with FTPS (FTP over SSL/TLS). The requirement is just to provide a way to transfer files from and to a server with secure authentication and connection. We also want to the user access be limited to the homedir using SSH ChrootDirectory directive and enforce SFTP protocol (user should not be able to use SSH instead).</p>
@@ -179,9 +179,9 @@ END
   
   <entry>
     <title type="html"><![CDATA[425]]></title>
-    <link href="http://sw0x2A.github.com/2012/05/425/"/>
+    <link href="http://syslog.warten.de/2012/05/425/"/>
     <updated>2012-05-06T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2012/05/425</id>
+    <id>http://syslog.warten.de/2012/05/425</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p><a href="http://unix.stackexchange.com/questions/4105/how-do-i-count-all-the-files-recursively-through-directories">How do I count all the files recursively through directories</a></p>
@@ -190,9 +190,9 @@ END
   
   <entry>
     <title type="html"><![CDATA[Separate webapps from Tomcat]]></title>
-    <link href="http://sw0x2A.github.com/2012/03/separate-webapps-from-tomcat/"/>
+    <link href="http://syslog.warten.de/2012/03/separate-webapps-from-tomcat/"/>
     <updated>2012-03-31T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2012/03/separate-webapps-from-tomcat</id>
+    <id>http://syslog.warten.de/2012/03/separate-webapps-from-tomcat</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>Until last week I thought it would be necessary to configure Tomcat and its webapps as a big monolithic system. What a great mistake! I have learned that there is a much easier way to run webapps in Tomcat. Actually each webapps becomes its own application server, executed with a dedicated user. I will demonstrate this way by showing how to install Jenkins.</p>
@@ -296,9 +296,9 @@ exit 0
   
   <entry>
     <title type="html"><![CDATA[Simple and secure Subversion server]]></title>
-    <link href="http://sw0x2A.github.com/2012/03/simple-and-secure-subversion-server/"/>
+    <link href="http://syslog.warten.de/2012/03/simple-and-secure-subversion-server/"/>
     <updated>2012-03-10T00:00:00+01:00</updated>
-    <id>http://sw0x2A.github.com/2012/03/simple-and-secure-subversion-server</id>
+    <id>http://syslog.warten.de/2012/03/simple-and-secure-subversion-server</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>In most environments, people want to access their Subversion repositories over a HTTPS connection. This requires a webserver like Apache, which provides WebDAV and SVN modules. I just switched over to nginx and do not want to install Apache just for SVN only. So I started to search for an alternative method which should be easy and secure.</p>
@@ -335,9 +335,9 @@ command="/usr/bin/svnserve -t -r /var/svn/repos --tunnel-user=user2",no-port-for
   
   <entry>
     <title type="html"><![CDATA[DELL XPS 8300 NIC hardware problem]]></title>
-    <link href="http://sw0x2A.github.com/2012/03/dell-xps-8300-nic-hardware-problem/"/>
+    <link href="http://syslog.warten.de/2012/03/dell-xps-8300-nic-hardware-problem/"/>
     <updated>2012-03-10T00:00:00+01:00</updated>
-    <id>http://sw0x2A.github.com/2012/03/dell-xps-8300-nic-hardware-problem</id>
+    <id>http://syslog.warten.de/2012/03/dell-xps-8300-nic-hardware-problem</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>It seems like there is a hardware problem at least on some motherboards of <a href="http://en.community.dell.com/support-forums/desktop/f/3514/p/19389902/19906490.aspx">DELL XPS 8300</a>. It appears to be an initialization issue of the network chipset (Broadcom NetLink BCM57788 Gigabit) when you turn on the computer at low temperatures. When OS starts, the NIC is not detected and therefore not usable. As soon as the PC warms up (usually after some minutes), you can restart and the problem is gone until next cold restart.</p>
@@ -348,9 +348,9 @@ command="/usr/bin/svnserve -t -r /var/svn/repos --tunnel-user=user2",no-port-for
   
   <entry>
     <title type="html"><![CDATA[Fetch IP addresses of Pingdom&#8217;s probe servers]]></title>
-    <link href="http://sw0x2A.github.com/2011/12/fetch-ip-addresses-of-pingdoms-probe-servers/"/>
+    <link href="http://syslog.warten.de/2011/12/fetch-ip-addresses-of-pingdoms-probe-servers/"/>
     <updated>2011-12-11T00:00:00+01:00</updated>
-    <id>http://sw0x2A.github.com/2011/12/fetch-ip-addresses-of-pingdoms-probe-servers</id>
+    <id>http://syslog.warten.de/2011/12/fetch-ip-addresses-of-pingdoms-probe-servers</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <pre><code>wget --quiet -O- https://www.pingdom.com/rss/probe_servers.xml | perl -nle 'print $1 if /IP: (([01]?dd?|2[0-4]d|25[0-5]).([01]?dd?|2[0-4]d|25[0-5]).([01]?dd?|2[0-4]d|25[0-5]).([01]?dd?|2[0-4]d|25[0-5]));/'
@@ -360,9 +360,9 @@ command="/usr/bin/svnserve -t -r /var/svn/repos --tunnel-user=user2",no-port-for
   
   <entry>
     <title type="html"><![CDATA[Install MGSE on other distributions than Linux Mint]]></title>
-    <link href="http://sw0x2A.github.com/2011/12/install-mgse-on-other-distributions-than-linux-mint/"/>
+    <link href="http://syslog.warten.de/2011/12/install-mgse-on-other-distributions-than-linux-mint/"/>
     <updated>2011-12-02T00:00:00+01:00</updated>
-    <id>http://sw0x2A.github.com/2011/12/install-mgse-on-other-distributions-than-linux-mint</id>
+    <id>http://syslog.warten.de/2011/12/install-mgse-on-other-distributions-than-linux-mint</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>The friendly guys from <a href="http://linuxmint.com/">Linux Mint</a> wrote some Gnome Shell extentions which make Gnome 3 feel more like Gnome 2. The good thing is that you can benefit from that even if you are using a different distribution. First of all, we will install the <a href="https://github.com/linuxmint/MGSE">Linux Mint Shell Extensions for Gnome 3 (MGSE)</a>.</p>
@@ -380,9 +380,9 @@ $ ./test
   
   <entry>
     <title type="html"><![CDATA[Solutions for Tour of Go exercises]]></title>
-    <link href="http://sw0x2A.github.com/2011/11/solutions-for-tour-of-go-exercises/"/>
+    <link href="http://syslog.warten.de/2011/11/solutions-for-tour-of-go-exercises/"/>
     <updated>2011-11-21T00:00:00+01:00</updated>
-    <id>http://sw0x2A.github.com/2011/11/solutions-for-tour-of-go-exercises</id>
+    <id>http://syslog.warten.de/2011/11/solutions-for-tour-of-go-exercises</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>I am learning <a href="http://golang.org/">Go</a> and the <a href="http://tour.golang.org/">Tour of Go</a>, an interactive tutorial, is a good resource to start with. At the end of each section is a series of exercises for the reader to complete.</p>
@@ -759,9 +759,9 @@ var fetcher = &amp;fakeFetcher{
   
   <entry>
     <title type="html"><![CDATA[363]]></title>
-    <link href="http://sw0x2A.github.com/2011/09/363/"/>
+    <link href="http://syslog.warten.de/2011/09/363/"/>
     <updated>2011-09-15T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2011/09/363</id>
+    <id>http://syslog.warten.de/2011/09/363</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>I cannot open some SSL-encrypted websites (https) in Firefox right now. I have found out that this is caused by the Online Certificate Status Protocol (OCSP) which confirms the current validity of certificates. All those websites are using certificates issued by <a href="http://cacert.org">cacert.org</a> and their OCSP server (ocsp.cacert.org) is currently quiet busy (“Too many users” or timeouts).</p>
@@ -774,9 +774,9 @@ var fetcher = &amp;fakeFetcher{
   
   <entry>
     <title type="html"><![CDATA[Significant improvements to indexes in MongoDB v2.0]]></title>
-    <link href="http://sw0x2A.github.com/2011/09/significant-improvements-to-indexes-in-mongodb-v2-0/"/>
+    <link href="http://syslog.warten.de/2011/09/significant-improvements-to-indexes-in-mongodb-v2-0/"/>
     <updated>2011-09-13T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2011/09/significant-improvements-to-indexes-in-mongodb-v2-0</id>
+    <id>http://syslog.warten.de/2011/09/significant-improvements-to-indexes-in-mongodb-v2-0</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>I have upgraded my MongoDB installation to version 2.0 today and converted existing indexes to {v:1} format. According to the <a href="http://www.mongodb.org/display/DOCS/2.0">release notes</a>, <em>“Indexes are often 25% smaller and 25% faster (depends on the use case)”</em>.</p>
@@ -795,9 +795,9 @@ var fetcher = &amp;fakeFetcher{
   
   <entry>
     <title type="html"><![CDATA[Instant query log for MySQL]]></title>
-    <link href="http://sw0x2A.github.com/2011/09/instant-query-log-for-mysql/"/>
+    <link href="http://syslog.warten.de/2011/09/instant-query-log-for-mysql/"/>
     <updated>2011-09-06T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2011/09/instant-query-log-for-mysql</id>
+    <id>http://syslog.warten.de/2011/09/instant-query-log-for-mysql</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>MySQL has <a href="http://dev.mysql.com/doc/refman/5.5/en/server-logs.html">build-in logging</a> for queries (general) and slow queries (slow). You can enable them at startup. It is not recommended to enable general logs on a high-traffic database server for performance reasons but sometimes you may want to be able to see what queries are executed there.</p>
@@ -828,9 +828,9 @@ var fetcher = &amp;fakeFetcher{
   
   <entry>
     <title type="html"><![CDATA[Logrotate with MongoDB]]></title>
-    <link href="http://sw0x2A.github.com/2011/08/logrotate-with-mongodb/"/>
+    <link href="http://syslog.warten.de/2011/08/logrotate-with-mongodb/"/>
     <updated>2011-08-22T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2011/08/logrotate-with-mongodb</id>
+    <id>http://syslog.warten.de/2011/08/logrotate-with-mongodb</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>MongoDB packages are shipped with <a href="http://www.mongodb.org/display/DOCS/Logging">logging</a> enabled in configuration but without a script to rotate the logfile. There are two build-in ways to let MongoDB rotate its logfile. You can execute <code>db.runCommand("logRotate");</code> from the mongo shell or <code>kill -SIGUSR1 $(cat /var/lib/mongodb/mongod.lock)</code> from unix shell.</p>
@@ -857,9 +857,9 @@ var fetcher = &amp;fakeFetcher{
   
   <entry>
     <title type="html"><![CDATA[340]]></title>
-    <link href="http://sw0x2A.github.com/2011/08/340/"/>
+    <link href="http://syslog.warten.de/2011/08/340/"/>
     <updated>2011-08-22T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2011/08/340</id>
+    <id>http://syslog.warten.de/2011/08/340</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p><a href="http://www.davidpashley.com/articles/writing-robust-shell-scripts.html">Writing robust Bash shell scripts</a></p>
@@ -868,9 +868,9 @@ var fetcher = &amp;fakeFetcher{
   
   <entry>
     <title type="html"><![CDATA[338]]></title>
-    <link href="http://sw0x2A.github.com/2011/08/338/"/>
+    <link href="http://syslog.warten.de/2011/08/338/"/>
     <updated>2011-08-02T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2011/08/338</id>
+    <id>http://syslog.warten.de/2011/08/338</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p><a href="http://www252.pair.com/comdog/mastering_perl/">Mastering Perl</a></p>
@@ -879,9 +879,9 @@ var fetcher = &amp;fakeFetcher{
   
   <entry>
     <title type="html"><![CDATA[Solarize your terminal!]]></title>
-    <link href="http://sw0x2A.github.com/2011/08/solarize-your-terminal/"/>
+    <link href="http://syslog.warten.de/2011/08/solarize-your-terminal/"/>
     <updated>2011-08-01T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2011/08/solarize-your-terminal</id>
+    <id>http://syslog.warten.de/2011/08/solarize-your-terminal</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>I have <a href="http://www.xaprb.com/blog/2011/07/28/easy-on-the-eyes-the-solarized-color-theme/">read</a> about <a href="http://ethanschoonover.com/solarized">Solarized</a> recently. It is a sixteen color palette designed for use with terminal and gui applications. I am using both the dark and light mode in <a href="https://github.com/sigurdga/gnome-terminal-colors-solarized">Gnome Terminal</a>, <a href="https://github.com/altercation/vim-colors-solarized">vim</a> and <a href="https://github.com/fentie/netbeans-colors-solarized">Netbeans</a> since a few days and I really like to work with it and do not want to miss it.</p>
@@ -890,9 +890,9 @@ var fetcher = &amp;fakeFetcher{
   
   <entry>
     <title type="html"><![CDATA[Perl: Inserting a lot of documents in MongoDB]]></title>
-    <link href="http://sw0x2A.github.com/2011/08/perl-inserting-a-lot-of-documents-in-mongodb/"/>
+    <link href="http://syslog.warten.de/2011/08/perl-inserting-a-lot-of-documents-in-mongodb/"/>
     <updated>2011-08-01T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2011/08/perl-inserting-a-lot-of-documents-in-mongodb</id>
+    <id>http://syslog.warten.de/2011/08/perl-inserting-a-lot-of-documents-in-mongodb</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>In the last few day, I spend a lot of time to figure out and learn how <a href="http://www.mongodb.org/">MongoDB</a> works and what is the best solution to fill a collection with millions of records (documents). To be more precise, I want to store unique strings and some other data related to that strings. One should be able to search for values in all fields, therefore I set indexes for all of them and a unique one for the strings.</p>
@@ -960,9 +960,9 @@ sub mdb_batch_insert {
   
   <entry>
     <title type="html"><![CDATA[328]]></title>
-    <link href="http://sw0x2A.github.com/2011/07/328/"/>
+    <link href="http://syslog.warten.de/2011/07/328/"/>
     <updated>2011-07-29T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2011/07/328</id>
+    <id>http://syslog.warten.de/2011/07/328</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>I have just <a href="http://code.google.com/p/mysql-cacti-templates/source/detail?r=565">commited another graph template</a> to mysql-cacti-templates.</p>

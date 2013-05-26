@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Uncategorized | syslog.warten.de]]></title>
-  <link href="http://sw0x2A.github.com/blog/categories/uncategorized/atom.xml" rel="self"/>
-  <link href="http://sw0x2A.github.com/"/>
-  <updated>2013-05-26T10:47:52+02:00</updated>
-  <id>http://sw0x2A.github.com/</id>
+  <link href="http://syslog.warten.de/blog/categories/uncategorized/atom.xml" rel="self"/>
+  <link href="http://syslog.warten.de/"/>
+  <updated>2013-05-26T11:09:09+02:00</updated>
+  <id>http://syslog.warten.de/</id>
   <author>
     <name><![CDATA[SW]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Simple SFTP setup]]></title>
-    <link href="http://sw0x2A.github.com/2012/06/simple-sftp-setup/"/>
+    <link href="http://syslog.warten.de/2012/06/simple-sftp-setup/"/>
     <updated>2012-06-18T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2012/06/simple-sftp-setup</id>
+    <id>http://syslog.warten.de/2012/06/simple-sftp-setup</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>SFTP is a subsystem of SSH and quiet easy to set up. It has some limitations compared with FTP and it is not to be confused with FTPS (FTP over SSL/TLS). The requirement is just to provide a way to transfer files from and to a server with secure authentication and connection. We also want to the user access be limited to the homedir using SSH ChrootDirectory directive and enforce SFTP protocol (user should not be able to use SSH instead).</p>
@@ -80,9 +80,9 @@ END
   
   <entry>
     <title type="html"><![CDATA[425]]></title>
-    <link href="http://sw0x2A.github.com/2012/05/425/"/>
+    <link href="http://syslog.warten.de/2012/05/425/"/>
     <updated>2012-05-06T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2012/05/425</id>
+    <id>http://syslog.warten.de/2012/05/425</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p><a href="http://unix.stackexchange.com/questions/4105/how-do-i-count-all-the-files-recursively-through-directories">How do I count all the files recursively through directories</a></p>
@@ -91,9 +91,9 @@ END
   
   <entry>
     <title type="html"><![CDATA[Separate webapps from Tomcat]]></title>
-    <link href="http://sw0x2A.github.com/2012/03/separate-webapps-from-tomcat/"/>
+    <link href="http://syslog.warten.de/2012/03/separate-webapps-from-tomcat/"/>
     <updated>2012-03-31T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2012/03/separate-webapps-from-tomcat</id>
+    <id>http://syslog.warten.de/2012/03/separate-webapps-from-tomcat</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>Until last week I thought it would be necessary to configure Tomcat and its webapps as a big monolithic system. What a great mistake! I have learned that there is a much easier way to run webapps in Tomcat. Actually each webapps becomes its own application server, executed with a dedicated user. I will demonstrate this way by showing how to install Jenkins.</p>
@@ -197,9 +197,9 @@ exit 0
   
   <entry>
     <title type="html"><![CDATA[Simple and secure Subversion server]]></title>
-    <link href="http://sw0x2A.github.com/2012/03/simple-and-secure-subversion-server/"/>
+    <link href="http://syslog.warten.de/2012/03/simple-and-secure-subversion-server/"/>
     <updated>2012-03-10T00:00:00+01:00</updated>
-    <id>http://sw0x2A.github.com/2012/03/simple-and-secure-subversion-server</id>
+    <id>http://syslog.warten.de/2012/03/simple-and-secure-subversion-server</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>In most environments, people want to access their Subversion repositories over a HTTPS connection. This requires a webserver like Apache, which provides WebDAV and SVN modules. I just switched over to nginx and do not want to install Apache just for SVN only. So I started to search for an alternative method which should be easy and secure.</p>
@@ -236,9 +236,9 @@ command="/usr/bin/svnserve -t -r /var/svn/repos --tunnel-user=user2",no-port-for
   
   <entry>
     <title type="html"><![CDATA[DELL XPS 8300 NIC hardware problem]]></title>
-    <link href="http://sw0x2A.github.com/2012/03/dell-xps-8300-nic-hardware-problem/"/>
+    <link href="http://syslog.warten.de/2012/03/dell-xps-8300-nic-hardware-problem/"/>
     <updated>2012-03-10T00:00:00+01:00</updated>
-    <id>http://sw0x2A.github.com/2012/03/dell-xps-8300-nic-hardware-problem</id>
+    <id>http://syslog.warten.de/2012/03/dell-xps-8300-nic-hardware-problem</id>
     <content type="html"><![CDATA[<h1></h1>
 
 <p>It seems like there is a hardware problem at least on some motherboards of <a href="http://en.community.dell.com/support-forums/desktop/f/3514/p/19389902/19906490.aspx">DELL XPS 8300</a>. It appears to be an initialization issue of the network chipset (Broadcom NetLink BCM57788 Gigabit) when you turn on the computer at low temperatures. When OS starts, the NIC is not detected and therefore not usable. As soon as the PC warms up (usually after some minutes), you can restart and the problem is gone until next cold restart.</p>
