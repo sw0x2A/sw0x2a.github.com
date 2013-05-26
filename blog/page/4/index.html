@@ -9,7 +9,7 @@
   <meta name="author" content="SW">
 
   
-  <meta name="description" content="Um häufig benutzte, komplizierte Shell-Kommandos abzukürzen, kann man ein kurzes alias definieren. Leider können so keine Parameter bzw. Variablen &hellip;">
+  <meta name="description" content=" iptables -t nat -I PREROUTING --src 0/0 --dst 127.0.0.1 -p tcp --dport 80 -j REDIRECT --to-ports 8080 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +63,84 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/06/internes_portforwarding_von_80_auf_8080/">Internes Portforwarding Von 80 Auf 8080</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-16T00:00:00+02:00" pubdate data-updated="true">Jun 16<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><code>
+iptables -t nat -I PREROUTING --src 0/0 --dst 127.0.0.1 -p tcp --dport 80 -j REDIRECT --to-ports 8080
+</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/06/crontab/">Crontab</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-09T00:00:00+02:00" pubdate data-updated="true">Jun 9<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Möchte man alle fünf Minuten einen Befehl ausführen lassen, bemüht man hierfür üblicherweise cron und schreibt ihm ein <em>/5 in die crontab. Der Befehl wird dann in den Minuten 0, 5, 10, 15 … 55 ausgeführt. Möchte man den Aufruf aber beispielsweise in den Minuten 2, 7, 12, 17 … 57 ausführen, wird cron einem ein 2/5 als Syntaxfehler um die Ohren schlagen. </em>/5 kann auch als 0-59/5 notiert werden. 2-59/5 erfüllt den Zweck, beginnend ab Minute 2, alle 5 Minuten den Befehl auszuführen.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -398,82 +476,6 @@ done
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/03/110/">Die_tastatur_meines_dell_latitude</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-03-14T00:00:00+01:00" pubdate data-updated="true">Mar 14<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1></h1>
-
-<p>Die Tastatur meines Dell Latitude D530 erzeugte Zeichen, die nie getippt wurden. Das geschah vor allem in bestimmten Neigungswinkeln des Notebooks, was mich eine Art Kurzschluß, eine ungewünschte Kontaktbrücke aufgrund Verschmutzung oder sowas vermuten ließ. Ich wollte die Tastatur ausbauen und prüfen und zu meiner Überraschung findet sich sogar eine detaillierte <a href="http://support.dell.com/support/edocs/systems/latd530/en/sm/index.htm">Anleitung</a> dazu auf den Seiten des Herstellers. Nachdem <a href="http://support.dell.com/support/edocs/systems/latd530/en/sm/keyboard.htm#wp1180225">Hinge Cover</a> und <a href="http://support.dell.com/support/edocs/systems/latd530/en/sm/hingecvr.htm#wp1180224">Keyboard</a> herausgelöst waren, konnte ich es reinigen und seit dem Wiedereinbau ist mein Ghostwriter im Ruhestand.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/03/110/">110</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-03-14T00:00:00+01:00" pubdate data-updated="true">Mar 14<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1></h1>
-
-<p>Die Tastatur meines Dell Latitude D530 erzeugte Zeichen, die nie getippt wurden. Das geschah vor allem in bestimmten Neigungswinkeln des Notebooks, was mich eine Art Kurzschluß, eine ungewünschte Kontaktbrücke aufgrund Verschmutzung oder sowas vermuten ließ. Ich wollte die Tastatur ausbauen und prüfen und zu meiner Überraschung findet sich sogar eine detaillierte <a href="http://support.dell.com/support/edocs/systems/latd530/en/sm/index.htm">Anleitung</a> dazu auf den Seiten des Herstellers. Nachdem <a href="http://support.dell.com/support/edocs/systems/latd530/en/sm/keyboard.htm#wp1180225">Hinge Cover</a> und <a href="http://support.dell.com/support/edocs/systems/latd530/en/sm/hingecvr.htm#wp1180224">Keyboard</a> herausgelöst waren, konnte ich es reinigen und seit dem Wiedereinbau ist mein Ghostwriter im Ruhestand.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -491,6 +493,14 @@ done
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/05/26/build-spotify-rpm-on-fedora/">Build Spotify RPM on Fedora</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/26/backup-synology-nas-using-rsync/">Backup Synology NAS using rsync</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/03/16/hello-world/">Hello world</a>
       </li>
     
@@ -500,14 +510,6 @@ done
     
       <li class="post">
         <a href="/2012/05/425/">425</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="SW">
 
   
-  <meta name="description" content="I have upgraded my MongoDB installation to version 2.0 today and converted existing indexes to {v:1} format. According to the release notes, “ &hellip;">
+  <meta name="description" content="I am learning Go and the Tour of Go, an interactive tutorial, is a good resource to start with. At the end of each section is a series of exercises &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +63,454 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/11/solutions-for-tour-of-go-exercises/">Solutions for Tour of Go Exercises</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-21T00:00:00+01:00" pubdate data-updated="true">Nov 21<span>st</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>I am learning <a href="http://golang.org/">Go</a> and the <a href="http://tour.golang.org/">Tour of Go</a>, an interactive tutorial, is a good resource to start with. At the end of each section is a series of exercises for the reader to complete.</p>
+
+<p>Unfortunately, there are no example solutions for those exercises, so its hard to get a hint if you are stuck. Therefore I post my solutions here. I do not think they are the best way to solve the problems in Go (as I said, I am learning too) but code is compiling and it is doing what it should. You are welcome to comment with your solutions and code improvements.</p>
+
+<ul>
+<li><p><a href="http://tour.golang.org/#44">Exercise: Loops and Functions</a></p>
+
+<pre><code>package main
+
+import (
+    "fmt"
+    "math"
+)
+
+func Sqrt(x float64) float64 {
+    var z, d float64 = x, 1
+    for d &gt; 1e-15 {
+        z0 := z
+        z = z-(z*z-x)/(2*z)
+        d = z-z0
+        if d &lt; 0 {
+            d = -d
+        }
+    }
+    return z
+}
+
+func main() {
+    fmt.Println(Sqrt(2))
+    fmt.Println(math.Sqrt(2))
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#45">Exercise: Maps</a></p>
+
+<pre><code>package main
+
+import (
+    "strings"
+    "tour/wc"
+)
+
+func WordCount(s string) map[string]int {
+    m:=make(map[string]int)
+    for _, w:=range strings.Fields(s) {
+        m[w]++
+    }
+    return m
+}
+
+func main() {
+    wc.Test(WordCount)
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#46">Exercise: Slices</a></p>
+
+<pre><code>package main
+
+import "tour/pic"
+
+func Pic(dx, dy int) [][]uint8 {
+    mat := make([][]uint8, dx) 
+    for i := range mat { 
+        mat[i] = make([]uint8, dy)
+    for j := range mat[i] {
+        mat[i][j]=uint8(i^j)
+    }
+    }
+    return mat
+}
+
+func main() {
+    pic.Show(Pic)
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#47">Exercise: Fibonacci closure</a></p>
+
+<pre><code>package main
+
+import "fmt"
+
+// fibonacci is a function that returns
+// a function that returns an int.
+func fibonacci() func() int {
+    var a, b, count int = 0, 1, 0
+    return func() int {
+        switch count {
+        case 0:  count++
+             return a 
+        case 1:  count++
+             return b
+        }
+        sum:=a b
+        a=b
+        b=sum
+        return sum
+    }
+}
+
+func main() {
+    f := fibonacci()
+    for i := 0; i &lt; 10; i   {
+        fmt.Println(f())
+    }
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#48">Advanced Exercise: Complex cube roots</a></p>
+
+<pre><code>package main
+
+import (
+    "fmt"
+    "math"
+    "cmath"
+)
+
+func Cbrt(x complex128) complex128 {
+    var z complex128 = x
+    for i:=0; i 1e-15 {
+        z0 := z
+        z = z-(z*z-f)/(2*z)
+        d = z-z0
+        if d &lt; 0 {
+            d = -d
+        }
+    }
+    return z, nil
+}
+
+func main() {
+    if value, err := Sqrt(-2.0); err != nil {
+        fmt.Println(err)
+    } else {
+        fmt.Println(value)
+    }
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#59">Exercise: Images</a></p>
+
+<pre><code>package main
+
+import (
+    "image"
+    "tour/pic"
+)
+
+type Image struct {}
+
+func (m *Image) ColorModel() image.ColorModel {
+    return image.RGBAColorModel
+}
+
+func (m *Image) Bounds() image.Rectangle {
+    return image.Rect(0,0,256,256)
+}
+
+func (m *Image) At(x, y int) image.Color {
+    v:=uint8(x^y)
+    return image.RGBAColor{v, v, 255, 255}
+}
+
+func main() {
+    m := &amp;Image{}
+    pic.ShowImage(m)
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#60">Exercise: Rot13 Reader</a></p>
+
+<pre><code>package main
+
+import (
+    "io"
+    "os"
+    "strings"
+)
+
+type rot13Reader struct {
+    r io.Reader
+}
+
+func rot13(b byte) byte { 
+    switch { 
+        case 'A' &lt;= b &amp;&amp; b &lt;= 'M': 
+                b = (b - 'A')+'N' 
+        case 'N' &lt;= b &amp;&amp; b &lt;= 'Z': 
+                b = (b - 'N')+'A' 
+        case 'a' &lt;= b &amp;&amp; b &lt;= 'm': 
+                b = (b - 'a')+'n' 
+        case 'n' &lt;= b &amp;&amp; b &lt;= 'z': 
+                b = (b - 'n')+'a' 
+    } 
+    return b 
+}
+
+func (b *rot13Reader) Read(p []byte) (n int, err os.Error) {
+    n, err = b.r.Read(p)
+    for i:=range(p[:n]) {
+        p[i]=rot13(p[i])
+    }
+    return
+}
+
+func main() {
+    s := strings.NewReader(
+        "Lbh penpxrq gur pbqr!")
+    r := rot13Reader{s}
+    io.Copy(os.Stdout, &amp;r)
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#69">Exercise: Equivalent Binary Trees</a></p>
+
+<pre><code>package main
+
+import (
+    "fmt"
+    "tour/tree"
+)
+
+// Walk walks the tree t sending all values
+// from the tree to the channel ch.
+func Walk(t *tree.Tree, ch chan int) {
+    if t.Left != nil {
+        Walk(t.Left, ch)
+    }
+    ch&lt;-t.Value
+    if t.Right != nil {
+        Walk(t.Right, ch)
+    }
+}
+
+// Same determines whether the trees
+// t1 and t2 contain the same values.
+func Same(t1, t2 *tree.Tree) bool {
+    ch1:=make(chan int)
+    ch2:=make(chan int)
+    go Walk(t1, ch1)
+    go Walk(t2, ch2)
+    for i:=0; i&lt;10; i++ {
+        if &lt;-ch1 != &lt;-ch2 {
+            return false
+        }
+    }
+    return true
+}   
+
+func main() {
+    ch := make(chan int)
+    go Walk(tree.New(1), ch)
+
+    for i:=0; i&lt;10; i++ {
+        fmt.Println(&lt;-ch)
+    }
+
+    fmt.Println("Equivalent Binary Trees?",
+        Same(tree.New(1), tree.New(1)))
+
+    fmt.Println("Equivalent Binary Trees?",
+        Same(tree.New(1), tree.New(2)))
+}
+</code></pre></li>
+<li><p><a href="http://tour.golang.org/#70">Exercise: Web Crawler</a></p>
+
+<pre><code>package main
+
+import (
+    "os"
+    "fmt"
+)
+
+type Fetcher interface {
+    // Fetch returns the body of URL and
+    // a slice of URLs found on that page.
+    Fetch(url string) (body string, urls []string, err os.Error)
+}
+
+// Crawl uses fetcher to recursively crawl
+// pages starting with url, to a maximum of depth.
+func Crawl(url string, depth int, fetcher Fetcher) {
+    type target struct{
+        urls  []string
+        depth int
+    }
+    more := make(chan target)
+
+    fetchPage := func(url string, depth int) {
+        body, urls, err := fetcher.Fetch(url)
+        if err != nil {
+            fmt.Println(err)
+        } else {
+            fmt.Printf("found: %s %q\n", url, body)
+        }
+        more &lt;- target{urls, depth+1}
+    }
+
+    go fetchPage(url, 0)
+
+    visited := map[string]bool{url:true}
+    for counter := 1; counter &gt; 0; {
+        next := &lt;-more
+        counter--
+        if next.depth &gt; depth {
+            continue
+        }
+        for _, url := range next.urls {
+            if _, seen := visited[url]; seen {
+                continue
+            }
+            visited[url] = true
+            counter++
+            go fetchPage(url, next.depth)
+        }
+    }
+}
+
+func main() {
+    Crawl("http://golang.org/", 4, fetcher)
+}
+
+
+// fakeFetcher is Fetcher that returns canned results.
+type fakeFetcher map[string]*fakeResult
+
+type fakeResult struct {
+    body string
+    urls     []string
+}
+
+func (f *fakeFetcher) Fetch(url string) (string, []string, os.Error) {
+    if res, ok := (*f)[url]; ok {
+        return res.body, res.urls, nil
+    }
+    return "", nil, fmt.Errorf("not found: %s", url)
+}
+
+// fetcher is a populated fakeFetcher.
+var fetcher = &amp;fakeFetcher{
+    "http://golang.org/": &amp;fakeResult{
+        "The Go Programming Language",
+        []string{
+            "http://golang.org/pkg/",
+            "http://golang.org/cmd/",
+        },
+    },
+    "http://golang.org/pkg/": &amp;fakeResult{
+        "Packages",
+        []string{
+            "http://golang.org/",
+            "http://golang.org/cmd/",
+            "http://golang.org/pkg/fmt/",
+            "http://golang.org/pkg/os/",
+        },
+    },
+    "http://golang.org/pkg/fmt/": &amp;fakeResult{
+        "Package fmt",
+        []string{
+            "http://golang.org/",
+            "http://golang.org/pkg/",
+        },
+    },
+    "http://golang.org/pkg/os/": &amp;fakeResult{
+        "Package os",
+        []string{
+            "http://golang.org/",
+            "http://golang.org/pkg/",
+        },
+    },
+}
+</code></pre></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/09/363/">363</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-15T00:00:00+02:00" pubdate data-updated="true">Sep 15<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>I cannot open some SSL-encrypted websites (https) in Firefox right now. I have found out that this is caused by the Online Certificate Status Protocol (OCSP) which confirms the current validity of certificates. All those websites are using certificates issued by <a href="http://cacert.org">cacert.org</a> and their OCSP server (ocsp.cacert.org) is currently quiet busy (“Too many users” or timeouts).</p>
+
+<p>Quick workaround is to temporarily disable OCSP in Firefox (or other affected web browsers). You can uncheck this feature in Preferences → Advanced → Encryption → Validation in Firefox.</p>
+
+<p><strong>Update:</strong> Server seems to be working again.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -477,129 +925,6 @@ sub mdb_batch_insert {
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/07/backup-to-go/">Backup to Go</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-07-28T00:00:00+02:00" pubdate data-updated="true">Jul 28<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1></h1>
-
-<p>We are using Bacula to store backups of all our servers on one big storage system. That made us sleep better for some days but then we thought it would be good to have another backup at a remote site (because a fire or another disaster could destroy servers and backup at once). Usually, one would just copy the backups over network to that remote site. Unfortunally, this was not an option for us because of some special conditions not worth to mention here. We decided to carry backup hard drives to that remote site instead.</p>
-
-<p>The backup system is a 2U server with 12 hot swappable hard drive bays. 10 of them are bundled as RAID-5 to store all full (weekly) and incremental (daily) backups. The other two hard drives are mirred (RAID-1) and have the latest full backups saved on it. Once a week, we replace one hard drive from RAID-1 and carry it to that remote site. That is it: A remote backup copy with almost no extra costs.</p>
-
-<p>Backups are done by Bacula automatically. All we have to do is to remove one hard drive from backup server and replace it. To make this easy, I wrote a small script that helps us doing it. It uses tw_cli, the monitoring and management software for 3ware RAID controllers. There are also Debian packages and <a href="http://jonas.genannt.name/">repositories</a> available.</p>
-
-<pre><code>#!/bin/bash
-
-TW_CLI=/usr/sbin/tw_cli
-DATE_CMD=/bin/date
-WEEK=$($DATE_CMD  %V | sed s/^0//)
-let "DRIVE=($WEEK%2) 18"
-CONTROLLER="/c0"
-SHOW_RAID_STATUS="$TW_CLI $CONTROLLER show"
-RAID_CHECK_CMD="$TW_CLI /c0 show allunitstatus"
-REMOVE_DRIVE="$TW_CLI $CONTROLLER/p$DRIVE remove quiet"
-
-$SHOW_RAID_STATUS
-
-if $RAID_CHECK_CMD | grep -q 'Not Optimal Units = [^0]'; then
-    echo "RAID status is not optimal. Aborting."; echo
-    exit 1
-fi
-
-echo "You are about to remove VPort p$DRIVE. This will degrade RAID status!"
-read -p "Are you sure? (yes/no)"
-if [ "$REPLY" == "yes" ]; then
-    $REMOVE_DRIVE
-fi
-</code></pre>
-
-<p>It checks RAID status (line 14) and if it is in an optimal state, it chooses a hard drive and removes it (line 22). Because we do not want to change the same hard drive all the time, we choice hard drive by whether calendar week is odd or even (line 6).</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/07/broken-cable-disabled-gigabit-ethernet/">Broken Cable Disabled Gigabit Ethernet</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-07-26T00:00:00+02:00" pubdate data-updated="true">Jul 26<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1></h1>
-
-<p>I have just noticed that one of our servers were connected with 100baseTx instead of 1000baseT. Both end-points support 1000baseT but it was not advertised.</p>
-
-<pre><code># mii-tool -v eth0
-eth0: negotiated 100baseTx-FD, link ok
-  product info: vendor 00:50:43, model 11 rev 1
-  basic mode: autonegotiation enabled
-  basic status: autonegotiation complete, link ok
-  capabilities: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-  advertising: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-  link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-</code></pre>
-
-<p>First idea was to check cable. It was the same Cat 5e cable we always use. However, I replaced it with another one of the same type and suddenly Gigabit Ethernet was working again.</p>
-
-<pre><code># mii-tool eth0
-eth0: negotiated 1000baseT-FD flow-control, link ok
-</code></pre>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -617,6 +942,14 @@ eth0: negotiated 1000baseT-FD flow-control, link ok
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/05/26/build-spotify-rpm-on-fedora/">Build Spotify RPM on Fedora</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/26/backup-synology-nas-using-rsync/">Backup Synology NAS using rsync</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/03/16/hello-world/">Hello world</a>
       </li>
     
@@ -626,14 +959,6 @@ eth0: negotiated 1000baseT-FD flow-control, link ok
     
       <li class="post">
         <a href="/2012/05/425/">425</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
       </li>
     
   </ul>

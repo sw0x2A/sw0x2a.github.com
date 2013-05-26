@@ -9,7 +9,7 @@
   <meta name="author" content="SW">
 
   
-  <meta name="description" content="I saved my OpenVPN certificates in ~/.openvpn, imported the configuration in NetworkManager and expected it to working properly. But in Fedora &hellip;">
+  <meta name="description" content="We are using Bacula to store backups of all our servers on one big storage system. That made us sleep better for some days but then we thought it &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +63,129 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/07/backup-to-go/">Backup to Go</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-28T00:00:00+02:00" pubdate data-updated="true">Jul 28<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>We are using Bacula to store backups of all our servers on one big storage system. That made us sleep better for some days but then we thought it would be good to have another backup at a remote site (because a fire or another disaster could destroy servers and backup at once). Usually, one would just copy the backups over network to that remote site. Unfortunally, this was not an option for us because of some special conditions not worth to mention here. We decided to carry backup hard drives to that remote site instead.</p>
+
+<p>The backup system is a 2U server with 12 hot swappable hard drive bays. 10 of them are bundled as RAID-5 to store all full (weekly) and incremental (daily) backups. The other two hard drives are mirred (RAID-1) and have the latest full backups saved on it. Once a week, we replace one hard drive from RAID-1 and carry it to that remote site. That is it: A remote backup copy with almost no extra costs.</p>
+
+<p>Backups are done by Bacula automatically. All we have to do is to remove one hard drive from backup server and replace it. To make this easy, I wrote a small script that helps us doing it. It uses tw_cli, the monitoring and management software for 3ware RAID controllers. There are also Debian packages and <a href="http://jonas.genannt.name/">repositories</a> available.</p>
+
+<pre><code>#!/bin/bash
+
+TW_CLI=/usr/sbin/tw_cli
+DATE_CMD=/bin/date
+WEEK=$($DATE_CMD  %V | sed s/^0//)
+let "DRIVE=($WEEK%2) 18"
+CONTROLLER="/c0"
+SHOW_RAID_STATUS="$TW_CLI $CONTROLLER show"
+RAID_CHECK_CMD="$TW_CLI /c0 show allunitstatus"
+REMOVE_DRIVE="$TW_CLI $CONTROLLER/p$DRIVE remove quiet"
+
+$SHOW_RAID_STATUS
+
+if $RAID_CHECK_CMD | grep -q 'Not Optimal Units = [^0]'; then
+    echo "RAID status is not optimal. Aborting."; echo
+    exit 1
+fi
+
+echo "You are about to remove VPort p$DRIVE. This will degrade RAID status!"
+read -p "Are you sure? (yes/no)"
+if [ "$REPLY" == "yes" ]; then
+    $REMOVE_DRIVE
+fi
+</code></pre>
+
+<p>It checks RAID status (line 14) and if it is in an optimal state, it chooses a hard drive and removes it (line 22). Because we do not want to change the same hard drive all the time, we choice hard drive by whether calendar week is odd or even (line 6).</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/07/broken-cable-disabled-gigabit-ethernet/">Broken Cable Disabled Gigabit Ethernet</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-26T00:00:00+02:00" pubdate data-updated="true">Jul 26<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>I have just noticed that one of our servers were connected with 100baseTx instead of 1000baseT. Both end-points support 1000baseT but it was not advertised.</p>
+
+<pre><code># mii-tool -v eth0
+eth0: negotiated 100baseTx-FD, link ok
+  product info: vendor 00:50:43, model 11 rev 1
+  basic mode: autonegotiation enabled
+  basic status: autonegotiation complete, link ok
+  capabilities: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+  advertising: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+  link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+</code></pre>
+
+<p>First idea was to check cable. It was the same Cat 5e cable we always use. However, I replaced it with another one of the same type and suddenly Gigabit Ethernet was working again.</p>
+
+<pre><code># mii-tool eth0
+eth0: negotiated 1000baseT-FD flow-control, link ok
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -429,84 +552,6 @@ print decrypt( encrypt('mysecretpassword') ) . "n";
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/06/internes_portforwarding_von_80_auf_8080/">Internes Portforwarding Von 80 Auf 8080</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-06-16T00:00:00+02:00" pubdate data-updated="true">Jun 16<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1></h1>
-
-<p><code>
-iptables -t nat -I PREROUTING --src 0/0 --dst 127.0.0.1 -p tcp --dport 80 -j REDIRECT --to-ports 8080
-</code></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/06/crontab/">Crontab</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-06-09T00:00:00+02:00" pubdate data-updated="true">Jun 9<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1></h1>
-
-<p>Möchte man alle fünf Minuten einen Befehl ausführen lassen, bemüht man hierfür üblicherweise cron und schreibt ihm ein <em>/5 in die crontab. Der Befehl wird dann in den Minuten 0, 5, 10, 15 … 55 ausgeführt. Möchte man den Aufruf aber beispielsweise in den Minuten 2, 7, 12, 17 … 57 ausführen, wird cron einem ein 2/5 als Syntaxfehler um die Ohren schlagen. </em>/5 kann auch als 0-59/5 notiert werden. 2-59/5 erfüllt den Zweck, beginnend ab Minute 2, alle 5 Minuten den Befehl auszuführen.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -524,6 +569,14 @@ iptables -t nat -I PREROUTING --src 0/0 --dst 127.0.0.1 -p tcp --dport 80 -j RED
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/05/26/build-spotify-rpm-on-fedora/">Build Spotify RPM on Fedora</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/26/backup-synology-nas-using-rsync/">Backup Synology NAS using rsync</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/03/16/hello-world/">Hello world</a>
       </li>
     
@@ -533,14 +586,6 @@ iptables -t nat -I PREROUTING --src 0/0 --dst 127.0.0.1 -p tcp --dport 80 -j RED
     
       <li class="post">
         <a href="/2012/05/425/">425</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
       </li>
     
   </ul>

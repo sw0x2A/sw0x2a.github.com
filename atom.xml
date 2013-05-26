@@ -4,7 +4,7 @@
   <title><![CDATA[syslog.warten.de]]></title>
   <link href="http://sw0x2A.github.com/atom.xml" rel="self"/>
   <link href="http://sw0x2A.github.com/"/>
-  <updated>2013-03-16T19:41:10+01:00</updated>
+  <updated>2013-05-26T10:47:52+02:00</updated>
   <id>http://sw0x2A.github.com/</id>
   <author>
     <name><![CDATA[SW]]></name>
@@ -12,6 +12,87 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Build Spotify RPM on Fedora]]></title>
+    <link href="http://sw0x2A.github.com/blog/2013/05/26/build-spotify-rpm-on-fedora/"/>
+    <updated>2013-05-26T10:32:00+02:00</updated>
+    <id>http://sw0x2A.github.com/blog/2013/05/26/build-spotify-rpm-on-fedora</id>
+    <content type="html"><![CDATA[<p><a href="http://leamas.fedorapeople.org/spotify/">Fedora people</a> provide everything to build a RPM package of the latest Spotify client.</p>
+
+<pre><code>sudo yum install rpm-build rpmdevtools yum-utils
+rpmdev-setuptree
+cd $HOME/rpmbuild/SPECS
+wget http://leamas.fedorapeople.org/spotify/0.9.0/spotify-client.spec
+cd $HOME/rpmbuild/SOURCES
+spectool -g ../SPECS/spotify-client.spec
+cd -
+sudo yum-builddep spotify-client.spec
+QA_RPATHS=$[2|8] rpmbuild -bb spotify-client.spec
+rpm -Uvh $HOME/rpmbuild/RPMS/x86_64/spotify-client-0.9.0.133.gd18ed58.259-2.fc18.x86_64.rpm
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Backup Synology NAS using rsync]]></title>
+    <link href="http://sw0x2A.github.com/blog/2013/05/26/backup-synology-nas-using-rsync/"/>
+    <updated>2013-05-26T10:29:00+02:00</updated>
+    <id>http://sw0x2A.github.com/blog/2013/05/26/backup-synology-nas-using-rsync</id>
+    <content type="html"><![CDATA[<p>Synology NAS devices offer a <a href="http://forum.synology.com/wiki/index.php/Backup_the_Synology_server_to_a_remote_Synology_server_or_RSync_Server">built-in service</a> to backup all configuration, applications and shared folders to a remote rsync server. Below is a short howto describing the steps required to setup the remote rsync services on a CentOS 6 server.</p>
+
+<p>Install rsync and xinetd.</p>
+
+<pre><code>yum install rsync xinetd
+</code></pre>
+
+<p>Create configuration file.</p>
+
+<pre><code># /etc/rsyncd.conf
+gid = nobody
+uid = nobody
+read only = no
+use chroot = yes 
+transfer logging = true
+log format = %h %o %f %l %b
+log file = /var/log/rsyncd.log
+secrets file = /etc/rsyncd.secrets
+hosts allow = 192.168.1.0/24
+
+[synology]
+comment = Backup of Synology
+path = /data/synology
+auth users = synology
+</code></pre>
+
+<p>Create password file.</p>
+
+<pre><code># /etc/rsyncd.secrets 
+synology:plaintextpassword
+</code></pre>
+
+<p>Restrict its file permissions.</p>
+
+<pre><code>chmod 600 /etc/rsyncd.secrets
+</code></pre>
+
+<p>Enable rsync service in xinetd by setting <code>disabled = no</code> in <code>/etc/xinetd.d/rsync</code> and restart xinetd.</p>
+
+<p>Open rsync port in iptables and make the change permanent.</p>
+
+<pre><code>iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 873 -j ACCEPT
+service iptables save
+</code></pre>
+
+<p>Finally, fix selinux config and context of the destination directory.</p>
+
+<pre><code>setsebool -P allow_rsync_anon_write=1
+chcon -t public_content_rw_t /data/synology
+</code></pre>
+
+<p>The Synology NAS should be able to establish a connection to the remote rsync server and do backups.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Hello world]]></title>
@@ -885,75 +966,6 @@ sub mdb_batch_insert {
     <content type="html"><![CDATA[<h1></h1>
 
 <p>I have just <a href="http://code.google.com/p/mysql-cacti-templates/source/detail?r=565">commited another graph template</a> to mysql-cacti-templates.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Backup To Go]]></title>
-    <link href="http://sw0x2A.github.com/2011/07/backup-to-go/"/>
-    <updated>2011-07-28T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2011/07/backup-to-go</id>
-    <content type="html"><![CDATA[<h1></h1>
-
-<p>We are using Bacula to store backups of all our servers on one big storage system. That made us sleep better for some days but then we thought it would be good to have another backup at a remote site (because a fire or another disaster could destroy servers and backup at once). Usually, one would just copy the backups over network to that remote site. Unfortunally, this was not an option for us because of some special conditions not worth to mention here. We decided to carry backup hard drives to that remote site instead.</p>
-
-<p>The backup system is a 2U server with 12 hot swappable hard drive bays. 10 of them are bundled as RAID-5 to store all full (weekly) and incremental (daily) backups. The other two hard drives are mirred (RAID-1) and have the latest full backups saved on it. Once a week, we replace one hard drive from RAID-1 and carry it to that remote site. That is it: A remote backup copy with almost no extra costs.</p>
-
-<p>Backups are done by Bacula automatically. All we have to do is to remove one hard drive from backup server and replace it. To make this easy, I wrote a small script that helps us doing it. It uses tw_cli, the monitoring and management software for 3ware RAID controllers. There are also Debian packages and <a href="http://jonas.genannt.name/">repositories</a> available.</p>
-
-<pre><code>#!/bin/bash
-
-TW_CLI=/usr/sbin/tw_cli
-DATE_CMD=/bin/date
-WEEK=$($DATE_CMD  %V | sed s/^0//)
-let "DRIVE=($WEEK%2) 18"
-CONTROLLER="/c0"
-SHOW_RAID_STATUS="$TW_CLI $CONTROLLER show"
-RAID_CHECK_CMD="$TW_CLI /c0 show allunitstatus"
-REMOVE_DRIVE="$TW_CLI $CONTROLLER/p$DRIVE remove quiet"
-
-$SHOW_RAID_STATUS
-
-if $RAID_CHECK_CMD | grep -q 'Not Optimal Units = [^0]'; then
-    echo "RAID status is not optimal. Aborting."; echo
-    exit 1
-fi
-
-echo "You are about to remove VPort p$DRIVE. This will degrade RAID status!"
-read -p "Are you sure? (yes/no)"
-if [ "$REPLY" == "yes" ]; then
-    $REMOVE_DRIVE
-fi
-</code></pre>
-
-<p>It checks RAID status (line 14) and if it is in an optimal state, it chooses a hard drive and removes it (line 22). Because we do not want to change the same hard drive all the time, we choice hard drive by whether calendar week is odd or even (line 6).</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Broken cable disabled Gigabit Ethernet]]></title>
-    <link href="http://sw0x2A.github.com/2011/07/broken-cable-disabled-gigabit-ethernet/"/>
-    <updated>2011-07-26T00:00:00+02:00</updated>
-    <id>http://sw0x2A.github.com/2011/07/broken-cable-disabled-gigabit-ethernet</id>
-    <content type="html"><![CDATA[<h1></h1>
-
-<p>I have just noticed that one of our servers were connected with 100baseTx instead of 1000baseT. Both end-points support 1000baseT but it was not advertised.</p>
-
-<pre><code># mii-tool -v eth0
-eth0: negotiated 100baseTx-FD, link ok
-  product info: vendor 00:50:43, model 11 rev 1
-  basic mode: autonegotiation enabled
-  basic status: autonegotiation complete, link ok
-  capabilities: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-  advertising: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-  link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-</code></pre>
-
-<p>First idea was to check cable. It was the same Cat 5e cable we always use. However, I replaced it with another one of the same type and suddenly Gigabit Ethernet was working again.</p>
-
-<pre><code># mii-tool eth0
-eth0: negotiated 1000baseT-FD flow-control, link ok
-</code></pre>
 ]]></content>
   </entry>
   

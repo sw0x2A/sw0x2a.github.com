@@ -9,10 +9,8 @@
   <meta name="author" content="SW">
 
   
-  <meta name="description" content="#!/bin/bash
-pwd=`pwd`
-find ${pwd} -type f -name *.rar | while read "file"
-do directory=`dirname ${file}` filename=`basename ${file}` let number=${# &hellip;">
+  <meta name="description" content=" perl -ne 'print lc' foo
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +64,91 @@ do directory=`dirname ${file}` filename=`basename ${file}` let number=${# &helli
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/11/perl_-ne_print_lc_foo/">95</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-24T00:00:00+01:00" pubdate data-updated="true">Nov 24<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><code>perl -ne 'print lc' foo</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/11/binbash_for_dir_in_data/">94</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-24T00:00:00+01:00" pubdate data-updated="true">Nov 24<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<pre><code>#!/bin/bash
+for DIR in /data/*
+do
+    PERM=`ls -ld ${DIR} | cut -f1 -d" "`
+     if [ ${PERM} != "drwxrwxrwx" ]
+     then
+         chmod 777 ${DIR}
+    fi
+done
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -485,115 +568,6 @@ grub-install /dev/sdb
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/02/smarthost_signiert_mails_mit_d/">Smarthost Signiert Mails Mit DKIM</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-02-23T00:00:00+01:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1></h1>
-
-<p>Die Produktionsserver relayen alle Mails an einen zentralen Mailserver, der dann den Versand übernimmt. Zusätzlich soll der Smarthost nun alle Mails mit DKIM signieren. Ich habe mich für den <a href="http://sourceforge.net/projects/dkim-milter/">dkim-milter</a> entschieden und die Umsetzung ging dank seiner Helferlein wie dkim-genkey recht schnell und einfach.</p>
-
-<p>Damit der dkim-filter für mehrere Domains signierend tätig werden kann, muss man die Schlüsselinformationen in einer Datei hinterlegen und deren Pfad mit KeyList übergeben. Die Paramater Domain, KeyFile und Selector können ausschliesslich für Ein-Domain-Lösungen verwendet werden.</p>
-
-<p>Die an KeyList übergebene Datei könnte beispielsweise wie folgt aussehen. Durch Doppelpunkte getrennt werden die für die Signierung zugelassenen E-Mail-Adressen, der Domainname (die Redundanz an dieser Stelle ist auffällig häßlich und historisch bedingt) sowie der Pfad zum keyfile angebenen. Die Angabe der Endungen .private und .pem ist optional.</p>
-
-<pre><code>relay:~# cat /etc/dkim-keys.conf
-*@example.de:example.de:/etc/dkim/example.de/2009
-*@example.com:example.com:/etc/dkim/example.com/2009
-*@example.es:example.es:/etc/dkim/example.es/2009
-*@example.fr:example.fr:/etc/dkim/example.fr/2009
-*@example.nl:example.nl:/etc/dkim/example.nl/2009
-*@example.pl:example.pl:/etc/dkim/example.pl/2009
-*@example.se:example.se:/etc/dkim/example.se/2009
-</code></pre>
-
-<p>Nach den notwendigen DNS-Änderungen (TXT für z.B. 2009._domainkey.example.com) funktionierte der lokale Versand wie gewünscht und mit gültiger Signatur. Allein die (wichtigen) externen Hosts wurden ignoriert. Im Logfile sieht das dann so aus:</p>
-
-<pre><code>(unknown-jobid) external host www.example.com attempted to send as example.de
-</code></pre>
-
-<p>Ein Blick in die man-Page konnte auch dieses Problem lösen: Die Grundeinstellung sieht nur eine Signierung von Mails von 127.0.0.1 vor. Mit dem Aufrufparameter <code>-i</code> kann man den Pfad einer Datei übergeben, die pro Zeile eine IP-Adresse weiterer zustellender Systeme enthält.</p>
-
-<pre><code>relay:~# cat /etc/default/dkim-filter
-# Command-line options specified here will override the contents of
-# /etc/dkim-filter.conf. See dkim-filter(8) for a complete list of options.
-DAEMON_OPTS="-i /etc/dkim-peers.conf"
-[...]
-relay:~# cat /etc/dkim-peers.conf
-127.0.0.1
-10.17.133.217
-</code></pre>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/02/nfs_permission_denied_wegen_gr/">NFS: Permission Denied Wegen Group</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-02-13T00:00:00+01:00" pubdate data-updated="true">Feb 13<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1></h1>
-
-<p>RPC, das von NFS für die Identifikation von Benutzern verwendet wird, kann nicht mehr als 16 Gruppen, deren Mitglied ein Benutzer ist, übermitteln. Hier hatten wir den Fall, dass eine Benutzerin plötzlich nicht mehr auf Verzeichnisse zugreifen konnte, für die sie aufgrund der Gruppenrechte Zugriff haben sollte (Permission denied). Selbstverständlich waren die GID auf NFS-Server und Client-System identisch. Sie war kürzlich einer 17. Gruppe zugeordnet worden und die für den Zugriff relevante Gruppe (sie hatte die höchste Group-ID) wurde nicht mehr an den NFS-Server übertragen.</p>
-
-<p>Das war extrem schwer zu debuggen. Die Ursache wurde erst nach Stunden gefunden. Der Sachverhalt wird <a href="http://nfsworld.blogspot.com/2005/03/whats-deal-on-16-group-id-limitation.html">hier</a> ausführlich erläutert. Die Lösung war einfach: Es wurde die Option –manage-gids beim Start von rpc.mountd hinzugefügt.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -611,6 +585,14 @@ relay:~# cat /etc/dkim-peers.conf
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/05/26/build-spotify-rpm-on-fedora/">Build Spotify RPM on Fedora</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/26/backup-synology-nas-using-rsync/">Backup Synology NAS using rsync</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/03/16/hello-world/">Hello world</a>
       </li>
     
@@ -620,14 +602,6 @@ relay:~# cat /etc/dkim-peers.conf
     
       <li class="post">
         <a href="/2012/05/425/">425</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
       </li>
     
   </ul>

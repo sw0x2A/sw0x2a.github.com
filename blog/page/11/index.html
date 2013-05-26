@@ -9,7 +9,7 @@
   <meta name="author" content="SW">
 
   
-  <meta name="description" content="Das Konfigurationswerkzeug Plesk kann sehr einfach über die Paketverwaltung auf einem Debian Linux installieren werden. Im folgenden Beispiel wird &hellip;">
+  <meta name="description" content="Letzte Woche habe ich an einer LPI-Zertifizierungsprüfung teilgenommen. Qualität und Schwierigkeitsgrad der Fragen waren wie erwartet. Enttäuscht &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +63,206 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/12/deutsche_ubersetzung_der_lpifr/">Deutsche Übersetzung Der LPI-Fragen Fehlerhaft</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-03T00:00:00+01:00" pubdate data-updated="true">Dec 3<span>rd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Letzte Woche habe ich an einer <a href="http://www.lpi.org/">LPI-Zertifizierungsprüfung</a> teilgenommen. Qualität und Schwierigkeitsgrad der Fragen waren wie erwartet.</p>
+
+<p>Enttäuscht war ich von der Qualität der deutschen Übersetzungen. Über einfache Rechtschreibfehler (wie etwa “Prufüng” im Prüfungszeugnis) kann ich hinwegsehen. Mindestens eine der Multiple-Choice-Prüfungsfragen war jedoch aufgrund der fehlerhaften Übersetzung nicht lösbar. Glücklicherweise war es möglich, sich die englische Originalfrage anzeigen zu lassen. Es war eine Frage zur maximalen Anzahl von Festplatten an einem SCSI-1-Bus. Bei den deutschen Antworten waren devices und hard disks jeweils mit “Platten” übersetzt worden, mit der Folge, dass keine der deutschen Antworten richtig war.</p>
+
+<p>Verunsichert durch diesen Fehler habe ich manche der weiteren Fragen erst nach Prüfung der englischen Fragen beantwortet. Für die nächste Prüfung überlege ich nun, gleich den englischen Test zu machen.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/12/debian_linux_mit_debootstrap_a/">Debian Linux Mit Debootstrap Auf Host Europe VPS Installieren</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-01T00:00:00+01:00" pubdate data-updated="true">Dec 1<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><strong>[EDIT: December 8, 2007 9:45 PM: Das nachfolgend beschriebene Vorgehen führt zu Fehlern beim Restore eines über das Virtuozzo Control Panel erstellten Backups. Es ist daher nicht zu empfehlen, wenn die Backup-Funktionalität des Control Panels genutzt werden soll. Weitere Informationen zur Beeinträchtigung finden Sie in diesem <a href="http://syslog.warten.de/2007/12/restore-failed-auf-vps-linux.html">Artikel</a>.]</strong></p>
+
+<p>Das Debian-Image der <a href="http://www.hosteurope.de/produkte/VPS-Linux">VPS Linux bei Host Europe</a> hat mehr Pakete vorinstalliert als für manche Zwecke notwendig sind. Diese könnten natürlich einfach entfernt werden. In diesem Fall soll jedoch ein Debian Linux mit debootstrap auf dem virtuellen Server komplett neu installiert werden. Das Vorgehen orientiert sich weitgehend an der <a href="http://www.debian.org/releases/stable/hppa/apds03.html.de">Installationsanleitung</a> der Debian-Entwickler. Durch die Virtualisierungstechnik sind jedoch einige Besonderheiten zu beachten.</p>
+
+<p>Zu Beginn ist der Server über das Virtuozzo Power Panel im Menüpunkt VPS Management > Maintenance in den Repair Mode zu versetzen. Das Virtuozzo Power Panel ist über https://VPS-IP:4643/ aufzurufen. Im Repair Mode ist das Dateisystem der VPS nach /repair gemountet.</p>
+
+<p>Das Dateisystem der VPS wird komplett gelöscht, danach debootstrap installiert und ausgeführt.</p>
+
+<pre><code># rm -rf /repair/*  
+# mkdir /tmp/work  
+# cd /tmp/work/  
+# wget http://ftp.hosteurope.de/mirror/ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap\_1.0.7\_all.deb  
+# ar -xf debootstrap\_1.0.7\_all.deb  
+# cd /  
+# zcat /tmp/work/data.tar.gz | tar xv  
+# /usr/sbin/debootstrap –arch i386 etch /repair http://ftp.hosteurope.de/mirror/ftp.debian.org/debian/ 
+</code></pre>
+
+<p>Nachdem das Basissystem installiert ist, müssen ein paar Anpassungen vorgenommen werden. In der Regel können die Konfigurationsdateien aus dem Repair Mode mit <code>cp -a /etc/filename /repair/etc/filename</code> übernommen werden. Es werden die Pseudo-Dateisysteme in fstab hinzugefügt, …</p>
+
+<pre><code># vi /repair/etc/fstab 
+
+proc  /proc       proc    defaults    0    0  
+none  /dev/pts    devpts  rw          0    0 
+</code></pre>
+
+<p>… ein Template für die Netzwerkkonfiguration hinterlegt, …</p>
+
+<pre><code># vi /repair/etc/network/interfaces.template 
+
+auto lo  
+iface lo inet loopback  
+       address 127.0.0.1  
+       netmask 255.0.0.0  
+       broadcast 127.255.255.255  
+       up ip route replace 127.0.0.0/8 dev lo 
+</code></pre>
+
+<p>… die sources.list erweitert, …</p>
+
+<pre><code># vi /repair/etc/apt/sources.list 
+
+#Host Europe server:  
+deb http://ftp.hosteurope.de/mirror/ftp.debian.org/debian etch main  
+deb http://ftp.hosteurope.de/mirror/ftp.debian.org/debian-security etch/updates main 
+deb http://security.debian.org etch/updates main  
+deb-src http://security.debian.org/ etch/updates main
+
+#deb http://ftp.de.debian.org/debian/ etch main contrib non-free  
+#deb-src http://ftp.de.debian.org/debian etch main contrib non-free  
+… die hosts-Datei angepasst und …
+
+# vi /repair/etc/hosts 
+
+127.0.0.1     localhost localhost.localdomain  
+10.20.30.40   example.com 
+</code></pre>
+
+<p>… in der inittab werden die Konsolen einkommentiert, da sie auf dem VPS nicht nutzbar sind.</p>
+
+<pre><code># vi /repair/etc/inittab   
+[...]  
+# Note that on most Debian systems tty7 is used by the X Window System,  
+# so if you want to add more getty’s go ahead but skip tty7 if you run X.  
+#  
+#1:2345:respawn:/sbin/getty 38400 tty1  
+#2:23:respawn:/sbin/getty 38400 tty2  
+#3:23:respawn:/sbin/getty 38400 tty3  
+#4:23:respawn:/sbin/getty 38400 tty4  
+#5:23:respawn:/sbin/getty 38400 tty5  
+#6:23:respawn:/sbin/getty 38400 tty6  
+[...] 
+</code></pre>
+
+<p>Es wird eine chroot-Umgebung aufgebaut, damit zusätzliche Pakete installiert und das neue System bearbeitet und konfiguriert werden können.</p>
+
+<pre><code># LANG=C chroot /repair /bin/bash 
+</code></pre>
+
+<p>Zuerst wird die Zeitzone eingestellt.</p>
+
+<pre><code># tzconfig 
+</code></pre>
+
+<p>Dann muss der sshd installiert werden. Außerdem werden locales und console-data installiert, um Sprach- und Lokalisierungsanpassungen vornehmen zu können. Um beispielsweise ein englischsprachiges System mit einer deutschen Tastaturbelegung zu nutzen, wird bei den locales “en_US.UTF-8″ und in console_data die Keymap “pc / qwertz / German / Standard / latin1″ ausgewählt.</p>
+
+<pre><code># aptitude update  
+# aptitude install openssh-server  
+# aptitude install locales  
+# dpkg-reconfigure locales  
+# aptitude install console-data  
+# dpkg-reconfigure console-data 
+</code></pre>
+
+<p>Da bei jedem Neustart des V-Servers der Hostname zurückgesetzt wird, muss er beim Booten neu geschrieben werden. Es wird hierfür die in der <a href="http://www.hosteurope.de/faq/index.php?cpid=11517">Host Europe FAQ</a> vorgeschlagene Lösung eingesetzt.</p>
+
+<pre><code># vi /etc/init.d/hostname_vps 
+
+#!/bin/bash  
+HOSTNAME=example.com  
+echo $HOSTNAME &gt; /etc/hostname  
+/bin/hostname $HOSTNAME  
+if [ -f /etc/my.resolv.conf ]; then cp /etc/my.resolv.conf /etc/resolv.conf ; fi  
+exit  
+</code></pre>
+
+<p>Das Init-Skript wird erstellt, mit Ausführrechten versehen und verlinkt, damit es bei jedem Bootvorgang ausgeführt wird.</p>
+
+<pre><code># chmod x /etc/init.d/hostname_vps  
+# update-rc.d hostname_vps defaults 09 
+</code></pre>
+
+<p>Zum Abschluß wird das root-Passwort gesetzt, die chroot-Umgebung verlassen und ausgeloggt.</p>
+
+<pre><code># /etc/init.d/ssh stop  
+# passwd  
+# exit  
+# logout 
+</code></pre>
+
+<p>Die Installation von Debian Linux ist nun vollständig abgeschlossen und der Server muss rebootet werden. Hierzu wird der Repair Mode im Virtuozzo Power Panel beendet. Nach ein paar Sekunden sollte man sich auf dem neugestarteten Server anmelden können.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -734,152 +934,6 @@ SQL&gt;
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/07/schlussel_fur_repository_in_se/">Schlüssel Für Repository in Secure APT Importieren</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-07-09T00:00:00+02:00" pubdate data-updated="true">Jul 9<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1></h1>
-
-<p>Mit Debian 4.0 (Etch) hat Secure APT Einzug in die Paketverwaltung gefunden. Es soll sicherstellen, dass nur vom Herausgeber signierte Debian-Archive installiert werden. Die Repositories enthalten hierfür eine Datei “Release”, die neben Informationen über die Releases selbst auch Prüfsummen der Paketindizes beinhaltet. Die Datei “Release” wird anhand einer GnuPG-Signatur verifiziert.</p>
-
-<p>Für die Hauptrepositories sind die öffentlichen Schlüssel (public keys) bereits hinterlegt. Möchte man weitere Installationsquellen hinzufügen, beklagt die Paketverwaltung, dass der zuständige Schlüssel fehlt.</p>
-
-<pre><code>W: GPG error: http://dl.google.com stable Release: The following signatures couldn’t be verified because the public key is not available: NO_PUBKEY A040830F7FAC5991  
-W: You may want to run apt-get update to correct these problems 
-</code></pre>
-
-<p>Mit den folgenden drei Schritten lässt sich der fehlende Schlüssel importieren:</p>
-
-<ol>
-<li><p>Der gewünschte Schlüssel kann von Keyservern heruntergeladen werden.</p>
-
-<pre><code># gpg –keyserver subkeys.pgp.net –recv-key A040830F7FAC5991  
-gpg: requesting key 7FAC5991 from hkp server subkeys.pgp.net  
-gpg: key 7FAC5991: public key “Google, Inc. Linux Package Signing Key ” imported  
-gpg: no ultimately trusted keys found  
-gpg: Total number processed: 1  
-gpg: imported: 1 
-</code></pre></li>
-<li><p>Prüfen Sie den Fingerabdruck des neuen Schlüssels.</p>
-
-<pre><code># gpg –fingerprint A040830F7FAC5991  
-pub 1024D/7FAC5991 2007-03-08  
-    Key fingerprint = 4CCA 1EAF 950C EE4A B839 76DC A040 830F 7FAC 5991  
-uid Google, Inc. Linux Package Signing Key   
-sub 2048g/C07CB649 2007-03-08 
-</code></pre></li>
-<li><p>Können Sie davon ausgehen, dass es sich um den passenden Schlüssel für das hinzugefügte Repository handelt, exportieren Sie ihn aus Ihrem Schlüsselbund in ASCII-Armor-Form und übergeben ihn an <code>apt-key</code>.</p>
-
-<pre><code># gpg –armor –export 7FAC5991 | apt-key add -  
-OK
-</code></pre></li>
-</ol>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/06/magic_sysrq_keys_benutzen/">Magic SysRq Keys Benutzen</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-06-28T00:00:00+02:00" pubdate data-updated="true">Jun 28<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1></h1>
-
-<p>Wenn ein Linux-System nicht mehr reagiert, ist der Reset-Knopf nur die letzte, aber nicht die einzige Option. Sollte man noch Zugang zum betroffenen System haben, können über das im Linux-Kernel integrierte sysrq-Interface Befehle übergeben werden.</p>
-
-<p>Der Kernel muss mit Unterstützung für sysrq (CONFIG_MAGIC_SYSRQ) übersetzt worden sein. Im <code>/proc</code>-Dateisystem existiert dann der Eintrag sysrq-trigger.</p>
-
-<p>Wenn Sie Zugriff auf die Console des Systems haben, betätigen Sie die Tastenkombination [Alt]-[Druck] ([S-Abf]). Danach können Sie mit einer weiteren Taste den gewünschten Befehl ausführen.<br/>
-Es folgt eine der Kernel-Dokumentation entnommenen Liste der unterstützten Befehle.</p>
-
-<ul>
-<li>‘r’ – Turns off keyboard raw mode and sets it to XLATE.</li>
-<li>‘k’ – Secure Access Key (SAK) Kills all programs on the current virtual console. NOTE: See important comments below in SAK section.</li>
-<li>‘b’ – Will immediately reboot the system without syncing or unmounting your disks.</li>
-<li>‘c’ – Will perform a kexec reboot in order to take a crashdump.</li>
-<li>‘d’ – Shows all locks that are held.</li>
-<li>‘o’ – Will shut your system off (if configured and supported).</li>
-<li>‘s’ – Will attempt to sync all mounted filesystems.</li>
-<li>‘u’ – Will attempt to remount all mounted filesystems read-only.</li>
-<li>‘p’ – Will dump the current registers and flags to your console.</li>
-<li>‘t’ – Will dump a list of current tasks and their information to your console.</li>
-<li>‘m’ – Will dump current memory info to your console.</li>
-<li>‘n’ – Used to make RT tasks nice-able.</li>
-<li>‘v’ – Dumps Voyager SMP processor info to your console.</li>
-<li>‘w’ – Dumps tasks that are in uninterruptable (blocked) state.</li>
-<li>‘x’ – Used by xmon interface on ppc/powerpc platforms.</li>
-<li>’0′-’9′ – Sets the console log level, controlling which kernel messages will be printed to your console. (’0′, for example would make it so that only emergency messages like PANICs or OOPSes would make it to your console.)</li>
-<li>‘f’ – Will call oom_kill to kill a memory hog process.</li>
-<li>‘e’ – Send a SIGTERM to all processes, except for init.</li>
-<li>‘g’ – Used by kgdb on ppc platforms.</li>
-<li>‘i’ – Send a SIGKILL to all processes, except for init.</li>
-<li>‘h’ – Will display help (actually any other key than those listed above will display help. but ‘h’ is easy to remember :-)</li>
-</ul>
-
-
-<p>Beim Zugriff aus der Ferne senden Sie als Benutzer root die Befehle an /proc/sysrq-trigger. Mit <code>echo s &gt; /proc/sysrq-trigger</code> weisen Sie Linux an, seine Puffer auf die Festplatten zurückzuschreiben (“sync”). Wenig später können mit [e] die laufenden Prozesse beendet werden (“SIGTERM”); Prozesse, die diesem Befehl nicht Folge leisten werden mit [i] erledigt (“SIGKILL”). Danach können Sie mit <code>echo u &gt; /proc/sysrq-trigger</code> alle Dateisysteme read-only remounten und mit <code>echo b &gt; /proc/sysrq-trigger</code> einen Reset auslösen.</p>
-
-<p>Wer eine serielle RemoteConsole an einem entfernten Server nutzt, kann mitunter über spezielle Tastenkombinationen Befehle an sysrq zu übergeben. Bei der RemoteConsole von STRATO-Servern ist über die Tastenfolge [~]-[b]-[r]-[e]-[a]-[k] und einer weiteren Taste ein Befehl ausführen.</p>
-
-<p>Damit die sysctl-Schnittstelle nicht mißbraucht wird, gibt es einen Schutzmechanismus: Erst wenn in <code>/proc/sys/kernel/sysrq</code> ein Wert größer als 0 eingetragen ist, reagiert das System überhaupt auf den Tastendruck oder die Ausgaben nach <code>/proc/sysrq-trigger</code>. Gegebenenfalls müssen Sie die Funktion erst mit <code>echo 1 &gt; /proc/sys/kernel/sysrq</code> einschalten.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/12/">&larr; Older</a>
@@ -897,6 +951,14 @@ Es folgt eine der Kernel-Dokumentation entnommenen Liste der unterstützten Befe
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/05/26/build-spotify-rpm-on-fedora/">Build Spotify RPM on Fedora</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/26/backup-synology-nas-using-rsync/">Backup Synology NAS using rsync</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/03/16/hello-world/">Hello world</a>
       </li>
     
@@ -906,14 +968,6 @@ Es folgt eine der Kernel-Dokumentation entnommenen Liste der unterstützten Befe
     
       <li class="post">
         <a href="/2012/05/425/">425</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
       </li>
     
   </ul>

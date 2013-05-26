@@ -1,0 +1,612 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>syslog.warten.de</title>
+  <meta name="author" content="SW">
+
+  
+  <meta name="description" content="Die folgende Anleitung beschreibt die Installation von Gentoo Linux auf einem STRATO PowerServer-S. Die Installation orientiert sich an der &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sw0x2A.github.com/blog/page/13">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="syslog.warten.de" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">syslog.warten.de</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:sw0x2A.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/03/gentoo_linux_auf_strato_powers/">Gentoo Linux Auf STRATO PowerServer-S Installieren</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-03-31T00:00:00+02:00" pubdate data-updated="true">Mar 31<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Die folgende Anleitung beschreibt die Installation von <a href="http://www.gentoo.org/">Gentoo Linux</a> auf einem <a href="http://www.strato.de/server/power/index.html">STRATO PowerServer-S</a>. Die Installation orientiert sich an der empfohlenen Vorgehensweise aus dem <a href="http://www.gentoo.org/doc/de/handbook/handbook-x86.xml">Gentoo Linux x86 Handbuch</a>. Daher werden nur die von der Standardinstallation abweichenden, STRATO-spezifischen Schritte detailliert beschrieben. Für eine Erklärung der Installation im Einzelnen sei auf das <a href="http://www.gentoo.org/doc/de/handbook/handbook-x86.xml">Gentoo Linux x86 Handbuch</a> verwiesen.</p>
+
+<h2>Vorbereitung</h2>
+
+<h3>Rettungssystem starten</h3>
+
+<p>Bevor Sie mit der Installation loslegen, müssen noch ein paar Dinge erledigt werden. Um die Installation durchführen zu können, müssen Sie das Rettungssystem starten. Die Wahl des Bootmodus treffen Sie im <a href="https://config.strato.de/">Kundenservicebereich</a> unter Serverkonfiguration > RecoveryManager. Dort wird der Bootmodus “Starten im Rettungssystem” und “Maschine resetten” ausgewählt und mit dem Button “Weiter” bestätigt. Nach ein paar Minuten steht das Rettungssystem für Sie bereit.</p>
+
+<h3>Hardware erkennen</h3>
+
+<p>Melden Sie sich auf dem Server an. Eine ausführliche Anleitung, wie Sie sich mit SSH (PuTTY) auf dem Server anmelden, finden Sie im <a href="http://www.strato-faq.de/view.php4?articleid=1197">FAQ-Bereich</a> von STRATO.</p>
+
+<pre><code>~ $ ssh root@h913533.serverkompetenz.net 
+</code></pre>
+
+<p>Nachdem Sie sich auf dem Server angemeldet haben, sollten Sie zuerst ein paar Information zur vorhandenen Hardware sammeln. Das ist wichtig, um später die Unterstützung für diese Hardwarekomponenten im Kernel zu aktivieren.</p>
+
+<pre><code>~# cat /proc/cpuinfo | grep “model name”  
+model name : Intel(R) Celeron(R) CPU 2.40GHz 
+
+
+
+~# lspci  
+00:00.0 Host bridge: Intel Corp. 82845 845 (Brookdale) Chipset Host Bridge (rev 04)  
+00:01.0 PCI bridge: Intel Corp. 82845 845 (Brookdale) Chipset AGP Bridge (rev 04)  
+00:1e.0 PCI bridge: Intel Corp. 82801BA/CA/DB PCI Bridge (rev 05)  
+00:1f.0 ISA bridge: Intel Corp. 82801BA ISA Bridge (LPC) (rev 05)  
+00:1f.1 IDE interface: Intel Corp. 82801BA IDE U100 (rev 05)  
+00:1f.3 SMBus: Intel Corp. 82801BA/BAM SMBus (rev 05)  
+02:06.0 Ethernet controller: Intel Corp. 82557/8/9 \[Ethernet Pro 100\] (rev 08)  
+02:07.0 Ethernet controller: Intel Corp. 82557/8/9 \[Ethernet Pro 100\] (rev 08)  
+02:08.0 VGA compatible controller: ATI Technologies Inc Rage XL (rev 27) 
+</code></pre>
+
+<h2>Installation</h2>
+
+<p>Da das Rettungssystem bereits konfiguriert ist und eine Netzwerkanbindung bereitstellt, können Sie die Installation im Kapitel 4 des Gentoo Linux x86 Handbuchs starten.</p>
+
+<h3>Vorbereiten der Festplatte</h3>
+
+<p>Sehen Sie sich die Partitionierung der Festplatte an.</p>
+
+<pre><code>~# fdisk -l 
+Disk /dev/hda: 61.4 GB, 61492838400 bytes  
+255 heads, 63 sectors/track, 7476 cylinders  
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+   Device Boot      Start         End      Blocks   Id  System    
+/dev/hda1   *           1           7       56196   83  Linux    
+/dev/hda2               8         138     1052257   82  Linux swap / Solaris    
+/dev/hda3             139        7476    58942485   83  Linux  
+</code></pre>
+
+<p>Im Beispiel haben wir uns entscheiden, keine Veränderungen an den Partitionen der Festplatte vorzunehmen.<br/>
+Im nächsten Schritt formatieren Sie die Partitionen und legen die Dateisysteme an.</p>
+
+<pre><code>~# mke2fs /dev/hda1  
+~# mke2fs -j /dev/hda3  
+~# mkswap /dev/hda2 
+</code></pre>
+
+<p>Nachdem die Dateisysteme angelegt sind, mounten Sie die Partitionen.</p>
+
+<pre><code>~# swapon /dev/hda2  
+~# mkdir /mnt/gentoo  
+~# mount /dev/hda3 /mnt/gentoo  
+~# mkdir /mnt/gentoo/boot  
+~# mount /dev/hda1 /mnt/gentoo/boot 
+</code></pre>
+
+<p>Die Festplatte ist nun vorbereitet und Sie können zu Kapitel 5 im Gentoo Linux x86 Handbuch übergehen.</p>
+
+<h3>Installation der Gentoo Installationsdateien</h3>
+
+<p>Das Gentoo Linux x86 Handbuch sieht vor, die benötigten Dateien mit dem Programm <code>links</code> zu suchen und herunterzuladen. Das STRATO Rettungssystem hat <code>links</code> nicht installiert, weshalb hier auf <code>wget</code> zurückgegriffen wird. Suchen Sie auf den <a href="http://www.gentoo.org/main/en/mirrors.xml">Mirror-Servern</a> nach den benötigten Installationsdateien und laden Sie sie mit <code>wget</code> herunter:</p>
+
+<pre><code>~# cd /mnt/gentoo  
+/mnt/gentoo# wget ftp://ftp.wh2.tu-dresden.de/pub/mirrors/gentoo/releases/x86/current/stages/stage3-i686-2006.0.tar.bz2  
+/mnt/gentoo# wget ftp://ftp.wh2.tu-dresden.de/pub/mirrors/gentoo/releases/x86/current/stages/stage3-i686-2006.0.tar.bz2.DIGESTS  
+/mnt/gentoo# md5sum -c stage3-i686-2006.0.tar.bz2.DIGESTS 
+</code></pre>
+
+<p>Nun entpacken Sie die Installationsdateien.</p>
+
+<pre><code>/mnt/gentoo# tar xvjpf stage3-i686-2006.0.tar.bz2 
+</code></pre>
+
+<p>Als Nächstes werden die Dateien für Portage benötigt. Sie gehen hier wie schon bei den Installationsdateien vor.</p>
+
+<pre><code>/mnt/gentoo# wget ftp://ftp.wh2.tu-dresden.de/pub/mirrors/gentoo/snapshots/portage-latest.tar.bz2  
+/mnt/gentoo# wget ftp://ftp.wh2.tu-dresden.de/pub/mirrors/gentoo/snapshots/portage-latest.tar.bz2.md5sum  
+/mnt/gentoo# md5sum -c portage-latest.tar.bz2.md5sum  
+/mnt/gentoo# tar xvjf /mnt/gentoo/portage-latest.tar.bz2 -C /mnt/gentoo/usr/ 
+</code></pre>
+
+<p>Führen Sie eine Konfiguration der Compiler-Optionen durch.</p>
+
+<pre><code>/mnt/gentoo# vi /mnt/gentoo/etc/make.conf 
+</code></pre>
+
+<p>Der Inhalt der Datei /etc/make.conf könnte beispielsweise so aussehen:</p>
+
+<pre><code>USE=”-X -gnome -kde -gtk -qt -doc -ipv6″  
+CFLAGS=”-O2 -march=pentium4 -pipe”  
+CHOST=”i686-pc-linux-gnu”  
+CXXFLAGS=”${CFLAGS}” 
+</code></pre>
+
+<p>Es befinden sich nun die Installationsdateien auf dem Server und Sie können mit dem nächsten Kapitel des Gentoo Linux x86 Handbuchs fortfahren.</p>
+
+<h3>Installation des Gentoo Basissystems</h3>
+
+<p>Bevor Sie gleich in die chroot-Umgebung wechseln, kopieren Sie noch die Nameserver-Informationen und mounten Sie die Pseudo-Dateisysteme <code>/proc</code> und <code>/dev</code>.</p>
+
+<pre><code>/mnt/gentoo# cp -L /etc/resolv.conf /mnt/gentoo/etc/resolv.conf  
+/mnt/gentoo# mount -t proc none /mnt/gentoo/proc  
+/mnt/gentoo# mount -o bind /dev /mnt/gentoo/dev 
+</code></pre>
+
+<p>Bauen Sie die chroot-Umgebung auf.</p>
+
+<pre><code>/mnt/gentoo# chroot /mnt/gentoo /bin/bash  
+/ # env-update  
+&gt;&gt;&gt; Regenerating /etc/ld.so.cache…  
+/ # source /etc/profile  
+/ # export PS1=”(chroot) $PS1″ 
+</code></pre>
+
+<p>Als erstes führen Sie ein Update des Portage-Tree durch.</p>
+
+<pre><code>/ # emerge –sync 
+</code></pre>
+
+<p>Die Standardinstallation von Gentoo Linux sieht vor <code>nano</code> als Texteditor zu verwenden. Damit weiterhin <code>vi</code> zur Verfügung steht, muß es installiert werden.</p>
+
+<pre><code>/ # emerge vim 
+</code></pre>
+
+<h3>Konfiguration des Kernels</h3>
+
+<p>Stellen Sie die Zeitzone für den Server ein.</p>
+
+<pre><code>/ # cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime 
+</code></pre>
+
+<p>Nun laden Sie die Quelltexte für den Linux-Kernel herunter. Danach beginnen Sie mit der Konfiguration.</p>
+
+<pre><code>/ # USE=”-doc symlink” emerge gentoo-sources  
+/ # cd /usr/src/linux  
+linux # make menuconfig 
+</code></pre>
+
+<p>Aktivieren Sie die benötigten Kernelmodule. Beachten Sie hierbei unbedingt auch die Hinweise im Gentoo Linux x86 Handbuch. Jetzt kommen auch die eingangs gesammelten Informationen zur Hardware zum tragen. Aktivieren Sie das Modul für die Netzwerkkarte. Im Beispiel ist das Intel Ethernet Pro 100.</p>
+
+<pre><code>-&gt; Device Drivers  
+  -&gt; Network device support  
+    -&gt; Ethernet (10 or 100Mbit)  
+      -&gt; EISA, VLB, PCI and on board controllers  
+        -&gt; Intel(R) PRO/100 support (CONFIG_E100=y) 
+</code></pre>
+
+<p>Damit Sie sich im Notfall später auch über die Serielle Konsole anmelden können, ist es erforderlich, die dafür notwendigen Kernelmodule zu aktivieren.</p>
+
+<pre><code>-&gt; Device Drivers  
+  -&gt; Character devices  
+    -&gt; Serial drivers  
+      -&gt; 8250/16550 and compatible serial support (CONFIG\_SERIAL\_8250=y)  
+        -&gt; Console on 8250/16550 and compatible serial port (CONFIG\_SERIAL\_8250_CONSOLE=y) 
+</code></pre>
+
+<p>Kompilieren Sie den Kernel und kopieren Sie das Kernelimage ins Verzeichnis <code>/boot</code>. Im Beispiel wurde ein monolithischer Kernel ohne Module konfiguriert.</p>
+
+<pre><code>linux # make  
+cp arch/i386/boot/bzImage /boot/kernel-2.6.16-gentoo-r7 
+</code></pre>
+
+<h3>Konfiguration des Systems</h3>
+
+<p>Tragen Sie alle für das System notwendigen Partitionen in der Datei <code>/etc/fstab</code> ein.</p>
+
+<pre><code>linux # vi /etc/fstab  
+#                                             
+/dev/hda1               /boot           ext2            noauto,noatime  1 2  
+/dev/hda3               /               ext3            noatime         0 1  
+/dev/hda2               none            swap            sw              0 0  
+proc                    /proc           proc            defaults        0 0  
+shm                     /dev/shm        tmpfs           nodev,nosuid,noexec    0 0 
+</code></pre>
+
+<p>Konfigurieren Sie Host- und Domainnamen.</p>
+
+<pre><code>linux # vi /etc/conf.d/hostname  
+HOSTNAME=”h913533″ 
+
+
+
+linux # vi /etc/conf.d/domainname  
+DNSDOMAIN=”serverkompetenz.net” 
+</code></pre>
+
+<p>Aktivieren Sie DHCP für die Netzwerkkarte.</p>
+
+<pre><code>linux # vi /etc/conf.d/net 
+
+
+
+config_eth0=( “dhcp” )  
+dhcp_eth0=”nodns nontp nonis” 
+</code></pre>
+
+<p>Sorgen Sie dafür, dass die Netzwerkkarte beim Systemstart aktiviert wird.</p>
+
+<pre><code>linux # rc-update add net.eth0 default 
+</code></pre>
+
+<p>Informieren Sie das System über die Netzwerkumgebung.</p>
+
+<pre><code>linux # vi /etc/hosts 
+
+
+
+127.0.0.1 localhost  
+81.169.155.197 h913533.serverkompetenz.net h913533 
+</code></pre>
+
+<p>Setzen Sie das root-Passwort.</p>
+
+<pre><code>linux # passwd 
+</code></pre>
+
+<p>Danach konfigurien Sie noch ein paar Umgebungsvariablen.</p>
+
+<pre><code>linux # vi /etc/rc.conf  
+linux # vi /etc/conf.d/keymaps 
+</code></pre>
+
+<h3>Konfiguration der RemoteConsole</h3>
+
+<p>Damit es dem Benutzer root erlaubt ist, sich über die RemoteConsole einzuloggen, muß in der Datei <code>/etc/securetty</code> “ttyS0″ eingetragen sein. Prüfen Sie, ob der Eintrag vorhandeln ist und fügen Sie ihn gegebenenfalls ein.</p>
+
+<pre><code>linux # vi /etc/securetty 
+
+
+
+ttyS0 
+</code></pre>
+
+<p>Damit der Server Systemausgaben, beispielsweise die Bootmeldungen, an die RemoteConsole sendet, tragen Sie bitte die folgende Zeile in der Datei <code>/etc/inittab</code> ein.</p>
+
+<pre><code>linux # vi /etc/inittab 
+
+
+
+s0:12345:respawn:/sbin/agetty 57600 /dev/ttyS0 vt102 
+</code></pre>
+
+<p>Die Konfiguration des System ist somit abschlossen und Sie können im nächsten Kapitel des Gentoo Linux x86 Handbuchs mit der Installation der System-Tools weitermachen.</p>
+
+<h3>Installation der benötigten Systemtools</h3>
+
+<p>Installieren und aktivieren Sie <code>syslog-ng</code>, <code>vixie-cron</code> und <code>slocate</code>.</p>
+
+<pre><code>linux # emerge syslog-ng  
+linux # rc-update add syslog-ng default  
+linux # emerge vixie-cron  
+linux # rc-update add vixie-cron default  
+linux # emerge slocate 
+</code></pre>
+
+<p>Damit beim Systemstart auch ein DHCP-Client verfügbar ist, installieren Sie noch <code>dhcpcd</code>.</p>
+
+<pre><code>linux # emerge dhcpcd 
+</code></pre>
+
+<h3>Konfiguration des Bootloaders</h3>
+
+<p>Installalieren und konfigurieren Sie den Bootloader.</p>
+
+<pre><code>linux # emerge grub  
+linux # cp /boot/grub/grub.conf.sample /boot/grub/grub.conf  
+linux # vi /boot/grub/grub.conf 
+</code></pre>
+
+<p>Der Inhalt der Datei <code>/boot/grub/grub.conf</code> könnte beispielsweise wie folgt aussehen.</p>
+
+<pre><code>timeout 5  
+default 0  
+serial –unit=0 –speed=57600  
+terminal serial 
+# For booting GNU/Linux  
+title GNU/Linux  
+root (hd0,0)  
+kernel /kernel-2.6.16-gentoo-r7 root=/dev/hda3 console=tty0 console=ttyS0,57600  
+</code></pre>
+
+<p>Die Angabe der Parameter <code>console</code> sorgt dafür, dass die Bootmeldungen auch auf der Seriellen Konsole ausgegeben werden.<br/>
+Installieren Sie <code>grub</code> im Master Boot Record (MBR) der Festplatte Ihres Servers.</p>
+
+<pre><code>linux # grep -v rootfs /proc/mounts &gt; /etc/mtab  
+linux # grub-install /dev/hda 
+</code></pre>
+
+<p>Nun aktivieren Sie noch den SSH-Daemon, damit er nach einem Neustart automatisch geladen wird. Dann können Sie die chroot-Umgebung verlassen und die Partitionen unmounten.</p>
+
+<pre><code>linux # rc-update add sshd default  
+linux # exit  
+/mnt/gentoo# cd  
+~# umount /mnt/gentoo/boot /mnt/gentoo/dev /mnt/gentoo/proc /mnt/gentoo 
+</code></pre>
+
+<p>Die Installation ist abgeschlossen und der Server kann neu gestartet werden. Damit nach dem Neustart nicht wieder das Rettungssystem geladen wird, müssen Sie im <a href="https://config.strato.de/">Kundenservicebereich</a> unter Serverkonfiguration > RecoveryManager noch den Bootmodus “Normal Boot” auswählen und mit dem Button “Weiter” bestätigen. Die Option “Maschine resetten” aktivieren Sie bitte nicht. Sicherheitshalber führen Sie den Neustart manuell durch.</p>
+
+<pre><code>~# reboot 
+</code></pre>
+
+<p>Jetzt steht Ihnen Gentoo Linux auf dem STRATO PowerServer zur Verfügung. Sie können sich mit SSH anmelden und weitere Dienste installieren.</p>
+
+<pre><code>~$ nmap h913533.serverkompetenz.net 
+Starting Nmap 4.03 ( http://www.insecure.org/nmap/ ) at 2006-05-29 08:16 CEST  
+Interesting ports on h913533.serverkompetenz.net (81.169.155.197):  
+(The 1672 ports scanned but not shown below are in state: closed)  
+PORT STATE SERVICE  
+22/tcp open ssh
+
+Nmap finished: 1 IP address (1 host up) scanned in 0.281 seconds 
+</code></pre>
+
+<h2>RemoteConsole</h2>
+
+<p>Die STRATO RemoteConsole ist ein SSH-Server, der direkt mit Ihrem Server verbunden ist. Sie greifen per SSH-Programm auf die RemoteConsole zu und diese leitet Ihre Eingaben als Tastatureingabe über den seriellen Zugang an Ihren Server weiter.<br/>
+Sie können bereits in dem Moment auf den Server zugreifen, wenn Linux gerade bootet und somit die Bootmeldungen mitlesen. Außerdem haben Sie mit der RemoteConsole auch dann noch Zugriff auf Ihren Server, wenn durch Arbeiten an einer Firewall oder an den Netzwerkdiensten keine Verbindung über die Netzwerkkarte möglich ist.<br/>
+Eine ausführliche Anleitung, wie Sie mit der seriellen RemoteConsole eine Verbindung zu Ihrem Server herstellen, finden Sie im <a href="http://www.strato-faq.de/view.php4?articleid=1190">FAQ-Bereich</a> von STRATO.</p>
+
+<h2>Wenn der Server nicht startet</h2>
+
+<p>Sollte der Server nach einem Neustart nicht verfügbar sein, empfielt es sich, den Bootvorgang mit Hilfe der Seriellen Konsole zu verfolgen. In der Regel läßt sich hierbei bereits die Ursache erkennen. Um Änderungen am System vornehmen zu können, starten Sie den Server mit dem Rettungssystem und bauen wie schon bei der Installation eine chroot-Umgebung auf.</p>
+
+<pre><code>~# swapon /dev/hda2  
+~# mkdir /mnt/gentoo  
+~# mount /dev/hda3 /mnt/gentoo  
+~# mount /dev/hda1 /mnt/gentoo/boot  
+~# mount -t proc none /mnt/gentoo/proc  
+~# mount -o bind /dev /mnt/gentoo/dev  
+~# chroot /mnt/gentoo /bin/bash  
+/ # env-update  
+/ # source /etc/profile  
+/ # export PS1=”(chroot) $PS1″ 
+</code></pre>
+
+<p>Nun können Sie das System wie gewohnt administrieren und Änderungen vornehmen. Haben Sie die Ursache für die Nichterreichbarkeit des Servers gefunden und behoben, beenden Sie die chroot-Umgebung und starten den Server neu.</p>
+
+<pre><code>/ # exit  
+~# cd  
+~# umount /mnt/gentoo/boot /mnt/gentoo/dev /mnt/gentoo/proc /mnt/gentoo  
+~# reboot
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/03/fastcgi_has_failed_to_remain_r/">FastCGI Has Failed to Remain Running for 30 Seconds</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-03-31T00:00:00+02:00" pubdate data-updated="true">Mar 31<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p>Nach der Installation von FastCGI und dem ersten Test mit einem CGI-Skript sind folgende Fehlermeldungen im error_log vom Apache zu finden:</p>
+
+<pre><code>[error] [client 127.0.0.1] FastCGI: incomplete headers (0 bytes) received from server "/var/www/localhost/cgi-bin/hello.fcgi"
+</code></pre>
+
+<p>und mehrfach</p>
+
+<pre><code>[warn] FastCGI: (dynamic) server "/var/www/localhost/cgi-bin/hello.fcgi" has failed to remain running for 30 seconds given 3 attempts, its restart interval has been backed off to 600 seconds
+</code></pre>
+
+<p>Mögliche Ursachen sind der vorangegangene Versuch ein gewöhnliches CGI-Skript mit FastCGI auszuführen und die Tatsache, dass das Perl-Modul FCGI nicht (in einem <code>@INC</code>-Pfad) installiert ist.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/12/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/26/build-spotify-rpm-on-fedora/">Build Spotify RPM on Fedora</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/26/backup-synology-nas-using-rsync/">Backup Synology NAS using rsync</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/16/hello-world/">Hello world</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/06/simple-sftp-setup/">Simple SFTP setup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/05/425/">425</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/sw0x2A">@sw0x2A</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sw0x2A',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - SW -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

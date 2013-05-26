@@ -9,7 +9,8 @@
   <meta name="author" content="SW">
 
   
-  <meta name="description" content="Perl 5.10 wurde Ende 2007 veröffentlicht, fand aber keinen Einzug in das kürzlich erschienene Ubuntu 8.04 LTS. Wer die neuen Features von Perl 5.10 &hellip;">
+  <meta name="description" content=" Jed’s Other Poem
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +64,120 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/05/jeds-other-poem/">&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-05-12T00:00:00+02:00" pubdate data-updated="true">May 12<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><a href="http://www.stewdio.org/jed/">Jed’s Other Poem</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/05/mit_fail2ban_dovecot_sichern/">Mit Fail2Ban Dovecot Absichern</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-05-04T00:00:00+02:00" pubdate data-updated="true">May 4<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1></h1>
+
+<p><strong>[EDIT: October 9, 2008 10:34 PM: Achtung: Das hier beschriebene Verfahren ist praktisch wirkungslos, wenn nicht die in den Kommentaren genannten Änderungen angewandt werden.]</strong></p>
+
+<p>Mit <a href="http://www.fail2ban.org/">Fail2Ban</a> lässt sich ein System recht flexibel gegen Einbruchsversuche absichern. Es kann durch reguläre Ausdrücke in den Logdateien fehlerhafte Authentifizierungsversuche (Passworteingaben) erkennen. Werden zu viele falsche Authentifizierungsversuche festgestellt, wird der zugreifende Host für eine bestimmte Zeit durch eine Firewallregel geblockt.</p>
+
+<p>In der Standardkonfiguration von Fail2Ban ist leider kein Filter für den IMAP-Server Dovecot beigefügt, weshalb ich einen erstellt habe. Die folgenden Zeilen sind als Filter in <code>/etc/fail2ban/filter.d/dovecot.conf</code> zu speichern.</p>
+
+<pre><code>[Definition]
+# Option:  failregex
+# Notes.:  regex to match the password failures messages in the logfile. The
+#          host must be matched by a group named "host". The tag "" can
+#          be used for standard IP/hostname matching.
+# Values:  TEXT
+#
+failregex = (?:imap|pop3)-login: Disconnected: user=, method=(?:LOGIN|PLAIN|(?:CRAM|DIGEST)-MD5), rip=, lip
+# Option:  ignoreregex
+# Notes.:  regex to ignore. If this regex matches, the line is ignored.
+# Values:  TEXT
+#
+ignoreregex =
+</code></pre>
+
+<p>Danach ist ein Jail für Dovecot zu erstellen. Hierzu fügt man die folgenden Zeilen der Datei <code>/etc/fail2ban/jail.local</code> an:</p>
+
+<pre><code>[dovecot]
+enabled  = true
+port     = imap,imaps,pop3,pop3s
+filter   = dovecot
+logpath  = /var/log/mail.log
+</code></pre>
+
+<p>Damit der Filter von Fail2Ban genutzt werden kann, muss die Konfiguration neu geladen werden.</p>
+
+<pre><code># fail2ban-client reload
+</code></pre>
+
+<p>Mit dem folgenden Befehl kann geprüft werden, ob der neue Filter Matches in den Logs findet:</p>
+
+<pre><code># fail2ban-regex /var/log/mail.log /etc/fail2ban/filter.d/dovecot.conf
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -938,206 +1053,6 @@ xcursor-themes xinetd xlibs-data
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/12/deutsche_ubersetzung_der_lpifr/">Deutsche Übersetzung Der LPI-Fragen Fehlerhaft</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-12-03T00:00:00+01:00" pubdate data-updated="true">Dec 3<span>rd</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1></h1>
-
-<p>Letzte Woche habe ich an einer <a href="http://www.lpi.org/">LPI-Zertifizierungsprüfung</a> teilgenommen. Qualität und Schwierigkeitsgrad der Fragen waren wie erwartet.</p>
-
-<p>Enttäuscht war ich von der Qualität der deutschen Übersetzungen. Über einfache Rechtschreibfehler (wie etwa “Prufüng” im Prüfungszeugnis) kann ich hinwegsehen. Mindestens eine der Multiple-Choice-Prüfungsfragen war jedoch aufgrund der fehlerhaften Übersetzung nicht lösbar. Glücklicherweise war es möglich, sich die englische Originalfrage anzeigen zu lassen. Es war eine Frage zur maximalen Anzahl von Festplatten an einem SCSI-1-Bus. Bei den deutschen Antworten waren devices und hard disks jeweils mit “Platten” übersetzt worden, mit der Folge, dass keine der deutschen Antworten richtig war.</p>
-
-<p>Verunsichert durch diesen Fehler habe ich manche der weiteren Fragen erst nach Prüfung der englischen Fragen beantwortet. Für die nächste Prüfung überlege ich nun, gleich den englischen Test zu machen.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/12/debian_linux_mit_debootstrap_a/">Debian Linux Mit Debootstrap Auf Host Europe VPS Installieren</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-12-01T00:00:00+01:00" pubdate data-updated="true">Dec 1<span>st</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1></h1>
-
-<p><strong>[EDIT: December 8, 2007 9:45 PM: Das nachfolgend beschriebene Vorgehen führt zu Fehlern beim Restore eines über das Virtuozzo Control Panel erstellten Backups. Es ist daher nicht zu empfehlen, wenn die Backup-Funktionalität des Control Panels genutzt werden soll. Weitere Informationen zur Beeinträchtigung finden Sie in diesem <a href="http://syslog.warten.de/2007/12/restore-failed-auf-vps-linux.html">Artikel</a>.]</strong></p>
-
-<p>Das Debian-Image der <a href="http://www.hosteurope.de/produkte/VPS-Linux">VPS Linux bei Host Europe</a> hat mehr Pakete vorinstalliert als für manche Zwecke notwendig sind. Diese könnten natürlich einfach entfernt werden. In diesem Fall soll jedoch ein Debian Linux mit debootstrap auf dem virtuellen Server komplett neu installiert werden. Das Vorgehen orientiert sich weitgehend an der <a href="http://www.debian.org/releases/stable/hppa/apds03.html.de">Installationsanleitung</a> der Debian-Entwickler. Durch die Virtualisierungstechnik sind jedoch einige Besonderheiten zu beachten.</p>
-
-<p>Zu Beginn ist der Server über das Virtuozzo Power Panel im Menüpunkt VPS Management > Maintenance in den Repair Mode zu versetzen. Das Virtuozzo Power Panel ist über https://VPS-IP:4643/ aufzurufen. Im Repair Mode ist das Dateisystem der VPS nach /repair gemountet.</p>
-
-<p>Das Dateisystem der VPS wird komplett gelöscht, danach debootstrap installiert und ausgeführt.</p>
-
-<pre><code># rm -rf /repair/*  
-# mkdir /tmp/work  
-# cd /tmp/work/  
-# wget http://ftp.hosteurope.de/mirror/ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap\_1.0.7\_all.deb  
-# ar -xf debootstrap\_1.0.7\_all.deb  
-# cd /  
-# zcat /tmp/work/data.tar.gz | tar xv  
-# /usr/sbin/debootstrap –arch i386 etch /repair http://ftp.hosteurope.de/mirror/ftp.debian.org/debian/ 
-</code></pre>
-
-<p>Nachdem das Basissystem installiert ist, müssen ein paar Anpassungen vorgenommen werden. In der Regel können die Konfigurationsdateien aus dem Repair Mode mit <code>cp -a /etc/filename /repair/etc/filename</code> übernommen werden. Es werden die Pseudo-Dateisysteme in fstab hinzugefügt, …</p>
-
-<pre><code># vi /repair/etc/fstab 
-
-proc  /proc       proc    defaults    0    0  
-none  /dev/pts    devpts  rw          0    0 
-</code></pre>
-
-<p>… ein Template für die Netzwerkkonfiguration hinterlegt, …</p>
-
-<pre><code># vi /repair/etc/network/interfaces.template 
-
-auto lo  
-iface lo inet loopback  
-       address 127.0.0.1  
-       netmask 255.0.0.0  
-       broadcast 127.255.255.255  
-       up ip route replace 127.0.0.0/8 dev lo 
-</code></pre>
-
-<p>… die sources.list erweitert, …</p>
-
-<pre><code># vi /repair/etc/apt/sources.list 
-
-#Host Europe server:  
-deb http://ftp.hosteurope.de/mirror/ftp.debian.org/debian etch main  
-deb http://ftp.hosteurope.de/mirror/ftp.debian.org/debian-security etch/updates main 
-deb http://security.debian.org etch/updates main  
-deb-src http://security.debian.org/ etch/updates main
-
-#deb http://ftp.de.debian.org/debian/ etch main contrib non-free  
-#deb-src http://ftp.de.debian.org/debian etch main contrib non-free  
-… die hosts-Datei angepasst und …
-
-# vi /repair/etc/hosts 
-
-127.0.0.1     localhost localhost.localdomain  
-10.20.30.40   example.com 
-</code></pre>
-
-<p>… in der inittab werden die Konsolen einkommentiert, da sie auf dem VPS nicht nutzbar sind.</p>
-
-<pre><code># vi /repair/etc/inittab   
-[...]  
-# Note that on most Debian systems tty7 is used by the X Window System,  
-# so if you want to add more getty’s go ahead but skip tty7 if you run X.  
-#  
-#1:2345:respawn:/sbin/getty 38400 tty1  
-#2:23:respawn:/sbin/getty 38400 tty2  
-#3:23:respawn:/sbin/getty 38400 tty3  
-#4:23:respawn:/sbin/getty 38400 tty4  
-#5:23:respawn:/sbin/getty 38400 tty5  
-#6:23:respawn:/sbin/getty 38400 tty6  
-[...] 
-</code></pre>
-
-<p>Es wird eine chroot-Umgebung aufgebaut, damit zusätzliche Pakete installiert und das neue System bearbeitet und konfiguriert werden können.</p>
-
-<pre><code># LANG=C chroot /repair /bin/bash 
-</code></pre>
-
-<p>Zuerst wird die Zeitzone eingestellt.</p>
-
-<pre><code># tzconfig 
-</code></pre>
-
-<p>Dann muss der sshd installiert werden. Außerdem werden locales und console-data installiert, um Sprach- und Lokalisierungsanpassungen vornehmen zu können. Um beispielsweise ein englischsprachiges System mit einer deutschen Tastaturbelegung zu nutzen, wird bei den locales “en_US.UTF-8″ und in console_data die Keymap “pc / qwertz / German / Standard / latin1″ ausgewählt.</p>
-
-<pre><code># aptitude update  
-# aptitude install openssh-server  
-# aptitude install locales  
-# dpkg-reconfigure locales  
-# aptitude install console-data  
-# dpkg-reconfigure console-data 
-</code></pre>
-
-<p>Da bei jedem Neustart des V-Servers der Hostname zurückgesetzt wird, muss er beim Booten neu geschrieben werden. Es wird hierfür die in der <a href="http://www.hosteurope.de/faq/index.php?cpid=11517">Host Europe FAQ</a> vorgeschlagene Lösung eingesetzt.</p>
-
-<pre><code># vi /etc/init.d/hostname_vps 
-
-#!/bin/bash  
-HOSTNAME=example.com  
-echo $HOSTNAME &gt; /etc/hostname  
-/bin/hostname $HOSTNAME  
-if [ -f /etc/my.resolv.conf ]; then cp /etc/my.resolv.conf /etc/resolv.conf ; fi  
-exit  
-</code></pre>
-
-<p>Das Init-Skript wird erstellt, mit Ausführrechten versehen und verlinkt, damit es bei jedem Bootvorgang ausgeführt wird.</p>
-
-<pre><code># chmod x /etc/init.d/hostname_vps  
-# update-rc.d hostname_vps defaults 09 
-</code></pre>
-
-<p>Zum Abschluß wird das root-Passwort gesetzt, die chroot-Umgebung verlassen und ausgeloggt.</p>
-
-<pre><code># /etc/init.d/ssh stop  
-# passwd  
-# exit  
-# logout 
-</code></pre>
-
-<p>Die Installation von Debian Linux ist nun vollständig abgeschlossen und der Server muss rebootet werden. Hierzu wird der Repair Mode im Virtuozzo Power Panel beendet. Nach ein paar Sekunden sollte man sich auf dem neugestarteten Server anmelden können.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/11/">&larr; Older</a>
@@ -1155,6 +1070,14 @@ exit
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/05/26/build-spotify-rpm-on-fedora/">Build Spotify RPM on Fedora</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/26/backup-synology-nas-using-rsync/">Backup Synology NAS using rsync</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/03/16/hello-world/">Hello world</a>
       </li>
     
@@ -1164,14 +1087,6 @@ exit
     
       <li class="post">
         <a href="/2012/05/425/">425</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2012/03/separate-webapps-from-tomcat/">Separate webapps from Tomcat</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2012/03/simple-and-secure-subversion-server/">Simple and secure Subversion server</a>
       </li>
     
   </ul>
